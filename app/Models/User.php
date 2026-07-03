@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     use Notifiable;
-    protected $connection = 'sqlsrv';
+    protected $connection = 'SML';
 		protected $table = 'DBFLPASS';
     /**
      * The attributes that are mass assignable.

@@ -99,12 +99,12 @@ return [
             'sslmode' => env('DB_SSLMODE', 'prefer'),
         ],
 
-        'sqlsrv' => [
+        'SML' => [
             'driver' => 'sqlsrv',
             'url' => env('DB_URL'),
             'host' => env('DB_HOST', '36.88.190.218'),
             'port' => env('DB_PORT', '1433'),
-            'database' => env('DB_DATABASE', 'DBSML2'),
+            'database' => env('DB_DATABASE', 'DBSMLNEW'),
             'username' => env('DB_USERNAME', 'sa'),
             'password' => env('DB_PASSWORD', 'Anekajc1a9'),
             'charset' => env('DB_CHARSET', 'utf8'),

@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\DB;
 
 class NewMenu extends Model
 {
-		protected $connection = 'sqlsrv';
+		protected $connection = 'SML';
     // protected $table = 'DBMENU';
-		protected $table = 'DBMENU';
+		protected $table = 'DBMENUWEB';
     protected $fillable = array(
         'KODEMENU',
         'Keterangan',

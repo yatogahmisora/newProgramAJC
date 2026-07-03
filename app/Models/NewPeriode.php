@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class NewPeriode extends Model
 {
-		protected $connection = 'sqlsrv';
+		protected $connection = 'SML';
     // protected $primaryKey = 'id';
     protected $table = 'DBPERIODE';
     protected $fillable = array(

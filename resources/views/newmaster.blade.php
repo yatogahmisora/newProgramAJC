@@ -13,9 +13,9 @@
   {{-- Vendor CSS --}} 
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.2/css/jquery.dataTables.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
-  {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous"> --}}
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
   
-  <link rel="stylesheet" href="{{ asset('css/semantic.css') }}">
+  {{-- <link rel="stylesheet" href="{{ asset('css/semantic.css') }}">
   <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
   <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
   <link rel="stylesheet" href="{{ asset('css/jquery-ui.min.css') }}">
@@ -26,12 +26,92 @@
   <link rel="stylesheet" href="{{ asset('css/canvas/animate.css') }}">
   <link rel="stylesheet" href="{{ asset('css/canvas/magnific-popup.css') }}">
   <link rel="stylesheet" href="{{ asset('css/canvas/custom.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/alertify.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/alertify.css') }}"> --}}
 
   <link rel="stylesheet" href="{{ asset('css/newmaster.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/tableMaster.css') }}">
 
   <title>AnekaJC</title>
 
+  {{-- Submenu flyout styles (L0=2 hover popout) --}}
+  <style>
+    
+    #sidebar.flyout-pinned {
+      width: var(--sidebar-exp, 240px) !important;
+    }
+    #sidebar.flyout-pinned .logo-text,
+    #sidebar.flyout-pinned .nav-label,
+    #sidebar.flyout-pinned .nav-chevron {
+      opacity: 1 !important;
+    }
+    #sidebar.flyout-pinned .nav-group.flyout-owner .nav-children {
+      max-height: 600px !important;
+    }
+    #sidebar.flyout-pinned .nav-group.flyout-owner > .nav-item .nav-chevron {
+      transform: rotate(90deg);
+      color: rgba(255, 255, 255, 0.6);
+    }
+    .nav-child.has-sub {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    .nav-child-arrow {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      opacity: 0.6;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .nav-child.has-sub:hover .nav-child-arrow {
+      opacity: 1;
+    }
+
+    .nav-flyout {
+      position: fixed !important;
+      min-width: 200px;
+      max-width: 280px;
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 8px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      padding: 6px;
+      z-index: 9999 !important;
+      margin: 0;
+
+      /* hidden by default; JS toggles a .flyout-visible class on hover */
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(-4px);
+      transition: opacity 0.12s ease, transform 0.12s ease, visibility 0.12s ease;
+      pointer-events: none;
+    }
+
+    .nav-flyout.flyout-visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+
+    .nav-flyout-item {
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      white-space: nowrap;
+      color: #333;
+      cursor: pointer;
+      transition: background 0.12s ease;
+    }
+
+    .nav-flyout-item:hover {
+      background: rgba(0, 0, 0, 0.06);
+    }
+  </style>
 
   @yield('css')
 </head>
@@ -42,7 +122,7 @@
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
       <div class="logo-icon">SPL</div>
-      <span class="logo-text">SPL</span>
+      <span class="logo-text">PT. SPL</span>
     </div>
     <nav class="sidebar-nav" id="nav"></nav>
   </aside>
@@ -79,21 +159,42 @@
 
   </div>
 
-  {{-- SCRIPTS — jQuery loaded once, then vendors --}}
-  <script src="{{ asset('js/canvas/jquery.js') }}"></script>
-  <script src="{{ asset('js/select2.min.js') }}"></script>
-  <script src="{{ asset('js/popper.min.js') }}"></script>
-  <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-  <script src="{{ asset('js/alertify.js') }}"></script>
-  <script src="{{ asset('js/autoNumeric.js') }}"></script>
-  <script src="{{ asset('js/datatables.min.js') }}"></script>
-  <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
-  <script src="{{ asset('js/qrcode.min.js') }}"></script>
-  <script src="{{ asset('js/canvas/functions.js') }}"></script>
-  <script src="{{ asset('js/canvas/JsBarcode.all.min.js') }}"></script>
+  {{-- SCRIPTS — jQuery loaded once, then vendors --}}<!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+<!-- Select2 (needs CSS too) -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<!-- Popper -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.min.js"></script>
+
+<!-- Alertify (needs CSS too) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/alertify.min.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/themes/default.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/alertify.min.js"></script>
+
+<!-- AutoNumeric -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/4.6.0/autoNumeric.min.js"></script>
+
+<!-- DataTables (needs CSS too) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/jquery.dataTables.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js"></script>
+
+<!-- jQuery UI -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+
+<!-- QRCode -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<!-- JsBarcode -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js"></script>
 
  <script>
-  // ── Keyboard shortcut lockdown ───────────────────────────────────────
+  // ── Keyboard shortcut lockdown ────────────────────────────────────────────
   document.addEventListener('keydown', function (e) {
     if (e.key === 'F12') { e.preventDefault(); return false; }
     if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) { e.preventDefault(); return false; }
@@ -104,11 +205,13 @@
     const multiplier = Math.pow(10, precision || 0);
     return Math.round(value * multiplier) / multiplier;
   }
+  
   function format_date(date) {
     if (!date) return '';
     const [y, m, d] = date.split('-');
     return `${d}/${m}/${y}`;
   }
+
   function format_timestamp(date) {
     if (!date) return '';
     const [tgl, waktu] = date.split(' ');
@@ -241,8 +344,13 @@
     ['cetak',         'printer'],
   ];
 
-  function getChildIcon(label) 
-  {
+  // Prefer the DB-provided icon column (row.icon) when present; only
+  // fall back to keyword guessing against the label when it's null —
+  // most rows have icon=NULL today, so the fallback still does most
+  // of the work, but as `icon` gets populated in DBMENU this will
+  // automatically prefer that instead.
+  function getChildIcon(label, dbIcon) {
+    if (dbIcon && icons[dbIcon]) return dbIcon;
     const l = (label || '').toLowerCase();
     for (const [kw, ic] of childIconMap) {
       if (l.includes(kw)) return ic;
@@ -267,7 +375,8 @@
     'jendela':         'monitor',
   };
 
-  function getModuleIcon(label) {
+  function getModuleIcon(label, dbIcon) {
+    if (dbIcon && icons[dbIcon]) return dbIcon;
     const k = (label || '').toLowerCase().trim();
     if (moduleIcons[k]) return moduleIcons[k];
     for (const [pattern, iconName] of Object.entries(moduleIcons)) {
@@ -276,18 +385,27 @@
     return 'box';
   }
 
+  // ── Build menu tree: consume the ALREADY-NESTED tree from the backend ─
+  // HomeController@GetMenu($headermenu) now returns $menul0, where each
+  // L0 module row already has a `.child` array of L1 cards, and each L1
+  // card already has its own `.child` array of L2 submenu rows (built
+  // server-side via KODEMENU prefix matching in PHP). So no client-side
+  // prefix-matching is needed anymore — just map field names into the
+  // shape the rest of this file expects (key/label/href/access/icon +
+  // recursive children).
+  function mapMenuNode(row) {
+    return {
+      key: row.KODEMENU,
+      label: row.Keterangan,
+      href: row.href,
+      access: row.ACCESS,
+      icon: row.icon || null, // DB-provided icon name, if any; falls back to keyword guessing below
+      children: (row.child || []).map(mapMenuNode)
+    };
+  }
+
   function buildMenu(rows) {
-    const result  = [];
-    let current   = null;
-    rows.forEach(row => {
-      if (row.L0 === 0 || row.L0 === '0') {
-        current = { key: row.KODEMENU, label: row.Keterangan, href: row.href, subtitle: row.Keterangan, cards: [] };
-        result.push(current);
-      } else if ((row.L0 === 1 || row.L0 === '1') && current) {
-        current.cards.push({ key: row.KODEMENU, label: row.Keterangan, href: row.href, access: row.ACCESS });
-      }
-    });
-    return result;
+    return (rows || []).map(mapMenuNode);
   }
 
   // ── Render the card-grid home for a module ───────────────────────────
@@ -306,10 +424,10 @@
     document.getElementById('breadcrumb').innerHTML =
       `<span>Beranda</span><span class="bc-sep">›</span><b>${mod.label}</b>`;
 
-    // Build card grid
-    const cards = mod.cards.map((c, i) => {
+    // Build card grid (L0=1 cards)
+    const cards = mod.children.map((c, i) => {
       const color    = cardColors[i % cardColors.length];
-      const iconName = getChildIcon(c.label);
+      const iconName = getChildIcon(c.label, c.icon);
       return `
         <div class="card" onclick="navToChild('${moduleKey}','${c.key}','${encodeURIComponent(c.href || '')}')">
           <div class="card-icon-wrap ${color}">${icon(iconName)}</div>
@@ -324,7 +442,7 @@
     dyn.style.display = 'block';
     dyn.innerHTML = `
       <div class="page-title">${mod.label}</div>
-      <div class="page-subtitle">${mod.subtitle}</div>
+      <div class="page-subtitle">${mod.subtitle ?? ''}</div>
       <div class="card-grid">${cards}</div>
     `;
   }
@@ -337,30 +455,180 @@
     }
   }
 
-  // ── Render sidebar nav ───────────────────────────────────────────────
+  // ── Navigate from sidebar items (prefixes the app base URL) ──────────
+  function goTo(encodedHref) {
+    const href = decodeURIComponent(encodedHref);
+    if (href && href !== 'undefined' && href !== '') {
+      window.location.href = '{{ url('') }}/' + href.replace(/^\//, '');
+    }
+  }
+
+  // ── Render sidebar nav (3 levels: module -> card -> submenu flyout) ───
+  // Flyout panels are NOT nested inside .nav-child in the DOM — they're
+  // rendered into a separate container appended to <body> and positioned
+  // with JS on hover. This is required because the sidebar's accordion
+  // uses overflow:hidden/max-height on .nav-group/.nav-children to drive
+  // its expand-collapse animation; any descendant of those gets clipped
+  // regardless of its own position/z-index. Living outside that tree
+  // (position:fixed, appended to body) sidesteps the clipping entirely.
   function renderNav() {
     const nav = document.getElementById('nav');
     nav.innerHTML = modules.map(m => `
       <div class="nav-group" id="ng-${m.key}">
         <div class="nav-item" onclick="showModuleHome('${m.key}')">
-          <span class="nav-icon">${icon(getModuleIcon(m.label))}</span>
+          <span class="nav-icon">${icon(getModuleIcon(m.label, m.icon))}</span>
           <span class="nav-label">${m.label}</span>
           <span class="nav-chevron">${icon('chevron')}</span>
         </div>
         <div class="nav-children">
-          ${m.cards.map(c => `
-            <div class="nav-child"
+          ${m.children.map(c => {
+            const hasSub = c.children && c.children.length > 0;
+            return `
+            <div class="nav-child ${hasSub ? 'has-sub' : ''}"
+                 data-flyout-id="${hasSub ? 'flyout-' + c.key : ''}"
                  data-access="${c.access ?? ''}"
-                 onclick="event.stopPropagation(); window.location='{{ url('') }}/${(c.href || '').replace(/^\//, '')}'">${c.label}</div>
-          `).join('')}
+                 onclick="event.stopPropagation(); ${hasSub ? '' : `goTo('${encodeURIComponent(c.href || '')}')`}">
+              <span class="nav-child-label">${c.label}</span>
+              ${hasSub ? `<span class="nav-child-arrow">${icon('chevron')}</span>` : ''}
+            </div>`;
+          }).join('')}
         </div>
       </div>
     `).join('');
+
+    // Build all flyout panels into one detached container appended to
+    // <body>, completely outside the sidebar's clipped DOM subtree.
+    let flyoutRoot = document.getElementById('flyout-root');
+    if (!flyoutRoot) {
+      flyoutRoot = document.createElement('div');
+      flyoutRoot.id = 'flyout-root';
+      document.body.appendChild(flyoutRoot);
+    }
+    flyoutRoot.innerHTML = modules.flatMap(m =>
+      m.children.filter(c => c.children && c.children.length > 0).map(c => `
+        <div class="nav-flyout" id="flyout-${c.key}">
+          ${c.children.map(sub => `
+            <div class="nav-flyout-item"
+                 data-access="${sub.access ?? ''}"
+                 onclick="goTo('${encodeURIComponent(sub.href || '')}')">${sub.label}</div>
+          `).join('')}
+        </div>
+      `)
+    ).join('');
+
+    attachFlyoutHoverHandlers();
+  }
+
+  // ── Position + show/hide flyouts on hover using real coordinates ─────
+  function attachFlyoutHoverHandlers() {
+    const allFlyouts = Array.from(document.querySelectorAll('.nav-flyout'));
+    const hideTimers = new Map(); // flyoutEl -> timer id, one per flyout
+    const HIDE_DELAY = 400; // ms grace period to travel from row to flyout
+    const sidebarEl = document.getElementById('sidebar');
+
+    function anyFlyoutOpen() {
+      return allFlyouts.some(f => f.classList.contains('flyout-visible'));
+    }
+
+    function syncSidebarPin() {
+      if (!sidebarEl) return;
+      const open = anyFlyoutOpen();
+      sidebarEl.classList.toggle('flyout-pinned', open);
+      // Only the nav-group owning the currently-open flyout should expand
+      // its accordion; every other nav-group's "flyout-owner" class gets
+      // cleared so they don't pop open along with it.
+      document.querySelectorAll('.nav-group.flyout-owner').forEach(g => {
+        if (!open) g.classList.remove('flyout-owner');
+      });
+    }
+
+    function hideAllExcept(keepEl) {
+      allFlyouts.forEach(f => {
+        if (f !== keepEl) {
+          clearTimeout(hideTimers.get(f));
+          f.classList.remove('flyout-visible');
+        }
+      });
+      syncSidebarPin();
+    }
+
+    document.querySelectorAll('.nav-child.has-sub').forEach(rowEl => {
+      const flyoutId = rowEl.getAttribute('data-flyout-id');
+      const flyoutEl = document.getElementById(flyoutId);
+      if (!flyoutEl) return;
+
+      function showFlyout() {
+        clearTimeout(hideTimers.get(flyoutEl));
+        hideAllExcept(flyoutEl);
+
+        // Mark the .nav-group that owns this row so its accordion stays
+        // expanded while the flyout is pinned open (see syncSidebarPin
+        // and the #sidebar.flyout-pinned .nav-group.flyout-owner CSS).
+        const ownerGroup = rowEl.closest('.nav-group');
+        if (ownerGroup) ownerGroup.classList.add('flyout-owner');
+
+        const rect = rowEl.getBoundingClientRect();
+        const OVERLAP = 6;
+
+        // ✅ Temporarily make it invisible-but-laid-out so offsetWidth is real
+        flyoutEl.style.visibility = 'hidden';
+        flyoutEl.style.opacity = '0';
+        flyoutEl.style.display = 'block'; // force layout
+
+        const flyoutWidth  = flyoutEl.offsetWidth  || 220;
+        const flyoutHeight = flyoutEl.offsetHeight || 0;
+
+        // Reset display (transition will handle the rest)
+        flyoutEl.style.display = '';
+        flyoutEl.style.visibility = '';
+        flyoutEl.style.opacity = '';
+
+        let left = rect.right - OVERLAP;
+        let top  = rect.top;
+
+        if (left + flyoutWidth > window.innerWidth) {
+          left = rect.left - flyoutWidth + OVERLAP;
+        }
+        if (top + flyoutHeight > window.innerHeight) {
+          top = Math.max(8, window.innerHeight - flyoutHeight - 8);
+        }
+
+        flyoutEl.style.left = left + 'px';
+        flyoutEl.style.top  = top  + 'px';
+        flyoutEl.classList.add('flyout-visible');
+        syncSidebarPin();
+      }
+
+      function scheduleHide() {
+        const t = setTimeout(() => {
+          flyoutEl.classList.remove('flyout-visible');
+          syncSidebarPin();
+        }, HIDE_DELAY);
+        hideTimers.set(flyoutEl, t);
+      }
+
+      rowEl.addEventListener('mouseenter', showFlyout);
+      rowEl.addEventListener('mouseleave', scheduleHide);
+      flyoutEl.addEventListener('mouseenter', () => clearTimeout(hideTimers.get(flyoutEl)));
+      flyoutEl.addEventListener('mouseleave', scheduleHide);
+    });
+
+    // No sidebar-level "mouseleave closes everything" listener here on
+    // purpose: the flyout lives outside #sidebar in the DOM (appended to
+    // body), so moving the cursor from the row into the flyout already
+    // counts as leaving #sidebar. A sidebar-wide listener would force-close
+    // the flyout the moment you tried to enter it. The row's own
+    // mouseleave + the flyout's own mouseleave already cover every real
+    // "user moved away" case between them.
   }
 
   // ── Boot ─────────────────────────────────────────────────────────────
-  $.get('{{ url('getmenu') }}', function (data) {
+  // headermenu=1 selects the "no offset" branch in GetMenu($headermenu):
+  // L0=0 for modules, L0=1 for cards, L0=2 for submenu items. Adjust this
+  // value later if a different header context needs the L0=1/2/(2) branch.
+  $.get('{{ url('getmenu/1') }}', function (data) {
     modules = buildMenu(data);
+    console.log(data)
     renderNav();
   }).fail(function () {
     console.error('Failed to load menu from /getmenu');

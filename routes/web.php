@@ -45,7 +45,7 @@ Route::get('/homepurchasing', [HomeController::class, 'purchasingIndex'])->middl
 Route::get('/homemaster', [HomeController::class, 'masterIndex'])->middleware('auth');
 Route::get('/homereport', [HomeController::class, 'reportIndex'])->middleware('auth');
 Route::get('/homeberkas', [HomeController::class, 'berkasIndex'])->middleware('auth');
-Route::get('/getmenu', [HomeController::class, 'GetMenu'])->middleware('auth');
+Route::get('/getmenu/{headermenu}', [HomeController::class, 'GetMenu']);
 
 Route::get('/setperiode', [NewSetupPeriodeKerjaController::class, 'index'])->middleware('auth');
 Route::post('/newsetupperiodekerjaupdate', [NewSetupPeriodeKerjaController::class, 'updatePeriodeKerja'])->middleware('auth');
@@ -60,4 +60,4 @@ Route::get('/spgetstockakhir', [GlobalController::class, 'getStockAkhir'])->midd
 require __DIR__.'/purchasing.php';
 // require __DIR__.'/master.php';
 // require __DIR__.'/report.php';
-// require __DIR__.'/berkas.php';
+require __DIR__.'/berkas.php';

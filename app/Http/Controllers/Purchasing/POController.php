@@ -5,12 +5,12 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use App\Models\NewMenu;
-use App\Model\NewAksesMenu;
-use App\Model\DBFLMENU;
-use App\Model\NewPeriode;
-use App\Model\NewUsers;
+use App\Models\NewAksesMenu;
+use App\Models\DBFLMENU;
+use App\Models\NewPeriode;
+use App\Models\NewUsers;
 use Illuminate\Support\Facades\DB;
-use App\Model\VwPPL;
+use App\Models\VwPPL;
 use Illuminate\Auth;
 
 
@@ -25,7 +25,6 @@ class POController extends Controller
     if(!$akses || !$akses->HASACCESS) {
        return redirect('/home');
     }
-
 
     $periode = app('App\Http\Controllers\GlobalController')->getPeriode();
 

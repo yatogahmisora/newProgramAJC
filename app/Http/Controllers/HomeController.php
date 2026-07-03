@@ -117,7 +117,6 @@ class HomeController extends Controller
         "periode" => $periode,
       ]);
 
-
     }
 
      public function reportIndex() {
@@ -131,7 +130,6 @@ class HomeController extends Controller
         "periode" => $periode,
         "akses" => $akses
       ]);
-
 
     }
 
@@ -147,20 +145,64 @@ class HomeController extends Controller
         "akses" => $akses
       ]);
 
-
     }
 
-  public function GetMenu()
+ public function GetMenu($headermenu)
 {
-    $menu = DB::connection("sqlsrv")
-        ->table('dbmenu')
+    $tempAngka = 0;
+    if ($headermenu == 2) {
+        $tempAngka += 1;
+    }
+ 
+    $menul0 = NewMenu::where('L0', $tempAngka)
+        ->join('DBFLMENUWEB', 'DBFLMENUWEB.L1', '=', 'DBMENUWEB.KODEMENU')
+        ->where('DBFLMENUWEB.USERID', \Auth::user()->username)
+        ->where('DBFLMENUWEB.HASACCESS', 1)
+        ->whereNotNull('DBMENUWEB.HeaderMenu')
         ->orderBy('KODEMENU')
         ->get();
-
-    return response()->json($menu);
+    $tempAngka += 1;
+ 
+    $menul1 = NewMenu::where('L0', $tempAngka)
+        ->join('DBFLMENUWEB', 'DBFLMENUWEB.L1', '=', 'DBMENUWEB.KODEMENU')
+        ->where('DBFLMENUWEB.USERID', \Auth::user()->username)
+        ->where('DBFLMENUWEB.HASACCESS', 1)
+        ->whereNotNull('DBMENUWEB.HeaderMenu')
+        ->orderBy('KODEMENU')
+        ->get();
+    $tempAngka += 1;
+ 
+    $menul2 = NewMenu::where('L0', 2)
+        ->join('DBFLMENUWEB', 'DBFLMENUWEB.L1', '=', 'DBMENUWEB.KODEMENU')
+        ->where('DBFLMENUWEB.USERID', \Auth::user()->username)
+        ->where('DBFLMENUWEB.HASACCESS', 1)
+        ->whereNotNull('DBMENUWEB.HeaderMenu')
+        ->orderBy('KODEMENU')
+        ->get();
+ 
+    foreach ($menul1 as $menu1) {
+        $array1 = [];
+        $kodecheck = $menu1['KODEMENU'];
+        foreach ($menul2 as $menu2) {
+            if (substr($menu2['KODEMENU'], 0, strlen($kodecheck)) == $kodecheck) {
+                array_push($array1, $menu2);
+            }
+        }
+        $menu1->child = $array1;
+    }
+ 
+    foreach ($menul0 as $menu0) {
+        $array = [];
+        $kodecheck = $menu0['KODEMENU'];
+        foreach ($menul1 as $menu1) {
+            if (substr($menu1['KODEMENU'], 0, strlen($kodecheck)) == $kodecheck) {
+                array_push($array, $menu1);
+            }
+        }
+        $menu0->child = $array;
+    }
+ 
+    return response()->json($menul0);
 }
-
-
-
 
 }

@@ -39,7 +39,7 @@ class AuthController extends Controller
 
         Auth::logoutOtherDevices($request->input('password'));
 
-        DB::connection('sqlsrv')->update(
+        DB::connection('SML')->update(
             'UPDATE dbperiode SET bulan = MONTH(GETDATE()), tahun = YEAR(GETDATE()) WHERE user_id = :user_id',
             ['user_id' => $request->input('username')]
         );

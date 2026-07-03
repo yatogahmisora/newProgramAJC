@@ -21,9 +21,9 @@ class GlobalController extends Controller
   public function getNoBuktiSimbol (Request $req) {
     // return 1;
     $username = \Auth::user()->username;
-    $periode = DB::connection("sqlsrv")->select('select TOP 1 * from DBPERIODE where user_id = :username ' , ["username" => $username]);
+    $periode = DB::connection("SML")->select('select TOP 1 * from DBPERIODE where user_id = :username ' , ["username" => $username]);
     $kode = $req->kode;
-    $inisial = DB::connection("sqlsrv")->select('select ' . $kode . ' from DBNOMOR');
+    $inisial = DB::connection("SML")->select('select ' . $kode . ' from DBNOMOR');
 
     $values = [
         $inisial[0]->$kode,
@@ -33,7 +33,7 @@ class GlobalController extends Controller
         $req->simbol
     ];
 
-    $noBukti = DB::connection('sqlsrv')->select('exec SP_IsiNobuktiSimbol ?,?,?,?,?',$values);
+    $noBukti = DB::connection('SML')->select('exec SP_IsiNobuktiSimbol ?,?,?,?,?',$values);
 
     return $noBukti;
   }
@@ -41,9 +41,9 @@ class GlobalController extends Controller
   public function getNoBukti (Request $req) {
     // return 1;
     $username = \Auth::user()->username;
-    $periode = DB::connection("sqlsrv")->select('select TOP 1 * from DBPERIODE where user_id = :username ' , ["username" => $username]);
+    $periode = DB::connection("SML")->select('select TOP 1 * from DBPERIODE where user_id = :username ' , ["username" => $username]);
     $kode = $req->kode;
-    $inisial = DB::connection("sqlsrv")->select('select ' . $kode . ' from DBNOMOR');
+    $inisial = DB::connection("SML")->select('select ' . $kode . ' from DBNOMOR');
     // $inisialx = 'KN';
     // return $inisialx;
     $values = [
@@ -53,7 +53,7 @@ class GlobalController extends Controller
         $username
     ];
 
-    $noBukti = DB::connection('sqlsrv')->select('exec SP_IsiNobukti ?,?,?,?',$values);
+    $noBukti = DB::connection('SML')->select('exec SP_IsiNobukti ?,?,?,?',$values);
 
     return $noBukti;
   }
@@ -62,7 +62,7 @@ class GlobalController extends Controller
 
 // public function LoggingData ($paktivitas, $psumber, $pnoBukti, $pketerangan,$purut,$ptable) {
 //     $username = \Auth::user()->username;
-//     $periode = DB::connection("sqlsrv")->select('select TOP 1 * from DBPERIODE where user_id = :username ' , ["username" => $username]);
+//     $periode = DB::connection("SML")->select('select TOP 1 * from DBPERIODE where user_id = :username ' , ["username" => $username]);
 
 //     // if ($paktivitas=='I') {
 //     //       $purut=1;
@@ -72,17 +72,17 @@ class GlobalController extends Controller
 //     // @dd($pketx);
 
 
-//     // $z =DB::connection("sqlsrv")->update("exec SP_KetLogfile 'sqlsrv/KRS/00001/1025','DBKOREKSIDET',CAST(1 AS INT), '','SA' " , []);
+//     // $z =DB::connection("SML")->update("exec SP_KetLogfile 'SML/KRS/00001/1025','DBKOREKSIDET',CAST(1 AS INT), '','SA' " , []);
 
 //     if ($paktivitas != 'btloto' and $paktivitas != 'oto')  {
 
-//        $z =DB::connection("sqlsrv")->statement("exec SP_KetLogfileMy :nobukti,:table,:urut, '',:pemakai " ,
+//        $z =DB::connection("SML")->statement("exec SP_KetLogfileMy :nobukti,:table,:urut, '',:pemakai " ,
 //         ["nobukti" => $pnoBukti,"table" => $ptable,"urut"=>$purut,"pemakai"=>$username]);
 
 
-//        $pketx = DB::connection("sqlsrv")->select("select * from tempketlog where iduser=:pemakai and keterangan<>'' ",["pemakai"=>$username] );
-//          DB::connection("sqlsrv")->update("delete tempketlog  where iduser=:pemakai",["pemakai"=>$username] );
-//          DB::connection("sqlsrv")->update("delete xMytable  where iduser=:pemakai",["pemakai"=>$username] );
+//        $pketx = DB::connection("SML")->select("select * from tempketlog where iduser=:pemakai and keterangan<>'' ",["pemakai"=>$username] );
+//          DB::connection("SML")->update("delete tempketlog  where iduser=:pemakai",["pemakai"=>$username] );
+//          DB::connection("SML")->update("delete xMytable  where iduser=:pemakai",["pemakai"=>$username] );
 
 //           $pketerangan = $pketx[0]->keterangan;
 
@@ -102,7 +102,7 @@ class GlobalController extends Controller
 //       $pketerangan
 //     ];
 
-//     DB::connection('sqlsrv')->statement('Insert into dbLogFile (Tahun, Bulan, Tanggal,Pemakai,Aktivitas,Sumber,NoBukti,Keterangan)
+//     DB::connection('SML')->statement('Insert into dbLogFile (Tahun, Bulan, Tanggal,Pemakai,Aktivitas,Sumber,NoBukti,Keterangan)
 //                         values (?,?,Getdate(),?,?,?,?,?)', $values);
 
 //   }
@@ -111,7 +111,7 @@ class GlobalController extends Controller
 
   public function LoggingData ($paktivitas, $psumber, $pnoBukti, $pketerangan,$purut,$ptable) {
     $username = \Auth::user()->username;
-    $periode = DB::connection("sqlsrv")->select('select TOP 1 * from DBPERIODE where user_id = :username ' , ["username" => $username]);
+    $periode = DB::connection("SML")->select('select TOP 1 * from DBPERIODE where user_id = :username ' , ["username" => $username]);
 
     // if ($paktivitas=='I') {
     //       $purut=1;
@@ -121,17 +121,17 @@ class GlobalController extends Controller
     // @dd($pketx);
 
 
-    // $z =DB::connection("sqlsrv")->update("exec SP_KetLogfile 'sqlsrv/KRS/00001/1025','DBKOREKSIDET',CAST(1 AS INT), '','SA' " , []);
+    // $z =DB::connection("SML")->update("exec SP_KetLogfile 'SML/KRS/00001/1025','DBKOREKSIDET',CAST(1 AS INT), '','SA' " , []);
 
     if ($paktivitas != 'btloto' and $paktivitas != 'oto')  {
-         DB::connection("sqlsrv")->update("delete tempketlog  where iduser=:pemakai",["pemakai"=>$username] );
-         DB::connection("sqlsrv")->update("delete xMytable  where iduser=:pemakai",["pemakai"=>$username] );
-        DB::connection("sqlsrv")->update("insert into tempketlog (keterangan,iduser) values ('',:pemakai)",["pemakai"=>$username] );
+         DB::connection("SML")->update("delete tempketlog  where iduser=:pemakai",["pemakai"=>$username] );
+         DB::connection("SML")->update("delete xMytable  where iduser=:pemakai",["pemakai"=>$username] );
+        DB::connection("SML")->update("insert into tempketlog (keterangan,iduser) values ('',:pemakai)",["pemakai"=>$username] );
 
 
  // :nobukti,:table,:urut, '',:pemakai "
 
-       $z =DB::connection("sqlsrv")->update("declare
+       $z =DB::connection("SML")->update("declare
 @Nobukti varchar(30),
 @Nama_Table varchar(500),
 @UrutX numeric(18,0),
@@ -194,7 +194,7 @@ deallocate mydata " , ["nobukti" => $pnoBukti,"table" => $ptable,"urut"=>$purut,
 
 
 
-DB::connection("sqlsrv")->update("
+DB::connection("SML")->update("
 --Select Table_Name, Column_Name, Value from #Mytable
 Declare @Table_Name varchar(500), @Column_Name varchar(500), @Value varchar(8000), @Script varchar(max), @Column_Type varchar(500)
 Declare @RowCount int,@i int, @Keterangan varchar(max), @iduser varchar(30)
@@ -236,9 +236,9 @@ close mydata1
 Deallocate Mydata1" , ["pemakai"=>$username]);
 
 
-       $pketx = DB::connection("sqlsrv")->select("select * from tempketlog where iduser=:pemakai and keterangan<>'' ",["pemakai"=>$username] );
-         // DB::connection("sqlsrv")->update("delete tempketlog  where iduser=:pemakai",["pemakai"=>$username] );
-         // DB::connection("sqlsrv")->update("delete xMytable  where iduser=:pemakai",["pemakai"=>$username] );
+       $pketx = DB::connection("SML")->select("select * from tempketlog where iduser=:pemakai and keterangan<>'' ",["pemakai"=>$username] );
+         // DB::connection("SML")->update("delete tempketlog  where iduser=:pemakai",["pemakai"=>$username] );
+         // DB::connection("SML")->update("delete xMytable  where iduser=:pemakai",["pemakai"=>$username] );
 
           $pketerangan = $pketx[0]->keterangan;
 
@@ -258,7 +258,7 @@ Deallocate Mydata1" , ["pemakai"=>$username]);
       $pketerangan
     ];
 
-    DB::connection('sqlsrv')->statement('Insert into dbLogFile (Tahun, Bulan, Tanggal,Pemakai,Aktivitas,Sumber,NoBukti,Keterangan)
+    DB::connection('SML')->statement('Insert into dbLogFile (Tahun, Bulan, Tanggal,Pemakai,Aktivitas,Sumber,NoBukti,Keterangan)
                         values (?,?,Getdate(),?,?,?,?,?)', $values);
 
   }
@@ -267,9 +267,9 @@ Deallocate Mydata1" , ["pemakai"=>$username]);
 
   public function getLockPeriode () {
    $username = \Auth::user()->username;
-    $periode = DB::connection('sqlsrv')->select('select top 1 user_id, bulan, tahun  from dbperiode where user_id = :username', ["username" => $username] );
+    $periode = DB::connection('SML')->select('select top 1 user_id, bulan, tahun  from dbperiode where user_id = :username', ["username" => $username] );
 
-    $lockperiode = DB::connection('sqlsrv')->select('select *  from dblockperiode where bulan = :bulan and tahun = :tahun', [
+    $lockperiode = DB::connection('SML')->select('select *  from dblockperiode where bulan = :bulan and tahun = :tahun', [
       "bulan" => $periode[0]->bulan,
       "tahun" => $periode[0]->tahun,
     ]);
@@ -284,9 +284,9 @@ Deallocate Mydata1" , ["pemakai"=>$username]);
 
   public function getLockPeriodeInput (Request $req) {
    $username = \Auth::user()->username;
-    // $periode = DB::connection('sqlsrv')->select('select top 1 user_id, bulan, tahun  from dbperiode where user_id = :username', ["username" => $username] );
+    // $periode = DB::connection('SML')->select('select top 1 user_id, bulan, tahun  from dbperiode where user_id = :username', ["username" => $username] );
 
-    $lockperiode = DB::connection('sqlsrv')->select('select *  from dblockperiode where bulan = :bulan and tahun = :tahun', [
+    $lockperiode = DB::connection('SML')->select('select *  from dblockperiode where bulan = :bulan and tahun = :tahun', [
       "bulan" => $req->bulan,
       "tahun" => $req->tahun,
     ]);
@@ -303,7 +303,7 @@ Deallocate Mydata1" , ["pemakai"=>$username]);
 
   public function LoggingDataTrans ($paktivitas, $psumber, $pnoBukti, $pketerangan,$purut,$ptable) {
     $username = \Auth::user()->username;
-    $periode = DB::connection("sqlsrv")->select('select TOP 1 * from DBPERIODE where user_id = :username ' , ["username" => $username]);
+    $periode = DB::connection("SML")->select('select TOP 1 * from DBPERIODE where user_id = :username ' , ["username" => $username]);
 
     // if ($paktivitas=='I') {
     //       $purut=1;
@@ -313,17 +313,17 @@ Deallocate Mydata1" , ["pemakai"=>$username]);
     // @dd($pketx);
 
 
-    // $z =DB::connection("sqlsrv")->update("exec SP_KetLogfile 'sqlsrv/KRS/00001/1025','DBKOREKSIDET',CAST(1 AS INT), '','SA' " , []);
+    // $z =DB::connection("SML")->update("exec SP_KetLogfile 'SML/KRS/00001/1025','DBKOREKSIDET',CAST(1 AS INT), '','SA' " , []);
 
     if ($paktivitas != 'btloto' and $paktivitas != 'oto')  {
-         DB::connection("sqlsrv")->update("delete tempketlog  where iduser=:pemakai",["pemakai"=>$username] );
-         DB::connection("sqlsrv")->update("delete xMytable  where iduser=:pemakai",["pemakai"=>$username] );
-        DB::connection("sqlsrv")->update("insert into tempketlog (keterangan,iduser) values ('',:pemakai)",["pemakai"=>$username] );
+         DB::connection("SML")->update("delete tempketlog  where iduser=:pemakai",["pemakai"=>$username] );
+         DB::connection("SML")->update("delete xMytable  where iduser=:pemakai",["pemakai"=>$username] );
+        DB::connection("SML")->update("insert into tempketlog (keterangan,iduser) values ('',:pemakai)",["pemakai"=>$username] );
 
 
  // :nobukti,:table,:urut, '',:pemakai "
 
-       $z =DB::connection("sqlsrv")->update("declare
+       $z =DB::connection("SML")->update("declare
 @Nobukti varchar(30),
 @Nama_Table varchar(500),
 @UrutX numeric(18,0),
@@ -386,7 +386,7 @@ deallocate mydata " , ["nobukti" => $pnoBukti,"table" => $ptable,"urut"=>$purut,
 
 
 
-DB::connection("sqlsrv")->update("
+DB::connection("SML")->update("
 --Select Table_Name, Column_Name, Value from #Mytable
 Declare @Table_Name varchar(500), @Column_Name varchar(500), @Value varchar(8000), @Script varchar(max), @Column_Type varchar(500)
 Declare @RowCount int,@i int, @Keterangan varchar(max), @iduser varchar(30)
@@ -428,9 +428,9 @@ close mydata1
 Deallocate Mydata1" , ["pemakai"=>$username]);
 
 
-       $pketx = DB::connection("sqlsrv")->select("select * from tempketlog where iduser=:pemakai and keterangan<>'' ",["pemakai"=>$username] );
-         // DB::connection("sqlsrv")->update("delete tempketlog  where iduser=:pemakai",["pemakai"=>$username] );
-         // DB::connection("sqlsrv")->update("delete xMytable  where iduser=:pemakai",["pemakai"=>$username] );
+       $pketx = DB::connection("SML")->select("select * from tempketlog where iduser=:pemakai and keterangan<>'' ",["pemakai"=>$username] );
+         // DB::connection("SML")->update("delete tempketlog  where iduser=:pemakai",["pemakai"=>$username] );
+         // DB::connection("SML")->update("delete xMytable  where iduser=:pemakai",["pemakai"=>$username] );
 
           $pketerangan = $pketx[0]->keterangan;
 
@@ -450,7 +450,7 @@ Deallocate Mydata1" , ["pemakai"=>$username]);
       $pketerangan
     ];
 
-    DB::connection('sqlsrv')->statement('Insert into dbLogFile (Tahun, Bulan, Tanggal,Pemakai,Aktivitas,Sumber,NoBukti,Keterangan)
+    DB::connection('SML')->statement('Insert into dbLogFile (Tahun, Bulan, Tanggal,Pemakai,Aktivitas,Sumber,NoBukti,Keterangan)
                         values (?,?,Getdate(),?,?,?,?,?)', $values);
 
   }
@@ -463,7 +463,7 @@ Deallocate Mydata1" , ["pemakai"=>$username]);
   public function getPeriode () {
     $username = \Auth::user()->username;
 
-    $periode = DB::connection('sqlsrv')->select('select top 1 user_id, bulan, tahun  from dbperiode where user_id = :username', ["username" => $username] );
+    $periode = DB::connection('SML')->select('select top 1 user_id, bulan, tahun  from dbperiode where user_id = :username', ["username" => $username] );
 
     return (object) [
       "bulan" => $periode[0]->bulan,
@@ -473,7 +473,7 @@ Deallocate Mydata1" , ["pemakai"=>$username]);
   }
 
   public function getAkses ($kodemenu, $path) {
-    // $akses = DB::connection('sqlsrv')->select('select b.* from dbmenu a join dbflmenu b on a.kodemenu = b.l1 where a.href = :path', ["path" => $path] );
+    // $akses = DB::connection('SML')->select('select b.* from dbmenu a join dbflmenu b on a.kodemenu = b.l1 where a.href = :path', ["path" => $path] );
 
     $akses = NewMenu::join('DBFLMENU', 'DBFLMENU.L1' ,'=' , 'DBMENU.KODEMENU')->where('DBFLMENU.USERID' , \Auth::user()->username)->where('DBMENU.href' , $path)->first();
 
@@ -484,7 +484,7 @@ Deallocate Mydata1" , ["pemakai"=>$username]);
   }
 
   public function getAksesX ($kodemenu, $path) {
-    // $akses = DB::connection('sqlsrv')->select('select b.* from dbmenu a join dbflmenu b on a.kodemenu = b.l1 where a.href = :path', ["path" => $path] );
+    // $akses = DB::connection('SML')->select('select b.* from dbmenu a join dbflmenu b on a.kodemenu = b.l1 where a.href = :path', ["path" => $path] );
 
     $akses = NewMenu::join('DBFLMENU', 'DBFLMENU.L1' ,'=' , 'DBMENU.KODEMENU')->where('DBFLMENU.USERID' , \Auth::user()->username)->where('DBMENU.href' , $path)->first();
 
@@ -495,7 +495,7 @@ Deallocate Mydata1" , ["pemakai"=>$username]);
   }
 
 public function getStockAkhir(Request $req) {
-    $stock = DB::connection('sqlsrv')->select('exec Sp_CekStockAkhir ?,?,?,?',[$req->nosat, $req->date, $req->kodegdg,  $req->kodebrg]);
+    $stock = DB::connection('SML')->select('exec Sp_CekStockAkhir ?,?,?,?',[$req->nosat, $req->date, $req->kodegdg,  $req->kodebrg]);
 
     return [
       "stock" => $stock

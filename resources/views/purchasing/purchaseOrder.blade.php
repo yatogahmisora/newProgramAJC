@@ -226,12 +226,12 @@
     <!-- <div id="qrcode"></div> -->
     <div class="row">
       <div class="col-6 text-left">
-        <h2 style="margin-top:-85px;">Purchase Order</h2>
+        <h2>Purchase Order</h2>
       </div>
-      <div class="col-6 text-right">
+      <div class="col-6 d-flex justify-content-end">
         <button type="button" class="btn btn-primary btn-lg" style="
             height: 30px;
-            margin-top: -150px;
+            margin-top: 0px;
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 0.75rem;
@@ -244,7 +244,7 @@
         </button>
         <button type="button" class="btn btn-primary btn-lg" style="
             height: 30px;
-            margin-top: -150px;
+            margin-top: 0px;
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 0.75rem;
@@ -286,7 +286,7 @@
     <input type="hidden" id="level" value="{!! $level !!}" />
 
     <div class="card">
-      <div class="card-header" style="margin-top:-55px;">
+      <div class="card-header">
         <div class="row">
           <div class="nav nav-tabs col-12" id="nav-tab" role="tablist" style="border-bottom: 0;">
             <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="nav-home" aria-selected="true"
@@ -327,7 +327,6 @@
                         <th style="padding: 4px 12px; white-space:nowrap;" scope="col">Keterangan</th>
                         <th style="padding: 4px 12px; white-space:nowrap;" scope="col">Out. SO</th>
                         <th style="padding: 4px 12px; white-space:nowrap;" scope="col">Qnt Stock</th>
-
                       </tr>
                     </thead>
                     <tbody id="tabel_data" class="text-left">
@@ -1616,9 +1615,7 @@
 
             </div>
 
-
             <div class="col-md-4">
-
 
             <div class="row">
               <div class="col-9">
@@ -2862,7 +2859,6 @@
         </button>
       </div>
 
-
         <!-- <h1>Tes Modal</h1> -->
         <div class="modal-body" >
 
@@ -2873,7 +2869,6 @@
           <div class="col-md-6">
 
             <div class="row">
-
 
             <!-- <div class="col-md-12">
               <div class="form-group">
@@ -2922,13 +2917,11 @@
               </div>
             </div> -->
 
-
             <!-- <div class="col-md-4" style="margin-top:-10px;">
               <div class="form-group">
                 <label>No PO</label>
               </div>
             </div> -->
-
 
           <!-- <div class="col-md-8" style="margin-top:-10px;">
             <div class="input-group form-group">
@@ -2994,7 +2987,6 @@
                 <th style="padding: 4px 12px;" scope="col">Nama Brg</th>
                 <th style="padding: 4px 12px;" scope="col">Qty</th>
                 <th style="padding: 4px 12px;" scope="col">Satuan</th>
-                <!-- <th scope="col">Actions</th> -->
 
               </tr>
             </thead>
@@ -3196,7 +3188,6 @@ function buttonAddPr () {
       });
       document.getElementById("tabel_data_refpr").innerHTML = rowTable
 
-
       $('#page1').hide();
       $('#page4').show();
     }
@@ -3234,11 +3225,9 @@ function submitAddPr () {
       console.log("after ===========")
     }})
 
-
-
 }
 
-function buttonOtorisasi (nobukti , isoto1) {
+function buttonOtorisasi (nobukti, isoto1) {
   console.log(nobukti , isoto1)
   let akses = $("#akses_isotorisasi1").val();
   if (!Number(akses)) {
@@ -3334,27 +3323,9 @@ function buttonOtorisasi (nobukti , isoto1) {
             `
           }
 
-          // });
           console.log(i, mssg)
 
-
-
-
-          // alertify.confirm('Konfirmasi Otorisasi', 'Apakah yakin ingin menghapus item ' + String(i) + ' ?',
-          //     function() {
-          //       console.log('yes')
-          //       let xtempx = 1;
-          //     }
-          //   ,function(){
-          //     console.log('no')
-          //       let xtempx = 0;
-          //   };
-          //   if (xtempx == 0) {
-          //     break;
-          //   })
-
         }
-
 
         console.log('mssg sini' , mssg)
         if (mssg) {
@@ -3395,9 +3366,6 @@ function buttonOtorisasi (nobukti , isoto1) {
             //   break;
             // })
 
-
-
-
         } else {
           console.log('else')
           // return
@@ -3435,11 +3403,6 @@ function buttonOtorisasi (nobukti , isoto1) {
         alertify.warning('Terjadi kesalahan silahkan refresh browser');
       }
     });
-
-
-    // return
-
-
 
   });
 }
@@ -6282,6 +6245,7 @@ function loadAll () {
     data: {
     },
     success: function(res) {
+      console.log(res)
       dataRefreshOutstanding = res.tempOutstanding1
       dataRefreshOutstanding2 = res.tempOutstanding3
       dataRefreshOutstanding3 = res.tempOutstanding5

@@ -68,11 +68,11 @@ class NewMenuController extends Controller
       $tempAngka += 1;
     }
 
-    $menul0 = NewMenu::where('L0' ,$tempAngka)->join('DBFLMENU', 'DBFLMENU.L1' ,'=' , 'DBMENU.KODEMENU')->where('DBFLMENU.USERID' , \Auth::user()->username)->where('DBFLMENU.HASACCESS' , 1)->whereNotNull('DBMENU.HeaderMenu')->orderBy('KODEMENU')->get();
+    $menul0 = NewMenu::where('L0' ,$tempAngka)->join('DBFLMENUWEB', 'DBFLMENUWEB.L1' ,'=' , 'DBMENUWEB.KODEMENU')->where('DBFLMENUWEB.USERID' , \Auth::user()->username)->where('DBFLMENUWEB.HASACCESS' , 1)->whereNotNull('DBMENUWEB.HeaderMenu')->orderBy('KODEMENU')->get();
     $tempAngka += 1;
-    $menul1 = NewMenu::where('L0' , $tempAngka)->join('DBFLMENU', 'DBFLMENU.L1' ,'=' , 'DBMENU.KODEMENU')->where('DBFLMENU.USERID' , \Auth::user()->username)->where('DBFLMENU.HASACCESS' , 1)->whereNotNull('DBMENU.HeaderMenu')->orderBy('KODEMENU')->get();
+    $menul1 = NewMenu::where('L0' , $tempAngka)->join('DBFLMENUWEB', 'DBFLMENUWEB.L1' ,'=' , 'DBMENUWEB.KODEMENU')->where('DBFLMENUWEB.USERID' , \Auth::user()->username)->where('DBFLMENUWEB.HASACCESS' , 1)->whereNotNull('DBMENUWEB.HeaderMenu')->orderBy('KODEMENU')->get();
     $tempAngka += 1;
-    $menul2 = NewMenu::where('L0' , 2)->join('DBFLMENU', 'DBFLMENU.L1' ,'=' , 'DBMENU.KODEMENU')->where('DBFLMENU.USERID' , \Auth::user()->username)->where('DBFLMENU.HASACCESS' , 1)->whereNotNull('DBMENU.HeaderMenu')->orderBy('KODEMENU')->get();
+    $menul2 = NewMenu::where('L0' , 2)->join('DBFLMENUWEB', 'DBFLMENUWEB.L1' ,'=' , 'DBMENUWEB.KODEMENU')->where('DBFLMENUWEB.USERID' , \Auth::user()->username)->where('DBFLMENUWEB.HASACCESS' , 1)->whereNotNull('DBMENUWEB.HeaderMenu')->orderBy('KODEMENU')->get();
 
 
     foreach ($menul1 as $menu1) {

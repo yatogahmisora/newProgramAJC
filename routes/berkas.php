@@ -1,42 +1,43 @@
 <?php
 
+use App\Http\Controllers\Berkas\NewSetPemakaiController;
+use App\Http\Controllers\Berkas\NewSetupPeriodeKerjaController;
+use App\Http\Controllers\Berkas\NewKunciPeriodeKerjaController;
+use App\Http\Controllers\Berkas\GantiPasswordController;
+use Illuminate\Support\Facades\Route;
+
 // Berkas
-Route::namespace('Berkas')->group(function () {
+Route::controller(NewSetPemakaiController::class)->group(function () {
+    Route::get('/newsetpemakai', 'index');
+    Route::get('/newsetpemakailoadall', 'loadAll');
 
-Route::get('/newsetpemakai', 'NewSetPemakaiController@index');
-Route::get('/newsetpemakailoadall', 'NewSetPemakaiController@loadAll');
+    Route::post('/newsetpemakailistakses', 'listAkses');
+    Route::post('/newsetpemakaidetailuser', 'detailUser');
 
-Route::post('/newsetpemakailistakses' , 'NewSetPemakaiController@listAkses');
-Route::post('/newsetpemakaidetailuser' , 'NewSetPemakaiController@detailUser');
+    Route::post('/newsetpemakaispupdateakses', 'spUpdateAkses');
+    Route::post('/newsetpemakaispupdateaksesheader', 'spUpdateAksesHeader');
+    Route::post('/newsetpemakailistaksesreport', 'listAksesReport');
+    Route::post('/newsetpemakaispupdateaksesreport', 'spUpdateAksesReport');
+    Route::post('/newsetpemakailistcoa', 'listCoa');
+    Route::post('/newsetpemakaiupdateiskirimcoa', 'updateIsKirimCOA');
+    Route::post('/newsetpemakaiupdateaddcoa', 'updateAddAksesCOA');
+    Route::post('/newsetpemakaiupdateaddallcoa', 'updateAddAllAksesCOA');
+    Route::post('/newsetpemakaideleteaksescoa', 'deleteAksesCOA');
+    Route::post('/newsetpemakaideleteallaksescoa', 'deleteAllAksesCOA');
+    Route::get('/newsetpemakaiLoadKaryawan', 'loadKaryawan');
+    Route::get('/newsetpemakaiLoadDepartemen', 'loadDepartemen');
+    Route::get('/newsetpemakaiLoadJabatan', 'loadJabatan');
+    Route::post('/newsetpemakaiAddUser', 'submitAddUser');
+    Route::post('/newsetpemakaideleteuser', 'deleteUser');
+});
 
-Route::post('/newsetpemakaispupdateakses', 'NewSetPemakaiController@spUpdateAkses');
-Route::post('/newsetpemakaispupdateaksesheader', 'NewSetPemakaiController@spUpdateAksesHeader');
-Route::post('/newsetpemakailistaksesreport' , 'NewSetPemakaiController@listAksesReport');
-Route::post('/newsetpemakaispupdateaksesreport', 'NewSetPemakaiController@spUpdateAksesReport');
-Route::post('/newsetpemakailistcoa', 'NewSetPemakaiController@listCoa');
-Route::post('/newsetpemakaiupdateiskirimcoa' ,'NewSetPemakaiController@updateIsKirimCOA');
-Route::post('/newsetpemakaiupdateaddcoa', 'NewSetPemakaiController@updateAddAksesCOA');
-Route::post('/newsetpemakaiupdateaddallcoa', 'NewSetPemakaiController@updateAddAllAksesCOA');
-Route::post('/newsetpemakaideleteaksescoa' , 'NewSetPemakaiController@deleteAksesCOA');
-Route::post('/newsetpemakaideleteallaksescoa' , 'NewSetPemakaiController@deleteAllAksesCOA');
-Route::post('/newsetpemakaideleteallaksescoa' , 'NewSetPemakaiController@deleteAllAksesCOA');
-Route::get('/newsetpemakaiLoadKaryawan' , 'NewSetPemakaiController@loadKaryawan');
-Route::get('/newsetpemakaiLoadDepartemen' , 'NewSetPemakaiController@loadDepartemen');
-Route::get('/newsetpemakaiLoadJabatan' , 'NewSetPemakaiController@loadJabatan');
-Route::post('/newsetpemakaiAddUser' , 'NewSetPemakaiController@submitAddUser');
-Route::post('/newsetpemakaideleteuser' , 'NewSetPemakaiController@deleteUser');
+Route::get('/newsetupperiodekerja', [NewSetupPeriodeKerjaController::class, 'index']);
+Route::post('/newsetupperiodekerjaupdate', [NewSetupPeriodeKerjaController::class, 'updatePeriodeKerja']);
 
-
-Route::get('/newsetupperiodekerja', 'NewSetupPeriodeKerjaController@index');
-Route::post('/newsetupperiodekerjaupdate' ,'NewSetupPeriodeKerjaController@updatePeriodeKerja');
-
-Route::get('/newkunciperiodekerja' , 'NewKunciPeriodeKerjaController@index');
-Route::post('/newkunciperiodekerjalisttahun' , 'NewKunciPeriodeKerjaController@getListKunciTahun');
-Route::post('/newkunciperiodekerjaupdate' ,'NewKunciPeriodeKerjaController@updateKunciPeriode');
+Route::get('/newkunciperiodekerja', [NewKunciPeriodeKerjaController::class, 'index']);
+Route::post('/newkunciperiodekerjalisttahun', [NewKunciPeriodeKerjaController::class, 'getListKunciTahun']);
+Route::post('/newkunciperiodekerjaupdate', [NewKunciPeriodeKerjaController::class, 'updateKunciPeriode']);
 
 // GANTI PASSWORD
-Route::get('/gantipassword' , 'GantiPasswordController@index')->middleware('auth');
-Route::post('/gantipassworduser' , 'GantiPasswordController@gantiPassword')->middleware('auth');
-
-
-});
+Route::get('/gantipassword', [GantiPasswordController::class, 'index'])->middleware('auth');
+Route::post('/gantipassworduser', [GantiPasswordController::class, 'gantiPassword'])->middleware('auth');
