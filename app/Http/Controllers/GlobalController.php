@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\NewMenu;
 use App\Model\NewAksesMenu;
-use App\Model\DBFLMENU;
+use App\Model\DBFLMENUWEB;
 use App\Model\NewPeriode;
 use App\Model\NewUsers;
 use Illuminate\Support\Facades\DB;
@@ -475,9 +475,9 @@ Deallocate Mydata1" , ["pemakai"=>$username]);
   public function getAkses ($kodemenu, $path) {
     // $akses = DB::connection('SML')->select('select b.* from dbmenu a join dbflmenu b on a.kodemenu = b.l1 where a.href = :path', ["path" => $path] );
 
-    $akses = NewMenu::join('DBFLMENU', 'DBFLMENU.L1' ,'=' , 'DBMENU.KODEMENU')->where('DBFLMENU.USERID' , \Auth::user()->username)->where('DBMENU.href' , $path)->first();
+    $akses = NewMenu::join('DBFLMENUWEB', 'DBFLMENUWEB.L1' ,'=' , 'DBMENUWEB.KODEMENU')->where('DBFLMENUWEB.USERID' , \Auth::user()->username)->where('DBMENUWEB.href' , $path)->first();
 
-    // $akses = DBFLMENU::where('USERID', \Auth::user()->username)-> where('href', $path)->first();
+    // $akses = DBFLMENUWEB::where('USERID', \Auth::user()->username)-> where('href', $path)->first();
     // $akses = collect($akses);
     // $akses = $akses->first();
     return $akses;
@@ -486,9 +486,9 @@ Deallocate Mydata1" , ["pemakai"=>$username]);
   public function getAksesX ($kodemenu, $path) {
     // $akses = DB::connection('SML')->select('select b.* from dbmenu a join dbflmenu b on a.kodemenu = b.l1 where a.href = :path', ["path" => $path] );
 
-    $akses = NewMenu::join('DBFLMENU', 'DBFLMENU.L1' ,'=' , 'DBMENU.KODEMENU')->where('DBFLMENU.USERID' , \Auth::user()->username)->where('DBMENU.href' , $path)->first();
+    $akses = NewMenu::join('DBFLMENUWEB', 'DBFLMENUWEB.L1' ,'=' , 'DBMENUWEB.KODEMENU')->where('DBFLMENUWEB.USERID' , \Auth::user()->username)->where('DBMENUWEB.href' , $path)->first();
 
-    // $akses = DBFLMENU::where('USERID', \Auth::user()->username)-> where('href', $path)->first();
+    // $akses = DBFLMENUWEB::where('USERID', \Auth::user()->username)-> where('href', $path)->first();
     // $akses = collect($akses);
     // $akses = $akses->first();
     return $akses;
@@ -504,7 +504,7 @@ public function getStockAkhir(Request $req) {
 
 public function getAkses1 ($kodemenu, $path) {
 
-    $akses = NewMenu::join('DBFLMENU', 'DBFLMENU.L1' ,'=' , 'DBMENU.KODEMENU')->where('DBFLMENU.USERID' , \Auth::user()->username)->where('DBMENU.href' , $path)->first();
+    $akses = NewMenu::join('DBFLMENUWEB', 'DBFLMENUWEB.L1' ,'=' , 'DBMENUWEB.KODEMENU')->where('DBFLMENUWEB.USERID' , \Auth::user()->username)->where('DBMENUWEB.href' , $path)->first();
 
     return $akses;
   }

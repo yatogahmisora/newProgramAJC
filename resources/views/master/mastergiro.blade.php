@@ -1,0 +1,1999 @@
+@extends('master.newmaster')
+@section('buttons')
+
+@endsection
+@section('content')
+
+<link rel="stylesheet" href="public/css/tabelCustom.css">
+
+<div class="container-fluid">
+
+  <!-- <div id="qrcode"></div> -->
+  <div class="row mt-4">
+      <div class="col-6 text-left">
+        <h2 style="margin-top:-85px;">Master Giro</h2>
+      </div>
+      <div class="col-6 text-right">
+        <button type="button" class="btn btn-primary btn-lg" style="
+            height: 30px; 
+            margin-top: -150px; 
+            padding: 4px 12px; 
+            border-radius: 20px; 
+            font-size: 0.75rem; 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            transition: background-color 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
+            onclick="buttonAddBuka()">
+          Add Giro Buka
+        </button>
+        <button type="button" class="btn btn-primary btn-lg" style="
+            height: 30px; 
+            margin-top: -150px; 
+            padding: 4px 12px; 
+            border-radius: 20px; 
+            font-size: 0.75rem; 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            transition: background-color 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
+            onclick="buttonAddTerima()">
+          Add Giro Terima
+        </button>
+      </div>
+    </div>
+<!-- <button onclick="loadAll()">tes</button> -->
+</div>
+
+<div id="printContainer" style="display:none">
+
+</div>
+<div id="contentContainer" class="container-fluid" style="max-width: 1800px">
+  <input type="hidden" id="periode_tahun" value="{!! $periode->tahun !!}" />
+  <input type="hidden" id="periode_bulan" value="{!! $periode->bulan !!}" />
+  <input type="hidden" name="_token" id="_token" value="{!! csrf_token() !!}" />
+
+  <div class="row mt-4">
+    <!-- <div class="col-12 text-right">
+        <button type="button" class="btn btn-primary btn-lg " style="height: 60px; " onclick="buttonAdd()"  >Add Koreksi Stock Gudang</button>
+    </div> -->
+  </div>
+  <div id="contentContainer" class="container-fluid" style="max-width: 1800px; margin-top:-110px">
+    <input type="hidden" id="periode_tahun" value="{!! $periode->tahun !!}" />
+    <input type="hidden" id="periode_bulan" value="{!! $periode->bulan !!}" />
+    <input type="hidden" name="_token" id="_token" value="{!! csrf_token() !!}" />
+
+    <div class="row mt-4">
+      <!-- <div class="col-12 text-right">
+          <button type="button" class="btn btn-primary btn-lg " style="height: 60px; " onclick="buttonAdd()"  >Add Koreksi Stock Gudang</button>
+      </div> -->
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-12" style="overflow:auto;">
+        <div class="">
+          <input type="radio" id="tab_dibuka" name="tab" checked>
+          <label for="tab_dibuka" class="tab-label">Daftar Giro Dibuka</label>
+
+          <input type="radio" id="tab_diterima" name="tab">
+          <label for="tab_diterima" class="tab-label">Daftar Giro Diterima</label>
+
+          <div class="tab-content" id="content_dibuka">
+            <table id="tabel_dibuka" class="table table-bordered table-striped">
+              <thead id='theadCustom' style='white-space:nowrap;' class="text-center">
+                <tr>
+                  <th scope="col">Actions</th>
+                  <th scope="col">Bank</th>
+                  <th scope="col">No. Giro</th>
+                  <th scope="col">Tanggal Giro Jatuh Tempo</th>
+                  <th scope="col">Valas</th>
+                  <th scope="col">Kurs</th>
+                  <th scope="col">Debet Rupiah</th>
+                  <th scope="col">Kredit Rupiah</th>
+                  <th scope="col">Debet Valas</th>
+                  <th scope="col">Kredit Valas</th>
+                  <th scope="col">Tanggal Buka Giro</th>
+                  <th scope="col">Bukti Buka Giro</th>
+                  <th scope="col">Keterangan Buka Giro</th>
+                  <th scope="col">Tanggal Pencairan Giro</th>
+                  <th scope="col">Bukti Pencairan Giro</th>
+                  <th scope="col">Keterangan Pencairan Giro</th>
+                </tr>
+              </thead>
+
+              <tbody id="tabel_dataDibuka" class="text-left">
+                {{-- @for ($i = 0; $i < count($listData); $i++)
+                <tr style='white-space:nowrap;'>
+                  <td style="white-space:nowrap;" class='text-center'>
+                    <button class="btn btn-success btn-sm" type="button" 
+                            data-bs-toggle="tooltip" 
+                            data-bs-placement="top" 
+                            title="Edit Giro Buka" 
+                            onclick="buttonEditBuka('{{ $listData[$i]->NoGiro }}')">
+                      <i class="bi bi-pen"></i>
+                    </button>
+                    <button class="btn btn-danger btn-sm" type="button" 
+                            data-bs-toggle="tooltip" 
+                            data-bs-placement="top" 
+                            title="Delete Giro Buka" 
+                            onclick="buttonDeleteBuka('{{ $listData[$i]->NoGiro }}')">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </td>
+                  <td>{{ $listData[$i]->Bank }}</td>
+                  <td>{{ $listData[$i]->NoGiro }}</td>
+                  <td>{{ date('d-m-Y', strtotime($listData[$i]->TglGiro)) }}</td>
+                  <td>{{ $listData[$i]->Kodevls }}</td>
+                  <td class='text-right'>{{ $listData[$i]->Kurs }}</td>
+                  <td class='text-right'>{{ $listData[$i]->DebetRp }}</td>
+                  <td class='text-right'>{{ $listData[$i]->KreditRp }}</td>
+                  <td class='text-right'>{{ $listData[$i]->Debet }}</td>
+                  <td class='text-right'>{{ $listData[$i]->Kredit }}</td>
+                  <td>{{ date('d-m-Y', strtotime($listData[$i]->TglBuka)) }}</td>
+                  <td>{{ $listData[$i]->BuktiBuka }}</td>
+                  <td>{{ $listData[$i]->Keterangan }}</td>
+                  <td>{{ $listData[$i]->TglCair ? date('d-m-Y', strtotime($listData[$i]->TglCair)) : '' }}</td>
+                  <td>{{ $listData[$i]->BuktiCair }}</td>
+                  <td>{{ $listData[$i]->KeteranganCair }}</td>
+
+                </tr>
+                @endfor --}}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="tab-content" id="content_diterima">
+            <table id="tabel_diterima" class="table table-bordered table-striped">
+              <thead id='theadCustom' style='white-space:nowrap;' class="text-center">
+                <tr>
+                  <th scope="col">Actions</th>
+                  <th scope="col">Bank</th>
+                  <th scope="col">No. Giro</th>
+                  <th scope="col">Perkiraan Kas</th>
+                  <th scope="col">Tanggal Giro Jatuh Tempo</th>
+                  <th scope="col">Valas</th>
+                  <th scope="col">Kurs</th>
+                  <th scope="col">Debet Rupiah</th>
+                  <th scope="col">Kredit Rupiah</th>
+                  <th scope="col">Debet Valas</th>
+                  <th scope="col">Kredit Valas</th>
+                  <th scope="col">Tanggal Terima Giro</th>
+                  <th scope="col">Bukti Terima Giro</th>
+                  <th scope="col">Keterangan Terima Giro</th>
+                  <th scope="col">Tanggal Pencairan Giro</th>
+                  <th scope="col">Bukti Pencairan Giro</th>
+                  <th scope="col">Keterangan Pencairan Giro</th>
+                </tr>
+              </thead>
+
+              <tbody id="tabel_dataDiterima" class="text-left">
+                {{-- @for ($i = 0; $i < count($listDataTerima); $i++)
+                <tr>
+                  <td style="white-space:nowrap;" class='text-center'>
+                    <button class="btn btn-success btn-sm" type="button" 
+                            data-bs-toggle="tooltip" 
+                            data-bs-placement="top" 
+                            title="Edit Giro Terima" 
+                            onclick="buttonEditTerima('{{ $listData[$i]->NoGiro }}')">
+                      <i class="bi bi-pen"></i>
+                    </button>
+                    <button class="btn btn-danger btn-sm" type="button" 
+                            data-bs-toggle="tooltip" 
+                            data-bs-placement="top" 
+                            title="Delete Giro Terima" 
+                            onclick="buttonDeleteTerima('{{ $listData[$i]->NoGiro }}')">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </td>
+                  <td>{{ $listDataTerima[$i]->Bank }}</td>
+                  <td>{{ $listDataTerima[$i]->NoGiro }}</td>
+                  <td>{{ $listDataTerima[$i]->Kas }}</td>
+                  <td>{{ date('d-m-Y', strtotime($listDataTerima[$i]->TglGiro)) }}</td>
+                  <td>{{ $listDataTerima[$i]->Kodevls }}</td>
+                  <td class='text-right'>{{ $listDataTerima[$i]->Kurs }}</td>
+                  <td class='text-right'>{{ $listDataTerima[$i]->Debet }}</td>
+                  <td class='text-right'>{{ $listDataTerima[$i]->Kredit }}</td>
+                  <td class='text-right'>{{ $listDataTerima[$i]->DebetRp }}</td>
+                  <td class='text-right'>{{ $listDataTerima[$i]->KreditRp }}</td>
+                  <td>{{ date('d-m-Y', strtotime($listDataTerima[$i]->TglBuka)) }}</td>
+                  <td>{{ $listDataTerima[$i]->BuktiBuka }}</td>
+                  <td>{{ $listDataTerima[$i]->Keterangan }}</td>
+                  <td>{{ $listDataTerima[$i]->TglCair ? date('d-m-Y', strtotime($listDataTerima[$i]->TglCair)) : '' }}</td>
+                  <td>{{ $listDataTerima[$i]->BuktiCair }}</td>
+                  <td>{{ $listDataTerima[$i]->KeteranganCair }}</td>
+                </tr>
+                @endfor --}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      .tab-label {
+        cursor: pointer;
+        padding: 10px;
+        display: inline-block;
+        background-color: #f2f2f2;
+        border: 1px solid #ccc;
+        border-radius: 4px 4px 0 0;
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      #tab_dibuka:checked ~ #content_dibuka,
+      #tab_diterima:checked ~ #content_diterima {
+        display: block;
+      }
+    </style>
+  </div>
+
+
+<!-- start modal add terima giro-->
+<div class="modal fade"  id="formTerima" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered"  role="document" style="max-width: 600px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Giro Terima</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- <h1>Tes Modal</h1> -->
+
+        <div class="container-fluid">
+          <input type="hidden" name="noUrut" id="input_add_noUrut" value="" />
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Bank</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_add_bank" placeholder="Bank">
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">No. Giro</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_add_noGiro" placeholder="No. Giro">
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Tanggal Giro</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="date" class="form-control" id="input_add_tglGiro">
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4">
+                <label class="form-label">Valas</label>
+              </div>
+              <div class="col-3">
+                <select id="input_add_valas" class="form-control form-select-lg mb-3" aria-label=".form-select-lg example">
+                  @foreach ($listDataValas as $valas)
+                      <option value="{{ $valas->KODEVLS }}" 
+                              data-kurs="{{ $valas->KURS }}"
+                              {{ $valas->KODEVLS == 'IDR' ? 'selected' : '' }}>
+                          {{ $valas->KODEVLS }}
+                      </option>
+                  @endforeach
+                </select>
+              </div>
+              <div class="col-2">
+                <label class="form-label">Kurs</label>
+              </div>
+              <div class="col-3">
+                <input type="text" class="form-control" id="input_add_kurs" placeholder="Kurs" disabled>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Nilai Giro</label>
+                </div>
+              </div>
+
+              <div class="col-4">
+                <div class="form-group">
+                <input type="text" class="form-control text-right" id="input_add_nilaiGiro" 
+                  value="0.00" 
+                  style="font-variant-numeric: tabular-nums;" 
+                  oninput="formatNumber(this)">
+                </div>
+              </div>
+
+              <div class="col-4">
+                <div class="form-group">
+                  
+                <input type="text" class="form-control text-right" id="input_add_nilaiGiroRp" 
+                  value="0.00" 
+                  style="font-variant-numeric: tabular-nums;" 
+                  oninput="formatNumber(this)">
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Tanggal Terima</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="date" class="form-control" id="input_add_tglTerima" >
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Bukti Terima</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_add_buktiTerima" disabled>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Keterangan</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_add_keterangan">
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Tanggal Cair</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="date" class="form-control" id="input_add_tglCair" disabled>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Bukti Cair</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_add_buktiCair" disabled>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Keterangan Cair</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_add_keteranganCair" disabled>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Perkiraan Kas</label>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_add_perkiraanKas" placeholder="Perkiraan Kas">
+                </div>
+              </div>
+
+              <div class="col-2">
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary btn-lg " style="height: 30px; " onclick="buttonSelectPerkiraanKas()"  >Select</button>
+                </div>
+              </div>
+
+            </div>
+
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" >Batal</button>
+    <button type="button" class="btn btn-primary" onclick="submitAddTerima()">Submit</button>
+  </div>
+</div>
+</div>
+</div>
+<!-- End modal add terima giro-->
+
+<!-- start modal add buka giro-->
+<div class="modal fade"  id="formBuka" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered"  role="document" style="max-width: 600px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Giro Buka</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- <h1>Tes Modal</h1> -->
+
+        <div class="container-fluid">
+          <input type="hidden" name="noUrut" id="input_add_noUrut" value="" />
+
+          <div class="row">
+            <div class="col-4 text-left">
+              <div class="form-group text-left">
+                <label class="text-left">Bank</label>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <input type="text" class="form-control" id="input_add2_bank" placeholder="Bank">
+              </div>
+            </div>
+
+            <div class="col-2">
+              <div class="form-group">
+                  <button type="button" class="btn btn-primary btn-lg " style="height: 30px; " onclick="buttonSelectBank()"  ><i class='bi bi-plus'></i></button>
+              </div>
+            </div>
+
+          </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">No. Giro</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_add2_noGiro" placeholder="No. Giro">
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Tanggal Giro</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="date" class="form-control" id="input_add2_tglGiro">
+                </div>
+              </div>
+
+            </div>
+            
+            <div class="row">
+              <div class="col-4">
+                <label class="form-label">Valas</label>
+              </div>
+              <div class="col-3">
+                <select id="input_add2_valas" class="form-control form-select-lg mb-3" aria-label=".form-select-lg example">
+                  @foreach ($listDataValas as $valas)
+                      <option value="{{ $valas->KODEVLS }}" 
+                              data-kurs="{{ $valas->KURS }}"
+                              {{ $valas->KODEVLS == 'IDR' ? 'selected' : '' }}>
+                          {{ $valas->KODEVLS }}
+                      </option>
+                  @endforeach
+                </select>
+              </div>
+              <div class="col-2">
+                <label class="form-label">Kurs</label>
+              </div>
+              <div class="col-3">
+                <input type="text" class="form-control text-right" id="input_add2_kurs" placeholder="Kurs" disabled>
+              </div>
+            </div>
+
+            <div class="row">
+
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Nilai Giro</label>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="form-group">
+                <input type="text" class="form-control text-right" id="input_add2_nilaiGiro" 
+                  value="0.00" 
+                  style="font-variant-numeric: tabular-nums;" 
+                  oninput="formatNumber(this)">
+                </div>
+              </div>
+
+              <div class="col-4">
+                <div class="form-group">
+                  
+                <input type="text" class="form-control text-right" id="input_add2_nilaiGiroRp" 
+                  value="0.00" 
+                  style="font-variant-numeric: tabular-nums;" 
+                  oninput="formatNumber(this)">
+                </div>
+              </div>
+
+            </div>
+
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Tanggal Buka</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="date" class="form-control" id="input_add2_tglBuka" >
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Bukti Buka</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_add2_buktiBuka" disabled>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Keterangan</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_add2_keterangan">
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Tanggal Cair</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="date" class="form-control" id="input_add2_tglCair" disabled>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Bukti Cair</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_add2_buktiCair" disabled>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Keterangan Cair</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_add2_keteranganCair" disabled>
+                </div>
+              </div>
+
+            </div>
+
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" >Batal</button>
+    <button type="button" class="btn btn-primary" onclick="submitAddBuka()">Submit</button>
+  </div>
+</div>
+</div>
+</div>
+<!-- End modal add buka giro-->
+
+<!-- start modal edit terima giro-->
+<div class="modal fade"  id="formEditTerima" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered"  role="document" style="max-width: 600px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Giro Terima</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- <h1>Tes Modal</h1> -->
+
+        <div class="container-fluid">
+          <input type="hidden" name="noUrut" id="input_edit_noUrut" value="" />
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Bank</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_edit_bank" placeholder="Bank" disabled>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">No. Giro</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_edit_noGiro" placeholder="No. Giro" disabled>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Tanggal Giro</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="date" class="form-control" id="input_edit_tglGiro">
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4">
+                <label class="form-label">Valas</label>
+              </div>
+              <div class="col-3">
+                <select id="input_edit_valas" class="form-control form-select-lg mb-3" aria-label=".form-select-lg example">
+                  @foreach ($listDataValas as $valas)
+                      <option value="{{ $valas->KODEVLS }}" 
+                              data-kurs="{{ $valas->KURS }}"
+                              {{ $valas->KODEVLS == 'IDR' ? 'selected' : '' }}>
+                          {{ $valas->KODEVLS }}
+                      </option>
+                  @endforeach
+                </select>
+              </div>
+              <div class="col-2">
+                <label class="form-label">Kurs</label>
+              </div>
+              <div class="col-3">
+                <input type="text" class="form-control text-right" id="input_edit_kurs" placeholder="Kurs" disabled>
+              </div>
+            </div>
+
+            
+            <div class="row">
+
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Nilai Giro</label>
+                </div>
+              </div>
+
+              <div class="col-4">
+                <div class="form-group">
+                  <input type="text" class="form-control text-right" id="input_edit_nilaiGiro">
+                </div>
+              </div>
+ 
+              <div class="col-4">
+                <div class="form-group">
+                  <input type="text" class="form-control text-right" id="input_edit_nilaiGiroRp">
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Tanggal Terima</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="date" class="form-control" id="input_edit_tglTerima" >
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Bukti Terima</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_edit_buktiTerima" placeholder="Bukti Terima" disabled>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Keterangan</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_edit_keterangan">
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Tanggal Cair</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="date" class="form-control" id="input_edit_tglCair" disabled>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Bukti Cair</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_edit_buktiCair" placeholder="Bukti Cair" disabled>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Keterangan Cair</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_edit_keteranganCair" disabled>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Perkiraan Kas</label>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_edit_perkiraanKas" placeholder="Perkiraan Kas">
+                </div>
+              </div>
+
+              <div class="col-4">
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary btn-lg " style="height: 30px; " onclick="buttonSelectPerkiraanKas()"  >Select</button>
+                </div>
+              </div>
+            </div>
+
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" >Batal</button>
+    <button type="button" class="btn btn-primary" onclick="submitEditTerima()">Submit</button>
+  </div>
+</div>
+</div>
+</div>
+<!-- End modal edit terima giro-->
+
+<!-- start modal edit buka giro-->
+<div class="modal fade"  id="formEditBuka" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered"  role="document" style="max-width: 600px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Giro Buka</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- <h1>Tes Modal</h1> -->
+
+        <div class="container-fluid">
+          <input type="hidden" name="noUrut" id="input_add_noUrut" value="" />
+
+            <div class="row">
+            <div class="col-4 text-left">
+              <div class="form-group text-left">
+                <label class="text-left">Bank</label>
+              </div>
+            </div>
+            <div class="col-8">
+              <div class="form-group">
+                <input type="text" class="form-control" id="input_edit2_bank" placeholder="Bank" disabled>
+              </div>
+            </div>
+
+          </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">No. Giro</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_edit2_noGiro" placeholder="No. Giro" disabled>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Tanggal Giro</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="date" class="form-control" id="input_edit2_tglGiro">
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4">
+                <label class="form-label">Valas</label>
+              </div>
+              <div class="col-3">
+                <select id="input_edit2_valas" class="form-control form-select-lg mb-3" aria-label=".form-select-lg example">
+                  @foreach ($listDataValas as $valas)
+                      <option value="{{ $valas->KODEVLS }}" 
+                              data-kurs="{{ $valas->KURS }}"
+                              {{ $valas->KODEVLS == 'IDR' ? 'selected' : '' }}>
+                          {{ $valas->KODEVLS }}
+                      </option>
+                  @endforeach
+                </select>
+              </div>
+              <div class="col-2">
+                <label class="form-label">Kurs</label>
+              </div>
+              <div class="col-3">
+                <input type="text" class="form-control text-right" id="input_edit2_kurs" placeholder="Kurs" disabled>
+              </div>
+            </div>
+
+            
+            <div class="row">
+
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Nilai Giro</label>
+                </div>
+              </div>
+
+              <div class="col-4">
+                <div class="form-group">
+                  <input type="text" class="form-control text-right" id="input_edit2_nilaiGiro" placeholder="Nilai Giro">
+                </div>
+              </div>
+ 
+              <div class="col-4">
+                <div class="form-group">
+                  <input type="text" class="form-control text-right" id="input_edit2_nilaiGiroRp">
+                </div>
+              </div>
+
+            </div>
+
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Tanggal Buka</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="date" class="form-control" id="input_edit2_tglBuka" >
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Bukti Buka</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_edit2_buktiBuka" disabled>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Keterangan</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_edit2_keterangan">
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Tanggal Cair</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="date" class="form-control" id="input_edit2_tglCair" disabled>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Bukti Cair</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_edit2_buktiCair" disabled>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Keterangan Cair</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_edit2_keteranganCair" disabled>
+                </div>
+              </div>
+
+            </div>
+
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" >Batal</button>
+    <button type="button" class="btn btn-primary" onclick="submitEditBuka()">Submit</button>
+  </div>
+</div>
+</div>
+</div>
+<!-- End modal edit buka giro-->
+
+<!-- start modal pilih Kas -->
+<div class="modal fade"  id="formSelectKas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered"  role="document" style="max-width: 1200px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Select Kas</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table id="tabelAktivaSelectPerkiraan" class="table table-bordered table-striped"  >
+          <thead id='theadCustom' class="text-center">
+            <tr>
+              <th scope="col">Actions</th>
+              <th scope="col">Perkiraan</th>
+              <th scope="col">Keterangan</th>
+            </tr>
+          </thead>
+
+          <tbody id="tabel_dataAktivaSelectPerkiraan" class="text-left" >
+            <tr>
+
+              <td></td>
+              <td></td>
+
+                <td class="text-center">
+                  <!-- <button class="btn btn-warning btn-sm" type="button" onclick="" ><i class="bi bi-info-lg"></i></button> -->
+                  <button type="button" onclick="buttonPilihPerkiraan()"><i class="bi bi-pen">Select</i></button>
+                </td>
+          </tr>
+          </tbody>
+
+
+        </table>
+
+
+    </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" >Batal</button>
+        </div>
+  </div>
+</div>
+</div>
+<!-- End modal pilih Kas-->
+
+<!-- start modal pilih Bank -->
+<div class="modal fade"  id="formSelectBank" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered"  role="document" style="max-width: 1200px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Select Bank</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table id="tabelBukaSelectBank" class="table table-bordered table-striped"  >
+          <thead id='theadCustom' class="text-center">
+            <tr>
+              <th scope="col">Actions</th>
+              <th scope="col">Perkiraan</th>
+              <th scope="col">Keterangan</th>
+
+            </tr>
+          </thead>
+
+          <tbody id="tabel_dataBukaSelectBank" class="text-left" >
+            <tr>
+
+              <td></td>
+              <td></td>
+
+                <td class="text-center">
+                  <!-- <button class="btn btn-warning btn-sm" type="button" onclick="" ><i class="bi bi-info-lg"></i></button> -->
+                  <button type="button" onclick="buttonPilihPerkiraan()"><i class="bi bi-pen">Select</i></button>
+                </td>
+          </tr>
+          </tbody>
+
+
+        </table>
+
+    </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" >Batal</button>
+        </div>
+  </div>
+</div>
+</div>
+<!-- End modal pilih Bank-->
+
+@endsection
+
+@section('js')
+<script type="text/javascript">
+
+let dataRefresh = []
+
+function loadAllBuka () {
+  console.log('asd')
+  let _token = $("#_token").val();
+
+  $('#tabel_dibuka').DataTable().destroy();
+
+  $.ajax({
+    url: "{!! url('mastergiroloadallbuka') !!}",
+    type: "get",
+    async: false,
+    data: {
+      _token : _token,
+    },
+    success: function(res) {
+      console.log(res)
+      dataRefresh = res
+  }})
+
+  let rowTable = ""
+  dataRefresh.forEach((item, i) => {
+    let temp = ""
+
+    rowTable += `<tr>
+    <td class="text-center">
+      <button class="btn btn-success btn-sm hover-tooltip" data-tooltip='Edit Giro Buka' type="button" onclick="buttonEditBuka('${item.NoGiro}')"><i class="bi bi-pen"></i></button>
+      <button class="btn btn-danger btn-sm hover-tooltip" data-tooltip='Delete Giro Buka' type="button" onclick="buttonDeleteBuka('${item.NoGiro}')"><i class="bi bi-trash"></i></button>
+    </td>
+    <td>${ item.Bank }</td>
+    <td>${ item.NoGiro }</td>
+    <td>${(new Date(item.TglGiro)).toLocaleDateString('en-CA')}</td>
+    <td>${ item.Kodevls }</td>
+    <td class='text-right'>${ item.Kurs }</td>
+    <td class='text-right'>${ parseFloat(item.DebetRp).toLocaleString('id-ID', {minimumFractionDigits: 2, maximumFractionDigits: 2}) }</td>
+    <td class='text-right'>${ parseFloat(item.KreditRp).toLocaleString('id-ID', {minimumFractionDigits: 2, maximumFractionDigits: 2}) }</td>
+    <td class='text-right'>${ parseFloat(item.Debet).toLocaleString('id-ID', {minimumFractionDigits: 2, maximumFractionDigits: 2}) }</td>
+    <td class='text-right'>${ parseFloat(item.Kredit).toLocaleString('id-ID', {minimumFractionDigits: 2, maximumFractionDigits: 2}) }</td>
+    <td>${(new Date(item.TglBuka)).toLocaleDateString('en-CA')}</td>
+    <td>${ item.BuktiBuka }</td>
+    <td>${ item.Keterangan }</td>
+    <td>${item.TglCair ? (new Date(item.TglCair)).toLocaleDateString('en-CA') : ''}</td>
+    <td>${ item.BuktiCair }</td>
+    <td>${ item.KeteranganCair }</td>
+
+    </tr>`
+  });
+
+  document.getElementById("tabel_dataDibuka").innerHTML = rowTable
+  $("#tabel_dibuka").DataTable({
+    "lengthChange": false,
+      "paging": false ,
+    });
+
+}
+
+function loadAllTerima () {
+  console.log('asd')
+  let _token = $("#_token").val();
+
+  $('#tabel_diterima').DataTable().destroy();
+
+  $.ajax({
+    url: "{!! url('mastergiroloadallterima') !!}",
+    type: "get",
+    async: false,
+    data: {
+      _token : _token,
+    },
+    success: function(res) {
+      console.log(res)
+      dataRefresh = res
+  }})
+
+  let rowTable = ""
+  dataRefresh.forEach((item, i) => {
+    let temp = ""
+
+    rowTable += `<tr>
+    <td class="text-center">
+      <button class="btn btn-success btn-sm hover-tooltip" data-tooltip='Edit Giro Terima' type="button" onclick="buttonEditTerima('${item.NoGiro}')"><i class="bi bi-pen"></i></button>
+      <button class="btn btn-danger btn-sm hover-tooltip" data-tooltip='Delete Giro Terima' type="button" onclick="buttonDeleteTerima('${item.NoGiro}')"><i class="bi bi-trash"></i></button>
+    </td>
+    <td>${ item.Bank }</td>
+    <td>${ item.NoGiro }</td>
+    <td>${ item.Kas }</td>
+    <td>${(new Date(item.TglGiro)).toLocaleDateString('en-CA')}</td>
+    <td>${ item.Kodevls }</td>
+    <td class='text-right'>${ parseFloat(item.Kurs).toLocaleString('id-ID', {minimumFractionDigits: 2, maximumFractionDigits: 2}) }</td>
+    <td class='text-right'>${ parseFloat(item.DebetRp).toLocaleString('id-ID', {minimumFractionDigits: 2, maximumFractionDigits: 2}) }</td>
+    <td class='text-right'>${ parseFloat(item.KreditRp).toLocaleString('id-ID', {minimumFractionDigits: 2, maximumFractionDigits: 2}) }</td>
+    <td class='text-right'>${ parseFloat(item.Debet).toLocaleString('id-ID', {minimumFractionDigits: 2, maximumFractionDigits: 2}) }</td>
+    <td class='text-right'>${ parseFloat(item.Kredit).toLocaleString('id-ID', {minimumFractionDigits: 2, maximumFractionDigits: 2}) }</td>
+    <td>${(new Date(item.TglBuka)).toLocaleDateString('en-CA')}</td>
+    <td>${ item.BuktiBuka }</td>
+    <td>${ item.Keterangan }</td>
+    <td>${(new Date(item.TglCair)).toLocaleDateString('en-CA')}</td>
+    <td>${ item.BuktiCair }</td>
+    <td>${ item.KeteranganCair }</td>
+    </tr>`
+  });
+
+  document.getElementById("tabel_dataDiterima").innerHTML = rowTable
+  $("#tabel_diterima").DataTable({
+    "lengthChange": false,
+      "paging": false ,
+    });
+
+}
+
+function buttonAddBuka () {
+  document.getElementById('input_add2_bank').value = ''
+  document.getElementById('input_add2_noGiro').value = ''
+  document.getElementById('input_add2_tglGiro').value = ''
+  document.getElementById('input_add2_nilaiGiro').value = ''
+  document.getElementById('input_add2_tglBuka').value = ''
+  document.getElementById('input_add2_buktiBuka').value = ''
+  document.getElementById('input_add2_keterangan').value = ''
+  document.getElementById('input_add2_tglCair').value = ''
+  document.getElementById('input_add2_buktiCair').value = ''
+  document.getElementById('input_add2_keteranganCair').value = ''
+
+  $("#formBuka").modal('toggle')
+
+}
+
+function buttonAddTerima () {
+document.getElementById('input_add_bank').value = ''
+document.getElementById('input_add_noGiro').value = ''
+document.getElementById('input_add_tglGiro').value = ''
+document.getElementById('input_add_nilaiGiro').value = ''
+document.getElementById('input_add_tglTerima').value = ''
+document.getElementById('input_add_buktiTerima').value = ''
+document.getElementById('input_add_keterangan').value = ''
+document.getElementById('input_add_tglCair').value = ''
+document.getElementById('input_add_buktiCair').value = ''
+document.getElementById('input_add_keteranganCair').value = ''
+document.getElementById('input_add_perkiraanKas').value = ''
+
+  $("#formTerima").modal('toggle')
+
+}
+
+let noGiroTemp = ''
+let noGiroTerimaTemp = ''
+
+function buttonEditBuka (kode) {
+  console.log(kode)
+  let _token = $("#_token").val();
+  $.ajax({
+    url: "{!! url('mastergirospdetailbuka') !!}",
+    type: "get",
+    async: false,
+    data: {
+      _token : _token,
+      kode
+    },
+    success: function(res) {
+
+      console.log(res)
+      document.getElementById("input_edit2_bank").value = res[0].Bank
+      document.getElementById("input_edit2_noGiro").value = res[0].NoGiro
+      document.getElementById("input_edit2_tglGiro").value = new Date(res[0].TglGiro).toLocaleDateString('en-CA');
+      document.getElementById("input_edit2_nilaiGiroRp").value = res[0].KreditRp
+      
+      document.getElementById("input_edit2_nilaiGiro").value = res[0].Kredit
+      document.getElementById("input_edit2_valas").value = res[0].Kodevls
+      document.getElementById("input_edit2_kurs").value = res[0].Kurs
+      document.getElementById("input_edit2_keterangan").value = res[0].Keterangan
+      document.getElementById("input_edit2_tglBuka").value = new Date(res[0].TglBuka).toLocaleDateString('en-CA');
+      document.getElementById("input_edit2_buktiBuka").value = res[0].BuktiBuka
+      document.getElementById("input_edit2_tglCair").value = new Date(res[0].TglCair).toLocaleDateString('en-CA');
+      document.getElementById("input_edit2_buktiCair").value = res[0].BuktiCair
+      document.getElementById("input_edit2_keteranganCair").value = res[0].KeteranganCair
+
+      formatNumber(document.getElementById("input_edit2_nilaiGiroRp"))
+      formatNumber(document.getElementById("input_edit2_nilaiGiro"))
+
+      noGiroTemp = res[0].NoGiro
+
+    }})
+    $("#formEditBuka").modal('toggle')
+}
+
+function buttonEditTerima (kode) {
+  console.log(kode)
+  let _token = $("#_token").val();
+  $.ajax({
+    url: "{!! url('mastergirospdetailterima') !!}",
+    type: "get",
+    async: false,
+    data: {
+      _token : _token,
+      kode
+    },
+    success: function(res) {
+      console.log(res)
+      document.getElementById("input_edit_bank").value = res[0].Bank
+      document.getElementById("input_edit_noGiro").value = res[0].NoGiro
+      document.getElementById("input_edit_tglGiro").value = new Date(res[0].TglGiro).toLocaleDateString('en-CA');
+      document.getElementById("input_edit_nilaiGiro").value = res[0].Debet
+      document.getElementById("input_edit_nilaiGiroRp").value = res[0].DebetRp
+      document.getElementById("input_edit_valas").value = res[0].Kodevls
+      document.getElementById("input_edit_kurs").value = res[0].Kurs
+      document.getElementById("input_edit_keterangan").value = res[0].Keterangan
+      document.getElementById("input_edit_tglTerima").value = new Date(res[0].TglBuka).toLocaleDateString('en-CA');
+      document.getElementById("input_edit_buktiTerima").value = res[0].BuktiBuka
+      document.getElementById("input_edit_tglCair").value = new Date(res[0].TglCair).toLocaleDateString('en-CA');
+      document.getElementById("input_edit_buktiCair").value = res[0].BuktiCair
+      document.getElementById("input_edit_keteranganCair").value = res[0].KeteranganCair
+      document.getElementById("input_edit_perkiraanKas").value = res[0].Kas
+      
+      
+      formatNumber(document.getElementById("input_edit_nilaiGiroRp"))
+      formatNumber(document.getElementById("input_edit_nilaiGiro"))
+
+      noGiroTerimaTemp = res[0].NoGiro
+
+    }})
+    $("#formEditTerima").modal('toggle')
+
+}
+
+function buttonDeleteTerima (kode) {
+  console.log(kode)
+  let _token = $("#_token").val();
+
+
+  alertify.confirm('Hapus Giro Terima', 'Apakah yakin ingin menghapus No. Giro ' + kode + ' ?',
+      function() {
+        console.log('yes')
+
+        $.ajax({
+          url: "{!! url('mastergirospdeleteterima') !!}",
+          type: "post",
+          async: false,
+          data: {
+            _token : _token,
+            kode
+          },
+          success: function(res) {
+            if (res != 1) {
+              alertify.warning(res);
+            } else {
+              console.log(res)
+              loadAllBuka()
+              loadAllTerima()
+              alertify.success("Data Giro Terima " + kode + " telah dihapus");
+
+            }
+          }})
+      }
+    ,function(){
+      console.log('no')
+    });
+
+
+}
+
+function buttonDeleteBuka (kode) {
+  console.log(kode)
+  let _token = $("#_token").val();
+
+
+  alertify.confirm('Hapus Giro Buka', 'Apakah yakin ingin menghapus No. Giro  ' + kode + ' ?',
+      function() {
+        console.log('yes')
+
+        $.ajax({
+          url: "{!! url('mastergirospdeletebuka') !!}",
+          type: "post",
+          async: false,
+          data: {
+            _token : _token,
+            kode
+          },
+          success: function(res) {
+            if (res != 1) {
+              alertify.warning(res);
+            } else {
+              console.log(res)
+              loadAllBuka()
+              loadAllTerima()
+              alertify.success("Data Giro Buka telah dihapus");
+
+            }
+          }})
+      }
+    ,function(){
+      console.log('no')
+    });
+
+
+}
+//
+function submitEditBuka () {
+
+  let _token = $("#_token").val();
+
+  let noGiro = $("#input_edit2_noGiro").val();
+  let bank = $("#input_edit2_bank").val();
+  let tanggalGiro = $("#input_edit2_tglGiro").val();
+  let nilaiGiro = parseFloat(($("#input_edit2_nilaiGiro").val() || 0).toString().replace(/,/g, '')) || 0;
+  let nilaiGiroRp = parseFloat(($("#input_edit2_nilaiGiroRp").val() || 0).toString().replace(/,/g, '')) || 0;
+  let valas = $("#input_edit2_valas").val();
+  let kurs = $("#input_edit2_kurs").val();
+  let tanggalBuka = $("#input_edit2_tglBuka").val();
+  let buktiBuka = $("#input_edit2_buktiBuka").val();
+  let keterangan = $("#input_edit2_keterangan").val();
+  let tanggalCair = $("#input_edit2_tanggalCair").val();
+  let buktiCair = $("#input_edit2_buktiCair").val();
+  let keteranganCair = $("#input_edit2_keteranganCair").val();
+
+  $.ajax({
+    url: "{!! url('mastergirospeditbuka') !!}",
+    type: "post",
+    async: false,
+    data: {
+      _token : _token,
+      noGiro,
+      bank,
+      tanggalGiro,
+      nilaiGiro,
+      nilaiGiroRp,
+      valas,
+      kurs,
+      tanggalBuka,
+      buktiBuka,
+      keterangan,
+      tanggalCair,
+      buktiCair,
+      keteranganCair,
+      noGiroOld : noGiroTemp
+    },
+    success: function(res) {
+
+      if (res != 1) {
+        alertify.warning(res);
+      }  else {
+        console.log(res ,'!')
+        // $("#formEdit").modal('toggle')
+        alertify.success("Data Giro Buka ' "  + noGiro + " ' telah diedit");
+        loadAllBuka()
+        loadAllTerima()
+        $("#formEditBuka").modal('toggle')
+      }
+
+    }})
+
+}
+
+function submitEditTerima () {
+
+  let _token = $("#_token").val();
+  let noGiro = $("#input_edit_noGiro").val();
+  let bank = $("#input_edit_bank").val();
+  let tanggalGiro = $("#input_edit_tglGiro").val();
+  let nilaiGiro = parseFloat(($("#input_edit_nilaiGiro").val() || 0).toString().replace(/,/g, '')) || 0;
+  let nilaiGiroRp = parseFloat(($("#input_edit_nilaiGiroRp").val() || 0).toString().replace(/,/g, '')) || 0;
+  let valas = $("#input_edit_valas").val();
+  let kurs = $("#input_edit_kurs").val();
+  let tanggalTerima = $("#input_edit_tglTerima").val();
+  let buktiTerima = $("#input_edit_buktiTerima").val();
+  let keterangan = $("#input_edit_keterangan").val();
+  let tanggalCair = $("#input_edit_tanggalCair").val();
+  let buktiCair = $("#input_edit_buktiCair").val();
+  let keteranganCair = $("#input_edit_keteranganCair").val();
+  let perkiraanKas = $("#input_edit_perkiraanKas").val();
+
+  console.log(noGiro);
+  console.log(bank);
+
+  if (!noGiro) {
+    alertify.warning("No. Giro  harus diisi");
+    return
+  }
+
+  if (!bank) {
+    alertify.warning("Bank  harus diisi");
+    return
+  }
+
+  if (!tanggalGiro) {
+    alertify.warning("Tanggal Giro  harus diisi");
+    return
+  }
+
+  $.ajax({
+    url: "{!! url('mastergirospeditterima') !!}",
+    type: "post",
+    async: false,
+    data: {
+      _token : _token,
+      noGiro,
+      bank,
+      tanggalGiro,
+      nilaiGiro,
+      nilaiGiroRp,
+      valas,
+      kurs,
+      tanggalTerima,
+      buktiTerima,
+      keterangan,
+      tanggalCair,
+      buktiCair,
+      keteranganCair,
+      perkiraanKas,
+      noGiroOld : noGiroTerimaTemp
+    },
+    success: function(res) {
+
+      if (res != 1) {
+        alertify.warning(res);
+      }  else {
+        console.log(res ,'!')
+        // $("#formEdit").modal('toggle')
+        alertify.success("Data Giro Terima '" + noGiro + "' telah diedit");
+        loadAllBuka()
+        loadAllTerima()
+        $("#formEditTerima").modal("hide");
+      }
+
+    }})
+
+}
+//
+function submitAddTerima () {
+
+  let _token = $("#_token").val();
+  let bank = $("#input_add_bank").val();
+  let noGiro = $("#input_add_noGiro").val();
+  let tglGiro = $("#input_add_tglGiro").val();
+  let nilaiGiro = parseFloat(($("#input_add_nilaiGiro").val() || 0).toString().replace(/,/g, '')) || 0;
+  let nilaiGiroRp = parseFloat(($("#input_add_nilaiGiroRp").val() || 0).toString().replace(/,/g, '')) || 0;
+  let valas = $("#input_add_valas").val();
+  let kurs = $("#input_add_kurs").val();
+  let tglTerima = $("#input_add_tglTerima").val();
+  let buktiTerima = $("#input_add_buktiTerima").val();
+  let keterangan = $("#input_add_keterangan").val();
+  let tglCair = $("#input_add_tglCair").val();
+  let buktiCair = $("#input_add_buktiCair").val();
+  let keteranganCair = $("#input_add_keteranganCair").val();
+  let perkiraanKas = $("#input_add_perkiraanKas").val();
+
+  $.ajax({
+    url: "{!! url('mastergirospaddterima') !!}",
+    type: "post",
+    async: false,
+    data: {
+      _token : _token,
+      bank,
+      noGiro,
+      tglGiro,
+      nilaiGiro,
+      nilaiGiroRp,
+      valas,
+      kurs,
+      tglTerima,
+      buktiTerima,
+      keterangan,
+      tglCair,
+      buktiCair,
+      keteranganCair,
+      perkiraanKas
+    },
+    success: function(res) {
+
+      if (res != 1) {
+        alertify.warning(res);
+      }  else {
+        console.log(res ,'!')
+        alertify.success("Data Giro Terima telah ditambah");
+        loadAllTerima()
+        $("#formTerima").modal('hide');
+      }
+
+    }})
+
+  // console.log(kodearea, namaarea)
+}
+
+function submitAddBuka () {
+
+  let _token = $("#_token").val();
+  let bank = $("#input_add2_bank").val();
+  let noGiro = $("#input_add2_noGiro").val();
+  let tglGiro = $("#input_add2_tglGiro").val();
+  let nilaiGiro = parseFloat(($("#input_add2_nilaiGiro").val() || 0).toString().replace(/,/g, '')) || 0;
+  let nilaiGiroRp = parseFloat(($("#input_add2_nilaiGiroRp").val() || 0).toString().replace(/,/g, '')) || 0;
+  let valas = $("#input_add2_valas").val();
+  let kurs = $("#input_add2_kurs").val();
+  let tglBuka = $("#input_add2_tglBuka").val();
+  let buktiBuka = $("#input_add2_buktiBuka").val();
+  let keterangan = $("#input_add2_keterangan").val();
+  let tglCair = $("#input_add2_tglCair").val();
+  let buktiCair = $("#input_add2_buktiCair").val();
+  let keteranganCair = $("#input_add2_keteranganCair").val();
+
+  $.ajax({
+    url: "{!! url('mastergirospaddbuka') !!}",
+    type: "post",
+    async: false,
+    data: {
+      _token : _token,
+      bank,
+      noGiro,
+      tglGiro,
+      nilaiGiro,
+      nilaiGiroRp,
+      valas,
+      kurs,
+      tglBuka,
+      buktiBuka,
+      keterangan,
+      tglCair,
+      buktiCair,
+      keteranganCair
+    },
+    success: function(res) {
+
+      if (res != 1) {
+        alertify.warning(res);
+      }  else {
+        console.log(res ,'!')
+        alertify.success("Data Giro Terima telah ditambah");
+        loadAllBuka()
+        loadAllTerima()
+        $("#formBuka").modal("hide")
+      }
+
+    }})
+}
+
+function updateKurs2() {
+    var selectElement = document.getElementById('input_add_valas');
+    var selectedOption = selectElement.options[selectElement.selectedIndex];
+    var kurs = selectedOption.getAttribute('data-kurs');
+    document.getElementById('input_add_kurs').value = kurs;
+}
+
+// Set up the change event listener
+document.getElementById('input_add_valas').addEventListener('change', updateKurs2);
+
+// Trigger immediately on page load to handle pre-selected option
+document.addEventListener('DOMContentLoaded', updateKurs2);
+
+function updateKurs() {
+    var selectElement = document.getElementById('input_add2_valas');
+    var selectedOption = selectElement.options[selectElement.selectedIndex];
+    var kurs = selectedOption.getAttribute('data-kurs');
+    document.getElementById('input_add2_kurs').value = kurs;
+}
+
+// Set up the change event listener
+document.getElementById('input_add2_valas').addEventListener('change', updateKurs);
+
+// Trigger immediately on page load to handle pre-selected option
+document.addEventListener('DOMContentLoaded', updateKurs);
+
+document.getElementById('input_edit_valas').addEventListener('change', function() {
+    var selectedOption = this.options[this.selectedIndex];
+    var kurs = selectedOption.getAttribute('data-kurs');
+    document.getElementById('input_edit_kurs').value = kurs;
+});
+
+document.getElementById('input_edit2_valas').addEventListener('change', function() {
+    var selectedOption = this.options[this.selectedIndex];
+    var kurs = selectedOption.getAttribute('data-kurs');
+    document.getElementById('input_edit2_kurs').value = kurs;
+});
+
+function buttonSelectPerkiraanKas () {
+  loadSelectKas()
+  $("#formSelectKas").modal('toggle')
+}
+
+function buttonSelectBank () {
+  loadSelectBank()
+  $("#formSelectBank").modal('toggle')
+}
+
+function loadSelectKas() {
+  let _token = $("#_token").val();
+
+  $('#tabelAktivaSelectPerkiraan').DataTable().destroy();
+
+  $.ajax({
+    url: "{!! url('mastergiroloadkas') !!}",
+    type: "get",
+    async: false,
+    data: {
+      _token: _token,
+    },
+    success: function (res) {
+      console.log(res);
+      dataRefresh = res;
+    },
+  });
+
+  let rowTable = "";
+  dataRefresh.forEach((item, i) => {
+    let temp = "";
+
+    rowTable += `<tr>
+      <td class="text-center">
+        <button class="btn btn-primary btn-sm" type="button" onclick="buttonPilihPerkiraanKas('${item.Perkiraan}')"><i class='bi bi-plus'></i></button>
+      </td>
+      <td>${item.Perkiraan}</td>
+      <td>${item.keterangan}</td>
+    </tr>`;
+  });
+
+  document.getElementById("tabel_dataAktivaSelectPerkiraan").innerHTML = rowTable;
+  $("#tabelAktivaSelectPerkiraan").DataTable({
+    "lengthChange": false,
+    "paging": false,
+  });
+}
+
+function loadSelectBank() {
+  let _token = $("#_token").val();
+
+  $('#tabelBukaSelectBank').DataTable().destroy();
+
+  $.ajax({
+    url: "{!! url('mastergiroloadbank') !!}",
+    type: "get",
+    async: false,
+    data: {
+      _token: _token,
+    },
+    success: function (res) {
+      console.log(res);
+      dataRefresh = res;
+    },
+  });
+
+  let rowTable = "";
+  dataRefresh.forEach((item, i) => {
+    let temp = "";
+
+    rowTable += `<tr>
+      <td class="text-center">
+        <button class="btn btn-primary btn-sm" type="button" onclick="buttonPilihPerkiraanBank('${item.Perkiraan}')"><i class='bi bi-plus'></i></button>
+      </td>
+      <td>${item.Perkiraan}</td>
+      <td>${item.keterangan}</td>
+    </tr>`;
+  });
+
+  document.getElementById("tabel_dataBukaSelectBank").innerHTML = rowTable;
+  $("#tabelBukaSelectBank").DataTable({
+    "lengthChange": false,
+    "paging": false,
+  });
+}
+
+function buttonPilihPerkiraanKas(selectedPerkiraan) {
+  $("#input_add_perkiraanKas").val(selectedPerkiraan);
+  $("#input_edit_perkiraanKas").val(selectedPerkiraan);
+  $("#formSelectKas").modal("hide");
+}
+
+function buttonPilihPerkiraanBank(selectedPerkiraan) {
+  $("#input_add2_bank").val(selectedPerkiraan);
+  $("#input_edit2_bank").val(selectedPerkiraan);
+  $("#formSelectBank").modal("hide");
+}
+
+window.onload = function(){
+  loadAllBuka();
+  loadAllTerima();
+}
+
+// Get the DOM elements (not their values)
+const inputNilaiGiroElement = document.getElementById('input_add2_nilaiGiro');
+const inputNilaiGiroRpElement = document.getElementById('input_add2_nilaiGiroRp');
+const inputKursElement = document.getElementById('input_add2_kurs');
+
+const inputNilaiGiroElement2 = document.getElementById('input_add_nilaiGiro');
+const inputNilaiGiroRpElement2 = document.getElementById('input_add_nilaiGiroRp');
+const inputKursElement2 = document.getElementById('input_add_kurs');
+
+// Function to format number with thousands separator
+function formatWithCommas(num) {
+    return num.toLocaleString('en-US');
+}
+
+// Function to parse value and remove commas
+function parseValue(element) {
+    return parseFloat((element.value || '0').replace(/,/g, '')) || 0;
+}
+
+// Add event listener to the input field
+inputNilaiGiroElement.addEventListener('input', function() {
+    // Get the values from the input fields
+    const nilaiGiro = parseValue(inputNilaiGiroElement);
+    const kurs = parseValue(inputKursElement);
+
+    // Calculate the result
+    const nilaiGiroRp = nilaiGiro * kurs;
+
+    // Update the value with thousands separator
+    inputNilaiGiroRpElement.value = formatWithCommas(nilaiGiroRp);
+});
+
+// Add event listener to the input field
+inputNilaiGiroElement2.addEventListener('input', function() {
+    // Get the values from the input fields
+    const nilaiGiro = parseValue(inputNilaiGiroElement2);
+    const kurs = parseValue(inputKursElement2);
+
+    // Calculate the result
+    const nilaiGiroRp = nilaiGiro * kurs;
+
+    // Update the value with thousands separator
+    inputNilaiGiroRpElement2.value = formatWithCommas(nilaiGiroRp);
+});
+
+inputNilaiGiroRpElement.addEventListener('input', function() {
+    // Get the values from the input fields
+    const nilaiGiroRp = parseValue(inputNilaiGiroRpElement);
+    const kurs = parseValue(inputKursElement);
+
+    // Calculate the result
+    const nilaiGiro = nilaiGiroRp / kurs;
+
+    // Update the value with thousands separator
+    inputNilaiGiroElement.value = formatWithCommas(nilaiGiro);
+});
+
+inputNilaiGiroRpElement2.addEventListener('input', function() {
+    // Get the values from the input fields
+    const nilaiGiroRp = parseValue(inputNilaiGiroRpElement2);
+    const kurs = parseValue(inputKursElement2);
+
+    // Calculate the result
+    const nilaiGiro = nilaiGiroRp / kurs;
+
+    // Update the value with thousands separator
+    inputNilaiGiroElement2.value = formatWithCommas(nilaiGiro);
+});
+
+
+
+// Optional: Add formatting to the input itself when user types
+inputNilaiGiroElement.addEventListener('blur', function() {
+    const value = parseValue(inputNilaiGiroElement);
+    if (value > 0) {
+        inputNilaiGiroElement.value = formatWithCommas(value);
+    }
+});
+
+const inputEditNilaiGiroElement = document.getElementById('input_edit2_nilaiGiro');
+const inputEditNilaiGiroRpElement = document.getElementById('input_edit2_nilaiGiroRp');
+const inputEditKursElement = document.getElementById('input_edit2_kurs');
+
+const inputEditNilaiGiroElement2 = document.getElementById('input_edit_nilaiGiro');
+const inputEditNilaiGiroRpElement2 = document.getElementById('input_edit_nilaiGiroRp');
+const inputEditKursElement2 = document.getElementById('input_edit_kurs');
+
+// Add event listener to the input field
+inputEditNilaiGiroElement.addEventListener('input', function() {
+    // Get the values from the input fields
+    const nilaiGiro = parseValue(inputEditNilaiGiroElement);
+    const kurs = parseValue(inputEditKursElement);
+
+    // Calculate the result
+    const nilaiGiroRp = nilaiGiro * kurs;
+
+    // Update the value with thousands separator
+    inputEditNilaiGiroRpElement.value = formatWithCommas(nilaiGiroRp);
+});
+
+// Add event listener to the input field
+inputEditNilaiGiroElement2.addEventListener('input', function() {
+    // Get the values from the input fields
+    const nilaiGiro = parseValue(inputEditNilaiGiroElement2);
+    const kurs = parseValue(inputEditKursElement2);
+
+    // Calculate the result
+    const nilaiGiroRp = nilaiGiro * kurs;
+
+    // Update the value with thousands separator
+    inputEditNilaiGiroRpElement2.value = formatWithCommas(nilaiGiroRp);
+});
+
+inputEditNilaiGiroRpElement.addEventListener('input', function() {
+    // Get the values from the input fields
+    const nilaiGiroRp = parseValue(inputEditNilaiGiroRpElement);
+    const kurs = parseValue(inputEditKursElement);
+
+    // Calculate the result
+    const nilaiGiro = nilaiGiroRp / kurs;
+
+    // Update the value with thousands separator
+    inputEditNilaiGiroElement.value = formatWithCommas(nilaiGiro);
+});
+
+inputEditNilaiGiroRpElement2.addEventListener('input', function() {
+    // Get the values from the input fields
+    const nilaiGiroRp = parseValue(inputEditNilaiGiroRpElement2);
+    const kurs = parseValue(inputEditKursElement2);
+
+    // Calculate the result
+    const nilaiGiro = nilaiGiroRp / kurs;
+
+    // Update the value with thousands separator
+    inputEditNilaiGiroElement2.value = formatWithCommas(nilaiGiro);
+});
+
+</script>
+
+
+
+
+@endsection

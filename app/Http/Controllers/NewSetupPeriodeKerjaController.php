@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Model\NewMenu;
-use App\Model\NewAksesMenu;
-use App\Model\NewPeriode;
+use App\Models\NewMenu;
+use App\Models\NewAksesMenu;
+use App\Models\NewPeriode;
 // use App\Model\NewUsers;
 use Illuminate\Support\Facades\DB;
 
@@ -28,7 +28,7 @@ class NewSetupPeriodeKerjaController extends Controller
 
     // $menul0 = app('App\Http\Controllers\NewMenuController')->getMenuL0();
 
-    return view('newsetupperiodekerja' , [
+    return view('berkas.newsetupperiodekerja' , [
       "menul0" =>[],
       "periode" => $periode,
       // "users"=> $users

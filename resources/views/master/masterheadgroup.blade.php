@@ -1,0 +1,1656 @@
+@extends('master.newmaster')
+@section('buttons')
+
+@endsection
+@section('content')
+<div class="container-fluid">
+
+  <!-- <div id="qrcode"></div> -->
+<div class="row mt-4">
+      <div class="col-6 text-left">
+        <h2 style="margin-top:-85px;">Master Head Group</h2>
+      </div>
+      <div class="col-6 text-right">
+        <button type="button" class="btn btn-primary btn-lg" style="
+            height: 30px; 
+            margin-top: -150px; 
+            padding: 4px 12px; 
+            border-radius: 20px; 
+            font-size: 0.75rem; 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            transition: background-color 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
+            onclick="buttonAdd()">
+          Add head Group
+        </button>
+      </div>
+      {{-- <div class="col-6 text-right">
+        <button type="button" class="btn btn-primary btn-lg" style="
+            height: 30px; 
+            margin-top: -150px; 
+            padding: 4px 12px; 
+            border-radius: 20px; 
+            font-size: 0.75rem; 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            transition: background-color 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
+            onclick="loadAll()">
+          tes load all
+        </button>
+      </div> --}}
+    </div>
+<!-- <button onclick="loadAll()">tes</button> -->
+</div>
+
+<div id="printContainer" style="display:none">
+
+</div>
+<div id="contentContainer" class="container-fluid" style="max-width: 900px; margin-top:-95px;">
+  <input type="hidden" id="periode_tahun" value="{!! $periode->tahun !!}" />
+  <input type="hidden" id="periode_bulan" value="{!! $periode->bulan !!}" />
+  <input type="hidden" name="_token" id="_token" value="{!! csrf_token() !!}" />
+          <div class="row mt-4">
+              <!-- <div class="col-12 text-right">
+                  <button type="button" class="btn btn-primary btn-lg " style="height: 60px; " onclick="buttonAdd()"  >Add Koreksi Stock Gudang</button>
+              </div> -->
+          </div>
+          <div class="row mt-3">
+            <div class="col-12" style="overflow:auto;">
+              <div class="">
+
+                    <table id="tabel" class="table table-bordered table-striped"  >
+                      <thead id='theadCustom' class="text-center">
+                        <tr>
+                          <th scope="col">Actions</th>
+                          <th scope="col">Kode Head Group</th>
+                          <th scope="col">Nama Head Group</th>
+                          <th scope="col">Group</th>
+
+                        </tr>
+                      </thead>
+
+
+                      <tbody id="tabel_data" class="text-left" >
+                        {{-- @for ($i = 0; $i < count($listData); $i++)
+                        <tr>
+                          <td class="text-center">
+                            <button class="btn btn-success btn-sm" type="button" 
+                                    data-bs-toggle="tooltip" 
+                                    data-bs-placement="top" 
+                                    title="Edit Head Group" 
+                                    onclick="buttonEdit('{{ $listData[$i]->KODEHDGRP }}')">
+                              <i class="bi bi-pen"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm" type="button" 
+                                    data-bs-toggle="tooltip" 
+                                    data-bs-placement="top" 
+                                    title="Delete Head Group" 
+                                    onclick="buttonDelete('{{ $listData[$i]->KODEHDGRP }}')">
+                              <i class="bi bi-trash"></i>
+                            </button>
+                            <button class="btn btn-primary btn-sm" type="button" 
+                                    data-bs-toggle="tooltip" 
+                                    data-bs-placement="top" 
+                                    title="Sub Group" 
+                                    onclick="buttonSubGroup('{{ $listData[$i]->KODEHDGRP }}' , '{{ $listData[$i]->KODEGRP }}')">
+                              <i class="bi bi-list"></i>
+                            </button>
+                          </td>
+
+                          <td>{{ $listData[$i]->KODEHDGRP }}</td>
+                          <td>{{ $listData[$i]->NAMAHDGRP }}</td>
+                          <td>{{ $listData[$i]->KODEGRP }}</td>
+                      </tr>
+                      @endfor --}}
+                      </tbody>
+
+
+                    </table>
+              </div>
+            </div>
+          </div>
+
+
+</div>
+
+
+<!-- start modal add -->
+<div class="modal fade"  id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered"  role="document" style="max-width: 500px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- <h1>Tes Modal</h1> -->
+
+        <div class="container-fluid">
+          <input type="hidden" name="noUrut" id="input_add_noUrut" value="" />
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Kode HDGroup</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_add_kode" placeholder="Kode Group">
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Nama HDGroup</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_add_nama" placeholder="Nama Group">
+                </div>
+              </div>
+
+            </div>
+            <div class="row">
+              <div class="col-4">
+                <div class="form-group text-left">
+                  <label class="text-left">Kode Group</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <select id="input_add_kodegroup" class="form-control" aria-label="Default select example">
+                  <option selected>Open this select menu</option>
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Three</option>
+                </select>
+              </div>
+
+            </div>
+
+
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" >Batal</button>
+    <button type="button" class="btn btn-primary" onclick="submitAdd()">Submit</button>
+  </div>
+</div>
+</div>
+</div>
+<!-- End modal add-->
+
+
+
+
+
+<!-- start modal edit -->
+<div class="modal fade"  id="formEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered"  role="document" style="max-width: 500px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- <h1>Tes Modal</h1> -->
+
+        <div class="container-fluid">
+          <!-- <input type="hidden" name="noUrut" id="input_add_noUrut" value="" /> -->
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Kode HDGroup</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" disabled id="input_edit_kode" placeholder="Kode Group">
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Nama HDGroup</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_edit_nama" placeholder="Nama Group">
+                </div>
+              </div>
+
+            </div>
+            <div class="row">
+              <div class="col-4">
+                <div class="form-group text-left">
+                  <label class="text-left">Kode Group</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <select id="input_edit_kodegroup" class="form-control" aria-label="Default select example">
+
+                </select>
+              </div>
+
+            </div>
+
+
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" >Batal</button>
+    <button type="button" class="btn btn-primary" onclick="submitEdit()">Submit</button>
+  </div>
+</div>
+</div>
+</div>
+<!-- End modal edit-->
+
+
+<!-- start modal subgroup -->
+<div class="modal fade"  id="formSubGroup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered"  role="document" >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Sub Group</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- <h1>Tes Modal</h1> -->
+        <div class="container-fluid" style='height:32px;'>
+          <div class="row">
+            <input type="hidden" id="input_subgroup_kodegroup" value="" />
+            <div class="col-2">
+              <div class="form-group">
+                <label>Kode Head Group</label>
+              </div>
+            </div>
+            <div class="col-2">
+              <div class="form-group">
+                <input type="text" class="form-control" id="input_subgroup_kodehdgroup" placeholder="Kode Headgroup" disabled>
+              </div>
+            </div>
+
+            <div class="col-2 ml-auto text-right">
+              <button type="button" class="btn btn-primary" onclick="buttonAddSubGroup()">Add Item</button>
+            </div>
+          </div>
+        </div>
+
+    <!-- ADD SUBGROUP -->
+
+    <div id="addSubGroup" class="container-fluid showhide">
+            <!-- <div class="line"></div> -->
+            <div class="row">
+              <div class="col-4">
+                <h4>Add Subgroup</h4>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-2">
+                <div class="form-group">
+                <label>Kode Subgroup</label>
+              </div>
+              </div>
+              <div class="col-4">
+                <input id="input_subgroup_add_kodesubgroup" type="text" class="form-control">
+              </div>
+              <div class="col-2">
+                <div class="form-group">
+                <label>Perkiraan Persiapan</label>
+              </div>
+              </div>
+              
+              <div class="col-md-4">
+                  <div class="input-group">
+                      <input type="text" class="form-control" id="input_add_perkPers">
+                      <div class="input-group-append">
+                          <button type="button" class="btn btn-primary btn-select" onclick="buttonPerkiraan()">+</button>
+                      </div>
+                  </div>
+              </div>
+
+            </div>
+            <div class="row">
+              <div class="col-2">
+                <div class="form-group">
+                <label>Nama Subgroup</label>
+              </div>
+              </div>
+              <div class="col-4">
+                <input id="input_subgroup_add_namasubgroup" type="text" class="form-control">
+              </div>
+              <div class="col-2">
+                <div class="form-group">
+                <label>Perkiraan Jual</label>
+              </div>
+              </div>
+              
+              <div class="col-md-4">
+                  <div class="input-group">
+                      <input type="text" class="form-control" id="input_add_perkJual">
+                      <div class="input-group-append">
+                          <button type="button" class="btn btn-primary btn-select" onclick="buttonPerkiraan()">+</button>
+                      </div>
+                  </div>
+              </div>
+            </div>
+
+            <div class="row mt-2">
+              <div class="col-md-12 text-right">
+                <button type="button" class="btn btn-secondary" onclick="closeShowHideSubGroup()" >Batal</button>
+                <button type="button" onclick="submitAddSubGroup()" class="btn btn-primary" >Add</button>
+              </div>
+
+            </div>
+          </div>
+
+    <!-- END ADD SUBGROUP -->
+
+    <!-- EDIT SUBGROUP -->
+
+    <div id="editSubGroup" class="container-fluid showhide">
+            <!-- <div class="line"></div> -->
+            <div class="row">
+              <div class="col-4">
+                <h4>Edit Subgroup</h4>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-2">
+                <div class="form-group">
+                <label>Kode Subgroup</label>
+              </div>
+              </div>
+              <div class="col-4">
+                <input id="input_subgroup_edit_kodesubgroup" type="text" class="form-control" disabled>
+              </div>
+              <div class="col-2">
+                <div class="form-group">
+                <label>Perkiraan Persiapan</label>
+              </div>
+              </div>
+              <div class="col-4">
+
+                <select id="input_subgroup_edit_perkpers" class="form-control" aria-label="Default select example">
+                  <option selected>Open this select menu</option>
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Three</option>
+                </select>
+              </div>
+
+            </div>
+            <div class="row">
+              <div class="col-2">
+                <div class="form-group">
+                <label>Nama Subgroup</label>
+              </div>
+              </div>
+              <div class="col-4">
+                <input id="input_subgroup_edit_namasubgroup" type="text" class="form-control">
+              </div>
+              <div class="col-2">
+                <div class="form-group">
+                <label>Perkiraan Jual</label>
+              </div>
+              </div>
+              <div class="col-4">
+
+                <select id="input_subgroup_edit_perkjual" class="form-control" aria-label="Default select example">
+                  <option selected>Open this select menu</option>
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Three</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row mt-2">
+              <div class="col-md-12 text-right">
+                <button type="button" class="btn btn-secondary" onclick="closeShowHideSubGroup()" >Batal</button>
+                <button type="button" onclick="submitEditSubGroup()" class="btn btn-primary" >Edit</button>
+              </div>
+
+            </div>
+          </div>
+
+    <!-- END EDIT SUBGROUP -->
+
+        <div class="container-fluid mt-4">
+          <!-- <input type="hidden" name="noUrut" id="input_add_noUrut" value="" /> -->
+          <div class="row">
+            <table id="tabel_subgroup" class="table table-bordered table-striped"  >
+              <thead class="text-center">
+                <tr id='theadCustom'>
+                  <th scope="col">Actions</th>
+                  <th scope="col">Kode Sub Group</th>
+                  <th scope="col">Nama Sub Group</th>
+
+                </tr>
+              </thead>
+
+
+              <tbody id="tabel_data_subgroup" class="text-left" >
+
+                <tr >
+
+                  <td></td>
+                  <td></td>
+
+
+                    <td class="text-center">
+                      <!-- <button class="btn btn-warning btn-sm" type="button" onclick="" ><i class="bi bi-info-lg"></i></button> -->
+                      <button class="btn btn-success btn-sm" type="button" ><i class="bi bi-pen"></i></button>
+                      <button class="btn btn-danger btn-sm" type="button" ><i class="bi bi-trash"></i></button>
+                      <button class="btn btn-primary btn-sm" type="button" ><i class="bi bi-list"></i></button>
+                    </td>
+              </tr>
+              </tbody>
+
+
+            </table>
+          </div>
+            <!-- <button onclick="buttonSubKategori()">tes</button> -->
+
+
+    </div>
+  </div>
+
+</div>
+</div>
+</div>
+<!-- End modal subgroup-->
+
+<!-- start modal subkategori -->
+<div class="modal fade"  id="formSubKategori" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered"  role="document" >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Sub Kategori</h5>
+        <button type="button" class="close" onclick="closeSubKategoriForm()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- <h1>Tes Modal</h1> -->
+        <div class="container-fluid">
+          <div class="row">
+
+            <!-- <input type="hidden" id="input_subkategori_kodegroup" value="" /> -->
+            <div class="col-2">
+              <div class="form-group">
+                <label>Kode SubGroup</label>
+              </div>
+            </div>
+            <div class="col-2">
+              <div class="form-group">
+                <input type="text" class="form-control" id="input_subkategori_kodesubgroup" placeholder="Kode Subgroup" disabled>
+              </div>
+            </div>
+            
+            <div class="col-md-2 ml-auto text-right">
+              <button type="button" class="btn btn-primary" onclick="buttonAddSubKategori()" class="btn btn-secondary"  >Add Item</button>
+            </div>
+          </div>
+    </div>
+
+    <!-- ADD SUBGROUP -->
+
+    <div id="addSubKategori" class="container-fluid showhidekategori">
+            <!-- <div class="line"></div> -->
+            <div class="row">
+              <div class="col-4">
+                <h4>Add Subkategori</h4>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-2">
+                <div class="form-group">
+                <label>Kode SubKategori</label>
+              </div>
+              </div>
+              <div class="col-4">
+                <input id="input_subkategori_add_kodesubkategori" type="text" class="form-control">
+              </div>
+
+            </div>
+            <div class="row">
+
+              <div class="col-2">
+                <div class="form-group">
+                <label>Nama SubKategori</label>
+              </div>
+
+              </div>
+              <div class="col-4">
+                <input id="input_subkategori_add_namasubkategori" type="text" class="form-control">
+              </div>
+
+            </div>
+
+            <div class="row mt-2">
+              <div class="col-md-12 text-right">
+                <button type="button" class="btn btn-secondary" onclick="closeShowHideSubKategori()" >Batal</button>
+                <button type="button" onclick="submitAddSubKategori()" class="btn btn-primary" >Add</button>
+              </div>
+
+            </div>
+          </div>
+
+    <!-- END ADD SUBGROUP -->
+
+    <!-- EDIT SUBGROUP -->
+
+    <div id="editSubKategori" class="container-fluid showhidekategori">
+            <!-- <div class="line"></div> -->
+            <div class="row">
+              <div class="col-4">
+                <h4>Edit Kategori</h4>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-2">
+                <div class="form-group">
+                <label>Kode Kategori</label>
+              </div>
+              </div>
+              <div class="col-4">
+                <input id="input_subkategori_edit_kodesubkategori" type="text" class="form-control" disabled>
+              </div>
+              <!-- <div class="col-2">
+                <div class="form-group">
+                <label>Perkiraan Persiapan</label>
+              </div>
+              </div>
+              <div class="col-4">
+
+                <select id="input_subkategori_edit_perkpers" class="form-control" aria-label="Default select example">
+                  <option selected>Open this select menu</option>
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Three</option>
+                </select>
+              </div> -->
+
+            </div>
+            <div class="row">
+              <div class="col-2">
+                <div class="form-group">
+                <label>Nama Kategori</label>
+              </div>
+              </div>
+              <div class="col-4">
+                <input id="input_subkategori_edit_namasubkategori" type="text" class="form-control">
+              </div>
+              <!-- <div class="col-2">
+                <div class="form-group">
+                <label>Perkiraan Jual</label>
+              </div>
+              </div>
+              <div class="col-4">
+
+                <select id="input_subkategori_edit_perkjual" class="form-control" aria-label="Default select example">
+                  <option selected>Open this select menu</option>
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Three</option>
+                </select>
+              </div> -->
+            </div>
+
+            <div class="row mt-2">
+              <div class="col-md-12 text-right">
+                <button type="button" class="btn btn-secondary" onclick="closeShowHideSubKategori()" >Batal</button>
+                <button type="button" onclick="submitEditSubKategori()" class="btn btn-primary" >Edit</button>
+              </div>
+
+            </div>
+          </div>
+
+    <!-- END EDIT SUBGROUP -->
+
+        <div class="container-fluid mt-4">
+          <!-- <input type="hidden" name="noUrut" id="input_add_noUrut" value="" /> -->
+          <div class="row">
+            <table id="tabel_subkategori" class="table table-bordered table-striped"  >
+              <thead class="text-center">
+                <tr id='theadCustom'>
+                  <th scope="col">Actions</th>
+                  <th scope="col">Kode Sub Kategori</th>
+                  <th scope="col">Nama Sub Kategori</th>
+
+                </tr>
+              </thead>
+
+
+              <tbody id="tabel_data_subkategori" class="text-left" >
+
+                <tr >
+
+                  <td></td>
+                  <td></td>
+
+
+                    <td class="text-center">
+                      <!-- <button class="btn btn-warning btn-sm" type="button" onclick="" ><i class="bi bi-info-lg"></i></button> -->
+                    </td>
+              </tr>
+              </tbody>
+
+
+            </table>
+          </div>
+            <!-- <button onclick="buttonSubKategori()">tes</button> -->
+
+
+    </div>
+  </div>
+  <!-- <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" >Batal</button>
+    <button type="button" class="btn btn-primary" onclick="">Submit</button>
+  </div> -->
+</div>
+</div>
+</div>
+<!-- End modal subkategori-->
+
+
+
+
+
+
+
+@endsection
+
+@section('js')
+<script type="text/javascript">
+
+let dataRefresh = []
+
+function closeSubKategoriForm() {
+   $('#formSubGroup').css('opacity', 1);
+   $("#formSubKategori").modal('toggle')
+}
+
+function submitAddSubKategori () {
+  console.log('submitAddSubKategori')
+  let _token = $("#_token").val();
+  let kodesubgroup = $("#input_subkategori_kodesubgroup").val();
+  let kodesubkategori = $("#input_subkategori_add_kodesubkategori").val();
+  let namasubkategori = $("#input_subkategori_add_namasubkategori").val();
+  let kodehdgroup = $("#input_subgroup_kodehdgroup").val();
+  let kodegroup = $("#input_subgroup_kodegroup").val();
+
+  console.log('kodegroup' , kodegroup)
+  console.log('kodehdgroup' , kodehdgroup)
+  console.log('kodesubgroup' , kodesubgroup)
+  console.log('kodesubkategori' , kodesubkategori)
+  console.log('namasubkategori' , namasubkategori)
+
+  if (!kodesubkategori) {
+    alertify.warning("Kode  harus diisi");
+    return
+  }
+  if (!namasubkategori) {
+    alertify.warning("Nama  harus diisi");
+    return
+  }
+  console.log("TESSSS ==========")
+  // return
+
+  $.ajax({
+    url: "{!! url('masterheadgroupspaddsubkategori') !!}",
+    type: "post",
+    async: false,
+    data: {
+      _token : _token,
+      kodesubgroup,
+      kodesubkategori,
+      namasubkategori,
+      kodehdgroup,
+      kodegroup
+    },
+    success: function(res) {
+
+      console.log(res)
+      if (res != 1) {
+        alertify.warning(res);
+      }  else {
+        // console.log(res ,'!')
+        // $("#formEdit").modal('toggle')
+        alertify.success("Sub Kategori telah ditambah");
+        refreshSubKategori()
+        // $("#form").modal('toggle')
+        closeShowHideSubKategori()
+      }
+
+    }})
+
+
+}
+
+
+function submitEditSubKategori () {
+  console.log('submitEditSubKategori')
+  let _token = $("#_token").val();
+
+  let kodesubgroup = $("#input_subkategori_kodesubgroup").val();
+  let kodesubkategori = $("#input_subkategori_edit_kodesubkategori").val();
+  let namasubkategori = $("#input_subkategori_edit_namasubkategori").val();
+  let kodehdgroup = $("#input_subgroup_kodehdgroup").val();
+  let kodegroup = $("#input_subgroup_kodegroup").val();
+
+  console.log('kodesubgroup' , kodesubgroup)
+  console.log('kodesubkategori' , kodesubkategori)
+  console.log('namasubkategori' , namasubkategori)
+  console.log('kodehdgroup' , kodehdgroup)
+  console.log('kodegroup' , kodegroup)
+
+  if (!kodesubkategori) {
+    alertify.warning("Kode  harus diisi");
+    return
+  }
+  if (!namasubkategori) {
+    alertify.warning("Nama  harus diisi");
+    return
+  }
+
+  $.ajax({
+    url: "{!! url('masterheadgroupspeditsubkategori') !!}",
+    type: "post",
+    async: false,
+    data: {
+      _token : _token,
+      kodesubgroup,
+      kodesubkategori,
+      namasubkategori,
+      kodehdgroup,
+      kodegroup
+    },
+    success: function(res) {
+
+      console.log(res)
+      if (res != 1) {
+        alertify.warning(res);
+      }  else {
+        // console.log(res ,'!')
+        // $("#formEdit").modal('toggle')
+        alertify.success("Sub Kategori telah diedit");
+        refreshSubKategori()
+        // $("#form").modal('toggle')
+        closeShowHideSubKategori()
+      }
+
+    }})
+}
+
+function submitAddSubGroup () {
+  let _token = $("#_token").val();
+  let kodehdgroup = $("#input_subgroup_kodehdgroup").val();
+  let kodesubgroup = $("#input_subgroup_add_kodesubgroup").val();
+  let perkpers = $("#input_subgroup_add_perkpers").val();
+  let perkjual = $("#input_subgroup_add_perkjual").val();
+  let namasubgroup = $("#input_subgroup_add_namasubgroup").val();
+  let kodegroup = $("#input_subgroup_kodegroup").val();
+
+  if (!kodehdgroup) {
+    alertify.warning("Kode  harus diisi");
+    return
+  }
+
+  if (!namasubgroup) {
+    alertify.warning("Nama  harus diisi");
+    return
+  }
+
+  if (!perkpers) {
+    alertify.warning("Perkiraan  harus diisi");
+    return
+  }
+  if (!perkjual) {
+    alertify.warning("Perkiraan  harus diisi");
+    return
+  }
+
+  console.log('kodehdgroup',kodehdgroup)
+  console.log('kodesubgroup',kodesubgroup)
+  console.log('namasubgroup',namasubgroup)
+  console.log('perkpers',perkpers)
+  console.log('perkjual',perkjual)
+  console.log('kodegroup',kodegroup)
+
+
+  $.ajax({
+    url: "{!! url('masterheadgroupspaddsubgroup') !!}",
+    type: "post",
+    async: false,
+    data: {
+      _token : _token,
+      kodehdgroup,
+      kodegroup,
+      kodesubgroup,
+      namasubgroup,
+      perkpers,
+      perkjual
+    },
+    success: function(res) {
+
+      console.log(res)
+      if (res != 1) {
+        alertify.warning(res);
+      }  else {
+        // console.log(res ,'!')
+        // $("#formEdit").modal('toggle')
+        alertify.success("Sub Group telah ditambah");
+        refreshSubGroup()
+        // $("#form").modal('toggle')
+        closeShowHideSubGroup()
+      }
+
+    }})
+
+
+
+}
+
+function submitEditSubGroup () {
+  let _token = $("#_token").val();
+  let kodehdgroup = $("#input_subgroup_kodehdgroup").val();
+  let kodesubgroup = $("#input_subgroup_edit_kodesubgroup").val();
+  let perkpers = $("#input_subgroup_edit_perkpers").val();
+  let perkjual = $("#input_subgroup_edit_perkjual").val();
+  let namasubgroup = $("#input_subgroup_edit_namasubgroup").val();
+  let kodegroup = $("#input_subgroup_kodegroup").val();
+
+  if (!kodehdgroup) {
+    alertify.warning("Kode  harus diisi");
+    return
+  }
+
+  if (!namasubgroup) {
+    alertify.warning("Nama  harus diisi");
+    return
+  }
+
+  if (!perkpers) {
+    alertify.warning("Perkiraan  harus diisi");
+    return
+  }
+  if (!perkjual) {
+    alertify.warning("Perkiraan  harus diisi");
+    return
+  }
+
+  console.log('kodehdgroup',kodehdgroup)
+  console.log('kodesubgroup',kodesubgroup)
+  console.log('namasubgroup',namasubgroup)
+  console.log('perkpers',perkpers)
+  console.log('perkjual',perkjual)
+  console.log('kodegroup',kodegroup)
+
+
+  $.ajax({
+    url: "{!! url('masterheadgroupspeditsubgroup') !!}",
+    type: "post",
+    async: false,
+    data: {
+      _token : _token,
+      kodehdgroup,
+      kodegroup,
+      kodesubgroup,
+      namasubgroup,
+      perkpers,
+      perkjual
+    },
+    success: function(res) {
+
+      console.log(res)
+      if (res != 1) {
+        alertify.warning(res);
+      }  else {
+        // console.log(res ,'!')
+        // $("#formEdit").modal('toggle')
+        alertify.success("Sub Group telah diedit");
+        refreshSubGroup()
+        // $("#form").modal('toggle')
+        closeShowHideSubGroup()
+      }
+
+    }})
+
+}
+
+function buttonAddSubGroup () {
+  $('.showhide').hide();
+  console.log('buttonAddSubGroup')
+  let _token = $("#_token").val();
+  $.ajax({
+    url: "{!! url('masterheadgrouplistperkiraan') !!}",
+    type: "get",
+    async: false,
+    data: {
+      _token : _token,
+    },
+    success: function(res) {
+
+      console.log(res)
+      let rowSelect = `<option selected disabled value="">Pilih Perkiraan</option>`
+
+      res.forEach((item, i) => {
+        // console.log(item)
+        rowSelect += `
+          <option value="${item.Perkiraan}">${item.Perkiraan} - ${item.Keterangan}</option>
+        `
+      });
+
+      document.getElementById("input_subgroup_add_perkjual").innerHTML = rowSelect
+      document.getElementById("input_subgroup_add_perkpers").innerHTML = rowSelect
+
+
+    }})
+
+
+  $('#addSubGroup').show();
+}
+
+function buttonDeleteSubKategori (kodesubkategori) {
+  let _token = $("#_token").val();
+  let kodesubgroup = $("#input_subkategori_kodesubgroup").val();
+  let kodehdgroup = $("#input_subgroup_kodehdgroup").val();
+  let kodegroup = $("#input_subgroup_kodegroup").val();
+
+  console.log('kodegroup' , kodegroup)
+  console.log('kodehdgroup' , kodehdgroup)
+  console.log('kodesubgroup' , kodesubgroup)
+  console.log('kodesubkategori' , kodesubkategori)
+  // return
+  // masterheadgroupspdeletesubkategori
+  alertify.confirm('Hapus Kategori', 'Apakah yakin ingin menghapus kategori ' + kodesubkategori + ' ?',
+      function() {
+        console.log('yes')
+
+        $.ajax({
+          url: "{!! url('masterheadgroupspdeletesubkategori') !!}",
+          type: "post",
+          async: false,
+          data: {
+            _token : _token,
+            kodesubgroup,
+            kodesubkategori,
+            kodegroup,
+            kodehdgroup
+          },
+          success: function(res) {
+            if (res != 1) {
+              alertify.warning(res);
+            } else {
+              console.log(res)
+              refreshSubKategori()
+              alertify.success("Sub Kategori telah dihapus");
+
+            }
+          }})
+      }
+    ,function(){
+      console.log('no')
+    });
+}
+
+function buttonDeleteSubGroup (kodesubgroup) {
+  console.log(kodesubgroup)
+  console.log('buttonDeleteSubGroup')
+  let _token = $("#_token").val();
+  let kodehdgroup = $("#input_subgroup_kodehdgroup").val();
+
+
+
+  alertify.confirm('Hapus Group', 'Apakah yakin ingin menghapus SubGroup ' + kodesubgroup + ' ?',
+      function() {
+        console.log('yes')
+
+        $.ajax({
+          url: "{!! url('masterheadgroupspdeletesubgroup') !!}",
+          type: "post",
+          async: false,
+          data: {
+            _token : _token,
+            kodesubgroup,
+            kodehdgroup
+          },
+          success: function(res) {
+            if (res != 1) {
+              alertify.warning(res);
+            } else {
+              console.log(res)
+              refreshSubGroup()
+              alertify.success("Sub Group telah dihapus");
+
+            }
+          }})
+      }
+    ,function(){
+      console.log('no')
+    });
+
+}
+
+function buttonEditSubGroup (kodesubgroup) {
+  $('.showhide').hide();
+  let kodehdgroup = $("#input_subgroup_kodehdgroup").val();
+  console.log('buttonEditSubGroup')
+  let _token = $("#_token").val();
+  $.ajax({
+    url: "{!! url('masterheadgrouplistperkiraan') !!}",
+    type: "get",
+    async: false,
+    data: {
+      _token : _token,
+    },
+    success: function(res) {
+
+      console.log(res)
+      let rowSelect = `<option selected disabled value="">Pilih Perkiraan</option>`
+
+      res.forEach((item, i) => {
+        // console.log(item)
+        rowSelect += `
+          <option value="${item.Perkiraan}">${item.Perkiraan} - ${item.Keterangan}</option>
+        `
+      });
+
+      document.getElementById("input_subgroup_edit_perkjual").innerHTML = rowSelect
+      document.getElementById("input_subgroup_edit_perkpers").innerHTML = rowSelect
+
+
+    }})
+
+    $.ajax({
+      url: "{!! url('masterheadgroupspdetailsubgroup') !!}",
+      type: "get",
+      async: false,
+      data: {
+        _token : _token,
+        kode: kodesubgroup,
+        kodehdgroup
+      },
+      success: function(res) {
+        console.log('DETAIL')
+        console.log(res)
+        console.log(res[0].KodeSubGrp)
+        console.log(res[0].NamaSubGrp)
+        document.getElementById("input_subgroup_edit_kodesubgroup").value = res[0].KodeSubGrp
+        document.getElementById("input_subgroup_edit_namasubgroup").value = res[0].NamaSubGrp
+
+        document.getElementById("input_subgroup_edit_perkpers").value = res[0].PerkPers
+        document.getElementById("input_subgroup_edit_perkjual").value = res[0].PerkH
+
+      }})
+
+
+    // masterheadgroupspdetailsubgroup
+
+
+  $('#editSubGroup').show();
+}
+
+
+function closeShowHideSubGroup () {
+  $('.showhide').hide();
+}
+
+function refreshSubGroup () {
+  console.log('refreshSubGroup')
+  let kode = $("#input_subgroup_kodehdgroup").val();
+  $('.showhide').hide();
+  $.ajax({
+    url: "{!! url('masterheadgrouplistsubgroup') !!}",
+    type: "get",
+    async: false,
+    data: {
+      // _token : _token,
+      kode
+    },
+    success: function(res) {
+
+      console.log(res)
+      let rowTable = ``
+      res.forEach((item, i) => {
+        rowTable += `
+        <tr>
+        <td>${item.KodeSubGrp}</td>
+        <td>${item.NamaSubGrp}</td>
+        <td class="text-center">
+          <button class="btn btn-success btn-sm" type="button" onclick="buttonEditSubGroup('${item.KodeSubGrp}')" ><i class="bi bi-pen"></i></button>
+          <button class="btn btn-danger btn-sm" type="button" onclick="buttonDeleteSubGroup('${item.KodeSubGrp}')" ><i class="bi bi-trash"></i></button>
+          <button class="btn btn-primary btn-sm" type="button" onclick="buttonSubKategori('${item.KodeSubGrp}')" ><i class="bi bi-list"></i></button>
+        </td>
+        </tr>
+        `
+      });
+
+      if (!res.length) {
+        rowTable =`<tr><td colspan=3 class="text-center" >Belum ada data</td></tr>`
+      }
+      // document.getElementById("input_subgroup_kodegroup").value = kodegroup
+      document.getElementById("input_subgroup_kodehdgroup").value = res[0].KodeHDGrp
+      document.getElementById("tabel_data_subgroup").innerHTML = rowTable
+
+
+    }})
+
+}
+
+function buttonSubGroup (kode , kodegroup) {
+  console.log('buttonSubGroup')
+  console.log(kode , kodegroup)
+  $('.showhide').hide();
+  $.ajax({
+    url: "{!! url('masterheadgrouplistsubgroup') !!}",
+    type: "get",
+    async: false,
+    data: {
+      // _token : _token,
+      kode
+    },
+    success: function(res) {
+
+      console.log(res)
+      let rowTable = ``
+      res.forEach((item, i) => {
+        rowTable += `
+        <tr>
+        <td class="text-center">
+          <button class="btn btn-success btn-sm" type="button" onclick="buttonEditSubGroup('${item.KodeSubGrp}')" ><i class="bi bi-pen"></i></button>
+          <button class="btn btn-danger btn-sm" type="button" onclick="buttonDeleteSubGroup('${item.KodeSubGrp}')" ><i class="bi bi-trash"></i></button>
+          <button class="btn btn-primary btn-sm" type="button" onclick="buttonSubKategori('${item.KodeSubGrp}')" ><i class="bi bi-list"></i></button>
+        </td>
+        <td>${item.KodeSubGrp}</td>
+        <td>${item.NamaSubGrp}</td>
+        </tr>
+        `
+      });
+      if (!res.length) {
+        rowTable =`<tr><td colspan=3 class="text-center" >Belum ada data</td></tr>`
+      }
+      document.getElementById("input_subgroup_kodegroup").value = kodegroup
+      document.getElementById("input_subgroup_kodehdgroup").value = kode
+      document.getElementById("tabel_data_subgroup").innerHTML = rowTable
+
+
+    }})
+
+  $("#formSubGroup").modal('toggle')
+}
+
+function refreshSubKategori () {
+  $('.showhidekategori').hide();
+  let kodesubgroup = $("#input_subkategori_kodesubgroup").val();
+  let kodehdgroup = $("#input_subgroup_kodehdgroup").val();
+
+  $.ajax({
+    url: "{!! url('masterheadgrouplistsubkategori') !!}",
+    type: "get",
+    async: false,
+    data: {
+      // _token : _token,
+      kodesubgroup,
+      kodehdgroup
+    },
+    success: function(res) {
+
+      console.log(res)
+      let rowTable = ``
+      res.forEach((item, i) => {
+        rowTable += `
+        <tr>
+        <td>${item.Urut}</td>
+        <td>${item.Keterangan}</td>
+        <td class="text-center">
+          <button class="btn btn-success btn-sm" type="button" onclick="buttonEditSubKategori('${item.Urut}')" ><i class="bi bi-pen"></i></button>
+          <button class="btn btn-danger btn-sm" type="button" onclick="buttonDeleteSubKategori('${item.Urut}')" ><i class="bi bi-trash"></i></button>
+
+        </td>
+        </tr>
+        `
+      });
+      if (!res.length) {
+        rowTable =`<tr><td colspan=3 class="text-center" >Belum ada data</td></tr>`
+      }
+
+
+      document.getElementById("tabel_data_subkategori").innerHTML = rowTable
+      // document.getElementById("input_subkategori_kodesubgroup").value = kodesubgroup
+
+
+    }})
+}
+
+function buttonSubKategori (kodesubgroup) {
+  console.log('buttonSubKategori')
+  $('.showhidekategori').hide();
+  $('#formSubGroup').css('opacity', .5);
+  let kodehdgroup = $("#input_subgroup_kodehdgroup").val();
+  console.log('kodehdgroup' , kodehdgroup)
+  console.log(kodesubgroup)
+
+
+  $.ajax({
+    url: "{!! url('masterheadgrouplistsubkategori') !!}",
+    type: "get",
+    async: false,
+    data: {
+      // _token : _token,
+      kodesubgroup,
+      kodehdgroup
+    },
+    success: function(res) {
+
+      console.log(res)
+      let rowTable = ``
+      res.forEach((item, i) => {
+        rowTable += `
+        <tr>
+        <td class="text-center">
+          <button class="btn btn-success btn-sm" type="button" onclick="buttonEditSubKategori('${item.Urut}')" ><i class="bi bi-pen"></i></button>
+          <button class="btn btn-danger btn-sm" type="button" onclick="buttonDeleteSubKategori('${item.Urut}')" ><i class="bi bi-trash"></i></button>
+        </td>
+        <td>${item.Urut}</td>
+        <td>${item.Keterangan}</td>
+        </tr>
+        `
+      });
+      if (!res.length) {
+        rowTable =`<tr><td colspan=3 class="text-center" >Belum ada data</td></tr>`
+      }
+
+      document.getElementById("tabel_data_subkategori").innerHTML = rowTable
+      document.getElementById("input_subkategori_kodesubgroup").value = kodesubgroup
+
+
+    }})
+
+  $("#formSubKategori").modal('toggle')
+
+
+  // console.log(kode , kodegroup)
+  // $('.showhide').hide();
+  // $.ajax({
+  //   url: "{!! url('masterheadgrouplistsubgroup') !!}",
+  //   type: "get",
+  //   async: false,
+  //   data: {
+  //     // _token : _token,
+  //     kode
+  //   },
+  //   success: function(res) {
+  //
+  //     console.log(res)
+  //     let rowTable = ``
+  //     res.forEach((item, i) => {
+  //       rowTable += `
+  //       <tr>
+  //       <td>${item.KodeSubGrp}</td>
+  //       <td>${item.NamaSubGrp}</td>
+  //       <td class="text-center">
+  //         <button class="btn btn-success btn-sm" type="button" onclick="buttonEditSubGroup('${item.KodeSubGrp}')" ><i class="bi bi-pen"></i></button>
+  //         <button class="btn btn-danger btn-sm" type="button" onclick="buttonDeleteSubGroup('${item.KodeSubGrp}')" ><i class="bi bi-trash"></i></button>
+  //         <button class="btn btn-primary btn-sm" type="button" onclick="buttonSubKategori('${item.KodeSubGrp}')" ><i class="bi bi-list"></i></button>
+  //       </td>
+  //       </tr>
+  //       `
+  //     });
+  //     document.getElementById("input_subgroup_kodegroup").value = kodegroup
+  //     document.getElementById("input_subgroup_kodehdgroup").value = res[0].KodeHDGrp
+  //     document.getElementById("tabel_data_subgroup").innerHTML = rowTable
+  //
+  //
+  //   }})
+  //
+  // $("#formSubGroup").modal('toggle')
+}
+
+function buttonAddSubKategori () {
+  closeShowHideSubKategori()
+  $('#addSubKategori').show();
+}
+
+function buttonEditSubKategori (kodesubkategori) {
+  closeShowHideSubKategori()
+  let kodesubgroup = $("#input_subkategori_kodesubgroup").val();
+  let kodehdgroup = $("#input_subgroup_kodehdgroup").val();
+  let kodegroup = $("#input_subgroup_kodegroup").val();
+
+  console.log('kodegroup' , kodegroup)
+  console.log('kodehdgroup' , kodehdgroup)
+  console.log(kodesubkategori, kodesubgroup)
+  $.ajax({
+    url: "{!! url('masterheadgroupspdetailsubkategori') !!}",
+    type: "get",
+    async: false,
+    data: {
+      // _token : _token,
+      kodesubkategori,
+      kodesubgroup,
+      kodehdgroup,
+      kodegroup
+    },
+    success: function(res) {
+
+      console.log(res)
+      // let rowTable = ``
+      // res.forEach((item, i) => {
+      //   rowTable += `
+      //   <tr>
+      //   <td>${item.Urut}</td>
+      //   <td>${item.Keterangan}</td>
+      //   <td class="text-center">
+      //     <button class="btn btn-success btn-sm" type="button" onclick="buttonEditSubKategori('${item.Urut}')" ><i class="bi bi-pen"></i></button>
+      //     <button class="btn btn-danger btn-sm" type="button" onclick="buttonDeleteSubKategori('${item.Urut}')" ><i class="bi bi-trash"></i></button>
+      //
+      //   </td>
+      //   </tr>
+      //   `
+      // });
+
+      document.getElementById("input_subkategori_edit_namasubkategori").value = res[0].Keterangan
+      document.getElementById("input_subkategori_edit_kodesubkategori").value = res[0].Urut
+      // document.getElementById("tabel_data_subkategori").innerHTML = rowTable
+
+
+    }})
+  $('#editSubKategori').show();
+}
+
+function closeShowHideSubKategori () {
+  $('.showhidekategori').hide();
+}
+
+function loadAll () {
+  console.log('asd')
+  let _token = $("#_token").val();
+
+
+  $('#tabel').DataTable().destroy();  
+
+  $.ajax({
+    url: "{!! url('masterheadgrouploadall') !!}",
+    type: "get",
+    async: false,
+    data: {
+      _token : _token,
+    },
+    success: function(res) {
+      console.log(res)
+      dataRefresh = res.hdgroup
+  }})
+
+  let rowTable = ""
+  dataRefresh.forEach((item, i) => {
+    let temp = ""
+
+    rowTable += `<tr>
+    <td class="text-center">
+      <button class="btn btn-primary btn-sm hover-tooltip" data-tooltip='Sub Group' type="button" onclick="buttonSubGroup('${item.KODEHDGRP}' ,'${item.KODEGRP}' )"><i class="bi bi-list"></i></button>
+      <button class="btn btn-success btn-sm hover-tooltip" data-tooltip='Edit Head Group' type="button" onclick="buttonEdit('${item.KODEHDGRP}')"><i class="bi bi-pen"></i></button>
+      <button class="btn btn-danger btn-sm hover-tooltip" data-tooltip='Delete Head Group' type="button" onclick="buttonDelete('${item.KODEHDGRP}')"><i class="bi bi-trash"></i></button>
+    </td>
+    <td>${item.KODEHDGRP}</td>
+    <td>${item.NAMAHDGRP}</td>
+    <td>${item.KODEGRP}</td>
+    </tr>`
+  });
+
+
+
+
+
+  document.getElementById("tabel_data").innerHTML = rowTable
+  $("#tabel").DataTable({
+    "lengthChange": false,
+      "paging": false ,
+    });
+
+}
+//
+function buttonAdd () {
+
+  let _token = $("#_token").val();
+  $.ajax({
+    url: "{!! url('masterheadgrouplistgroup') !!}",
+    type: "get",
+    async: false,
+    data: {
+      _token : _token,
+    },
+    success: function(res) {
+
+      console.log(res)
+      document.getElementById("input_add_kode").value = ''
+      document.getElementById("input_add_nama").value = ''
+
+      let rowSelect = `<option selected disabled value="">Pilih Group</option>`
+      res.forEach((item, i) => {
+        rowSelect += `
+          <option value="${item.KODEGRP}">${item.KODEGRP} - ${item.NAMA}</option>
+        `
+      });
+      document.getElementById("input_add_kodegroup").innerHTML = rowSelect
+
+    }})
+
+  $("#form").modal('toggle')
+
+}
+
+function buttonEdit (kode) {
+  console.log(kode)
+  let _token = $("#_token").val();
+
+  $.ajax({
+    url: "{!! url('masterheadgrouplistgroup') !!}",
+    type: "get",
+    async: false,
+    data: {
+      // _token : _token,
+    },
+    success: function(res) {
+
+      console.log(res)
+      // document.getElementById("input_edit_kode").value = res[0].KODEGRP
+      // document.getElementById("input_edit_nama").value = res[0].NAMA
+
+      let rowSelect = `<option selected value="">Pilih Group</option>`
+      res.forEach((item, i) => {
+        rowSelect += `
+          <option value="${item.KODEGRP}">${item.KODEGRP} - ${item.NAMA}</option>
+        `
+      });
+      document.getElementById("input_edit_kodegroup").innerHTML = rowSelect
+
+    }})
+
+  $.ajax({
+    url: "{!! url('masterheadgroupspdetail') !!}",
+    type: "get",
+    async: false,
+    data: {
+      _token : _token,
+      kode
+    },
+    success: function(res) {
+
+      console.log(res)
+      document.getElementById("input_edit_kode").value = res[0].KODEHDGRP
+      document.getElementById("input_edit_nama").value = res[0].NAMAHDGRP
+      let temp = ""
+      if (res[0].KODEGRP){
+        temp = res[0].KODEGRP
+
+      }
+      document.getElementById("input_edit_kodegroup").value = temp
+
+
+    }})
+    $("#formEdit").modal('toggle')
+}
+
+function buttonDelete (kode) {
+  console.log(kode)
+  let _token = $("#_token").val();
+
+
+  alertify.confirm('Hapus Group', 'Apakah yakin ingin menghapus Group ' + kode + ' ?',
+      function() {
+        console.log('yes')
+
+        $.ajax({
+          url: "{!! url('masterheadgroupspdelete') !!}",
+          type: "post",
+          async: false,
+          data: {
+            _token : _token,
+            kode
+          },
+          success: function(res) {
+            if (res != 1) {
+              alertify.warning(res);
+            } else {
+              console.log(res)
+              loadAll()
+              alertify.success("Group telah dihapus");
+
+            }
+          }})
+      }
+    ,function(){
+      console.log('no')
+    });
+
+
+}
+//
+function submitEdit () {
+
+  let _token = $("#_token").val();
+  let kode = $("#input_edit_kode").val();
+  let nama = $("#input_edit_nama").val();
+  let kodegroup = $("#input_edit_kodegroup").val();
+  console.log(kode,nama, kodegroup)
+  if (!kode) {
+    alertify.warning("Kode  harus diisi");
+    return
+  }
+
+  if (!nama) {
+    alertify.warning("Nama  harus diisi");
+    return
+  }
+
+  $.ajax({
+    url: "{!! url('masterheadgroupspedit') !!}",
+    type: "post",
+    async: false,
+    data: {
+      _token : _token,
+      kode,
+      nama,
+      kodegroup
+    },
+    success: function(res) {
+
+      if (res != 1) {
+        alertify.warning(res);
+      }  else {
+        console.log(res ,'!')
+        // $("#formEdit").modal('toggle')
+        alertify.success("Group telah diedit");
+        loadAll()
+        $("#formEdit").modal('toggle')
+      }
+
+    }})
+
+}
+//
+function submitAdd () {
+  console.log('submit add kodegroup')
+  let _token = $("#_token").val();
+  let kode = $("#input_add_kode").val();
+  let nama = $("#input_add_nama").val();
+  let kodegroup = $("#input_add_kodegroup").val();
+
+  if (!kode) {
+    alertify.warning("Kode harus diisi");
+    return
+  }
+
+  if (!nama) {
+    alertify.warning("Nama harus diisi");
+    return
+  }
+  if (kodegroup == 0 || !kodegroup) {
+    alertify.warning("Kode Group harus diisi");
+    return
+  }
+
+  console.log('submit add kodegroup',kode,nama,kodegroup)
+
+  $.ajax({
+    url: "{!! url('masterheadgroupspadd') !!}",
+    type: "post",
+    async: false,
+    data: {
+      _token : _token,
+      kode,
+      nama,
+      kodegroup
+    },
+    success: function(res) {
+
+      if (res != 1) {
+        alertify.warning(res);
+      }  else {
+        console.log(res ,'!')
+        // $("#formEdit").modal('toggle')
+        alertify.success("Group telah ditambah");
+        loadAll()
+        $("#form").modal('toggle')
+      }
+
+    }})
+
+  // console.log(kodearea, namaarea)
+}
+
+window.onload = function (){
+  loadAll();
+}
+
+</script>
+
+
+
+
+@endsection

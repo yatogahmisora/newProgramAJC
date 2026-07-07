@@ -33,9 +33,154 @@
 
   <title>AnekaJC</title>
 
+
+<style>
+  .hover-tooltip {
+  position: relative;
+}
+
+.hover-tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: black;
+  color: white;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.hover-tooltip::before {
+  content: '';
+  position: absolute;
+  bottom: 115%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: black;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.hover-tooltip:hover::after,
+.hover-tooltip:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+</style>
+
   {{-- Submenu flyout styles (L0=2 hover popout) --}}
   <style>
     
+.sidebar-footer {
+  margin-top: auto;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 4px;
+}
+
+.nav-report-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  cursor: pointer;
+  color: rgba(255,255,255,0.85);
+  transition: background 0.12s ease;
+}
+
+.nav-report-item:hover,
+.nav-report-item.active {
+  background: rgba(255,255,255,0.08);
+}
+
+.nav-report-item .nav-icon {
+  display: flex;
+  width: 18px;
+  height: 18px;
+}
+
+/* Report page layout (prototype) */
+.report-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: #555;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  padding: 0;
+}
+
+.report-back-btn:hover {
+  color: #000;
+}
+
+.report-category {
+  margin-bottom: 28px;
+}
+
+.report-category-title {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+.report-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.report-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 8px;
+  padding: 14px;
+  cursor: pointer;
+  transition: box-shadow 0.12s ease, transform 0.12s ease;
+}
+
+.report-card:hover {
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  transform: translateY(-1px);
+}
+
+.report-card-icon {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: rgba(0,0,0,0.04);
+}
+
+.report-card-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #222;
+}
+
     #sidebar.flyout-pinned {
       width: var(--sidebar-exp, 240px) !important;
     }
@@ -120,18 +265,22 @@
 
   {{-- SIDEBAR --}}
   <aside class="sidebar" id="sidebar">
-    <div class="sidebar-logo">
+    <div class="sidebar-logo" onclick="goHome()" style="cursor:pointer;">
       <div class="logo-icon">SPL</div>
       <span class="logo-text">PT. SPL</span>
     </div>
     <nav class="sidebar-nav" id="nav"></nav>
+
+    <div class="sidebar-footer" id="sidebar-footer">
+      <!-- filled in by JS, see renderSidebarFooter() below -->
+    </div>
   </aside>
 
   {{-- MAIN --}}
   <div class="main">
 
     <header class="header">
-      <div class="breadcrumb" id="breadcrumb"></div>
+      <div class="breadcrumb mt-3" id="breadcrumb"></div>
 
       <div class="header-right">
         <div class="period-badge">
@@ -148,6 +297,7 @@
 
 <section class="content">
   <div id="content-dynamic" style="display:none;"></div>
+  <div id="content-report" style="display:none;"></div>
   <div id="content-blade">
     <div class="container-fluid clearfix">
       <div class="row gutter-40 col-mb-80">
@@ -210,6 +360,13 @@
     if (!date) return '';
     const [y, m, d] = date.split('-');
     return `${d}/${m}/${y}`;
+  }
+  	
+  function formatNumber(input) {
+      let value = input.value.replace(/[^\d.]/g, '');
+      let parts = value.split('.');
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      input.value = parts.join('.');
   }
 
   function format_timestamp(date) {
@@ -410,6 +567,7 @@
 
   // ── Render the card-grid home for a module ───────────────────────────
   function showModuleHome(moduleKey) {
+    closeReportPage();
     const mod = modules.find(m => m.key === moduleKey);
     if (!mod) return;
 
@@ -441,6 +599,10 @@
     if (blade) blade.style.display = 'none';
     dyn.style.display = 'block';
     dyn.innerHTML = `
+      <div class="page-subtitle">
+      <button class="report-back-btn" onclick="goHome()">
+        ${icon('chevron')} Kembali
+      </button></div>
       <div class="page-title">${mod.label}</div>
       <div class="page-subtitle">${mod.subtitle ?? ''}</div>
       <div class="card-grid">${cards}</div>
@@ -630,9 +792,123 @@
     modules = buildMenu(data);
     console.log(data)
     renderNav();
+    renderSidebarFooter();
   }).fail(function () {
     console.error('Failed to load menu from /getmenu');
   });
+
+  const reportCategories = [
+  {
+    title: 'Laporan Keuangan',
+    items: [
+      { label: 'Laporan Laba Rugi', icon: 'trending-up' },
+      { label: 'Neraca',            icon: 'bar-chart' },
+      { label: 'Buku Besar',        icon: 'file-text' },
+    ]
+  },
+  {
+    title: 'Laporan Gudang',
+    items: [
+      { label: 'Mutasi Bahan Baku', icon: 'warehouse' },
+      { label: 'Stock Opname',      icon: 'check-square' },
+    ]
+  },
+  {
+    title: 'Laporan Aktivitas',
+    items: [
+      { label: 'Aktivitas Pemakai', icon: 'file-text' },
+    ]
+  },
+];
+
+function renderSidebarFooter() {
+  const footer = document.getElementById('sidebar-footer');
+  if (!footer) return;
+  footer.innerHTML = `
+    <div class="nav-report-item" id="nav-report-item" onclick="showReportPage()">
+      <span class="nav-icon">${icon('bar-chart')}</span>
+      <span class="nav-label">Report</span>
+    </div>
+  `;
+}
+
+function showReportPage() {
+  activeModuleKey = null;
+
+  // Clear active state on regular modules, mark Report as active
+  document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('active'));
+  const reportItem = document.getElementById('nav-report-item');
+  if (reportItem) reportItem.classList.add('active');
+
+  document.getElementById('breadcrumb').innerHTML =
+    `<span>Beranda</span><span class="bc-sep">›</span><b>Report</b>`;
+
+  const blade  = document.getElementById('content-blade');
+  const dyn    = document.getElementById('content-dynamic');
+  const report = document.getElementById('content-report');
+
+  if (blade) blade.style.display = 'none';
+  if (dyn)   dyn.style.display = 'none';
+
+  const categoriesHtml = reportCategories.map(cat => `
+    <div class="report-category">
+      <div class="report-category-title">${cat.title}</div>
+      <div class="report-grid">
+        ${cat.items.map(item => `
+          <div class="report-card" onclick="openReport('${item.label}')">
+            <div class="report-card-icon">${icon(item.icon)}</div>
+            <div class="report-card-label">${item.label}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  report.style.display = 'block';
+  report.innerHTML = `
+    <div class="container-fluid clearfix">
+      <button class="report-back-btn" onclick="closeReportPage()">
+        ${icon('chevron')} Kembali
+      </button>
+      <div class="page-title">Report</div>
+      ${categoriesHtml}
+    </div>
+  `;
+}
+
+function closeReportPage() {
+  const reportItem = document.getElementById('nav-report-item');
+  if (reportItem) reportItem.classList.remove('active');
+
+  document.getElementById('content-report').style.display = 'none';
+  document.getElementById('content-blade').style.display = 'block';
+
+  document.getElementById('breadcrumb').innerHTML =
+    `<span>Beranda</span>`;
+}
+
+function openReport(label) {
+  // Prototype: just log for now — once endpoints exist per report,
+  // this will route to the actual report page (like navToChild does).
+  console.log('openReport ->', label);
+  alertify.message('Report "' + label + '" belum terhubung ke halaman aslinya.');
+}
+
+function goHome() {
+  closeReportPage();
+
+  activeModuleKey = null;
+  document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('active'));
+
+  const dyn = document.getElementById('content-dynamic');
+  if (dyn) {
+    dyn.style.display = 'none';
+    dyn.innerHTML = '';
+  }
+
+  document.getElementById('content-blade').style.display = 'block';
+  document.getElementById('breadcrumb').innerHTML = `<span>Beranda</span>`;
+}
 
 </script>
 

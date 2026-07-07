@@ -4,399 +4,12 @@
 @endsection
 @section('content')
 
-  <link rel="stylesheet" href="{{ asset('css/tableMaster.css') }}">
-
-  <style>
-    /* ===================================================================
-       Set Pemakai — visual refresh
-       Scope: only cosmetic / layout rules. No element IDs, classes used by
-       JS (onclick targets, #tabel, #tabel_data, etc.) were renamed.
-    =================================================================== */
-
-    :root{
-      --sp-bg:        #f4f5f7;
-      --sp-surface:   #ffffff;
-      --sp-border:    #e7e9ee;
-      --sp-text:      #1f2430;
-      --sp-text-soft: #6b7280;
-      --sp-primary:   #6f42f3;
-      --sp-primary-dk:#5b32d6;
-      --sp-blue:      #2563eb;
-      --sp-blue-bg:   #e8edff;
-      --sp-green:     #16a34a;
-      --sp-green-bg:  #e7f7ed;
-      --sp-amber:     #b45309;
-      --sp-amber-bg:  #fef3e0;
-      --sp-red:       #dc2626;
-      --sp-red-bg:    #fdeaea;
-      --sp-radius:    10px;
-      --sp-radius-sm: 7px;
-      --sp-shadow:    0 1px 2px rgba(20,20,43,.04), 0 1px 1px rgba(20,20,43,.03);
-    }
-
-    #contentContainer, #contentContainer * { box-sizing: border-box; }
-
-    #contentContainer{
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      color: var(--sp-text);
-    }
-
-    /* ---------- Page header / breadcrumb ------------------------------ */
-    .sp-breadcrumb{
-      display:flex;
-      align-items:center;
-      gap:6px;
-      font-size: 13px;
-      color: var(--sp-text-soft);
-      margin-bottom: 18px;
-    }
-    .sp-breadcrumb span.sp-crumb-active{ color: var(--sp-text); font-weight: 600; }
-    .sp-breadcrumb .sp-sep{ color: #c7cad1; }
-
-    .sp-page-head{
-      display:flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-bottom: 22px;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-    .sp-page-head h1{
-      font-size: 26px;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      margin: 0 0 4px 0;
-      color: var(--sp-text);
-    }
-    .sp-page-head p{
-      margin: 0;
-      font-size: 14px;
-      color: var(--sp-text-soft);
-    }
-
-    /* ---------- Buttons ------------------------------------------------ */
-    #contentContainer .btn,
-    .sp-page-head .btn{
-      border-radius: var(--sp-radius-sm);
-      font-size: 14px;
-      font-weight: 600;
-      padding: 9px 16px;
-      box-shadow: none;
-      border: 1px solid transparent;
-      transition: background-color .15s ease, border-color .15s ease, color .15s ease, transform .04s ease;
-    }
-    #contentContainer .btn:active{ transform: translateY(1px); }
-
-    #contentContainer .btn-primary{
-      background: var(--sp-primary);
-      border-color: var(--sp-primary);
-      color: #fff;
-    }
-    #contentContainer .btn-primary:hover,
-    #contentContainer .btn-primary:focus{
-      background: var(--sp-primary-dk);
-      border-color: var(--sp-primary-dk);
-      color: #fff;
-    }
-    #contentContainer .btn-secondary{
-      background: #fff;
-      border-color: var(--sp-border);
-      color: var(--sp-text);
-    }
-    #contentContainer .btn-secondary:hover{
-      background: #f4f5f7;
-    }
-
-    /* small action icon buttons inside table rows */
-    .btn-action-sm{
-      width: 30px;
-      height: 30px;
-      border-radius: 7px;
-      border: 1px solid var(--sp-border);
-      background: #fff;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      margin: 2px;
-      color: var(--sp-text-soft);
-      transition: all .12s ease;
-    }
-    .btn-action-sm:hover{ filter: brightness(0.97); transform: translateY(-1px); }
-    .btn-action-success{ color: var(--sp-green); border-color: #cdebd7; background: var(--sp-green-bg); }
-    .btn-action-primary{ color: var(--sp-blue); border-color: #cfdcff; background: var(--sp-blue-bg); }
-    .btn-action-danger { color: var(--sp-red);  border-color: #f7cfcf; background: var(--sp-red-bg); }
-    .action-buttons-wrap{
-      display:flex;
-      flex-wrap: wrap;
-      justify-content:center;
-      gap: 4px;
-    }
-
-    /* ---------- Stat cards --------------------------------------------- */
-    .sp-stats-row{
-      display:flex;
-      gap: 16px;
-      margin-bottom: 22px;
-      flex-wrap: wrap;
-    }
-    .sp-stat-card{
-      background: var(--sp-surface);
-      border: 1px solid var(--sp-border);
-      border-radius: var(--sp-radius);
-      box-shadow: var(--sp-shadow);
-      padding: 16px 18px;
-      display:flex;
-      align-items:center;
-      gap: 14px;
-      min-width: 200px;
-      flex: 1 1 200px;
-    }
-    .sp-stat-icon{
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size: 18px;
-      flex: none;
-    }
-    .sp-stat-icon.is-purple{ background:#efe9ff; color: var(--sp-primary); }
-    .sp-stat-icon.is-green { background: var(--sp-green-bg); color: var(--sp-green); }
-    .sp-stat-icon.is-blue  { background: var(--sp-blue-bg);  color: var(--sp-blue); }
-    .sp-stat-label{
-      font-size: 13px;
-      color: var(--sp-text-soft);
-      margin-bottom: 2px;
-    }
-    .sp-stat-value{
-      font-size: 22px;
-      font-weight: 700;
-      line-height: 1.1;
-      color: var(--sp-text);
-    }
-    .sp-stat-sub{
-      font-size: 12px;
-      color: var(--sp-text-soft);
-      margin-top: 2px;
-    }
-
-    /* ---------- Toolbar (search + actions) ------------------------------ */
-    .sp-toolbar{
-      display:flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      background: var(--sp-surface);
-      border: 1px solid var(--sp-border);
-      border-bottom: none;
-      border-radius: var(--sp-radius) var(--sp-radius) 0 0;
-      padding: 14px 16px;
-    }
-    .sp-search-wrap{
-      position:relative;
-      flex: 1 1 260px;
-      max-width: 340px;
-    }
-    .sp-search-wrap input{
-      width:100%;
-      border: 1px solid var(--sp-border);
-      border-radius: var(--sp-radius-sm);
-      padding: 9px 12px 9px 34px;
-      font-size: 14px;
-      background: #fbfbfc;
-      color: var(--sp-text);
-    }
-    .sp-search-wrap input:focus{
-      outline: none;
-      border-color: var(--sp-primary);
-      background: #fff;
-    }
-    .sp-search-wrap .sp-search-icon{
-      position:absolute;
-      left: 11px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #a3a8b3;
-      font-size: 14px;
-      pointer-events:none;
-    }
-
-    /* ---------- Table card shell ---------------------------------------- */
-    .sp-table-card{
-      background: var(--sp-surface);
-      border: 1px solid var(--sp-border);
-      border-radius: 0 0 var(--sp-radius) var(--sp-radius);
-      box-shadow: var(--sp-shadow);
-      overflow: hidden;
-      margin-bottom: 28px;
-    }
-    .sp-table-card .table-responsive,
-    .sp-table-card .container-fluid{ padding: 0; }
-
-    /* Re-skin the existing #tabel without touching its id/classes */
-    #tabel{
-      margin-bottom: 0;
-      border: none;
-      width: 100%;
-    }
-    #tabel thead th{
-      background: #f8f9fb !important;
-      color: var(--sp-text-soft) !important;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .04em;
-      font-weight: 600;
-      border-bottom: 1px solid var(--sp-border);
-      border-top: none;
-      padding: 12px 14px;
-      white-space: nowrap;
-    }
-    #tabel tbody td{
-      border-color: var(--sp-border);
-      border-left: none;
-      border-right: none;
-      padding: 13px 14px;
-      font-size: 14px;
-      vertical-align: middle;
-      color: var(--sp-text);
-    }
-    #tabel.table-striped tbody tr:nth-of-type(odd){
-      background-color: #fbfbfc;
-    }
-    #tabel tbody tr:hover{
-      background-color: #f5f3ff;
-    }
-    #tabel, #tabel th, #tabel td{
-      border-color: var(--sp-border) !important;
-    }
-
-    /* Level / role pill, mirrors the "Debit/Kredit" badges in the reference */
-    #tabel td:last-child{
-      font-weight: 600;
-    }
-
-    /* DataTables chrome (length/info/pagination) — keep functional, restyle */
-    .dataTables_wrapper .dataTables_paginate .paginate_button{
-      border-radius: 6px !important;
-      margin-left: 4px;
-      border: 1px solid var(--sp-border) !important;
-      color: var(--sp-text) !important;
-    }
-    .dataTables_wrapper .dataTables_paginate .paginate_button.current{
-      background: var(--sp-primary) !important;
-      border-color: var(--sp-primary) !important;
-      color: #fff !important;
-    }
-    .dataTables_wrapper .dataTables_info{
-      color: var(--sp-text-soft);
-      font-size: 13px;
-      padding-top: 14px !important;
-    }
-    .dataTables_wrapper{
-      padding: 4px 14px 14px 14px;
-    }
-
-    /* ---------- Status / role badge helper (used in inline JS rows too) - */
-    .sp-badge{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding: 3px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-    .sp-badge::before{
-      content:"";
-      width:6px;
-      height:6px;
-      border-radius:50%;
-      background: currentColor;
-    }
-    .sp-badge.is-user        { background: var(--sp-blue-bg);  color: var(--sp-blue); }
-    .sp-badge.is-supervisor  { background: var(--sp-amber-bg); color: var(--sp-amber); }
-    .sp-badge.is-admin       { background: var(--sp-green-bg); color: var(--sp-green); }
-
-    /* ---------- Modals --------------------------------------------------- */
-    .modal-content{
-      border: none;
-      border-radius: var(--sp-radius);
-      box-shadow: 0 20px 50px rgba(15,15,35,.18);
-    }
-    .modal-header{
-      border-bottom: 1px solid var(--sp-border);
-      padding: 16px 20px;
-    }
-    .modal-title{
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--sp-text);
-    }
-    .modal-footer{
-      border-top: 1px solid var(--sp-border);
-      padding: 14px 20px;
-    }
-    .modal-body label{
-      font-size: 13px;
-      color: var(--sp-text-soft);
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-    .modal-body .form-control{
-      border-radius: var(--sp-radius-sm);
-      border: 1px solid var(--sp-border);
-      font-size: 14px;
-    }
-    .modal-body .form-control:focus{
-      border-color: var(--sp-primary);
-      box-shadow: 0 0 0 3px rgba(111,66,243,.12);
-    }
-
-    @media (max-width: 768px){
-      .sp-page-head{ flex-direction: column; align-items: flex-start; }
-      .sp-stats-row{ flex-direction: column; }
-      .sp-toolbar{ flex-direction: column; align-items: stretch; }
-      .sp-search-wrap{ max-width: none; }
-    }
-
-    /* Hide action buttons until the row is hovered */
-    #tabel tbody .action-buttons-wrap {
-      opacity: 0;
-      visibility: hidden;
-      transform: translateX(-6px);
-      transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
-    }
-
-    /* Show them when hovering the table row */
-    #tabel tbody tr:hover .action-buttons-wrap {
-      opacity: 1;
-      visibility: visible;
-      transform: translateX(0);
-    }
-
-    /* Keep actions visible while keyboard users focus a button */
-    #tabel tbody tr:focus-within .action-buttons-wrap {
-      opacity: 1;
-      visibility: visible;
-      transform: translateX(0);
-    }
-
-    <style>
-
-    #tabel th:first-child,
-    #tabel td:first-child {
-      width: 1%;
-      white-space: nowrap;
-    }
-  </style>
+  <link rel="stylesheet" href="{{ asset('css/tableMaster2.css') }}">
 
   <div class="sp-breadcrumb">
     <span>Beranda</span>
     <span class="sp-sep">›</span>
-    <span>Master</span>
+    <span>Berkas</span>
     <span class="sp-sep">›</span>
     <span class="sp-crumb-active">Set Pemakai</span>
   </div>
@@ -409,92 +22,92 @@
     <button class="btn btn-primary" onclick="buttonAdd()">+ Add User</button>
   </div>
 
-<div id="printContainer" style="display:none">
 
-</div>
-<div id="contentContainer" class="container-fluid">
+  <div id="contentContainer" class="container-fluid">
 
-  <input type="hidden" name="_token" id="_token" value="{!! csrf_token() !!}" />
+    <input type="hidden" name="_token" id="_token" value="{!! csrf_token() !!}" />
 
-  <!-- Stat summary cards -->
-  <div class="sp-stats-row">
-    <div class="sp-stat-card">
-      <div class="sp-stat-icon is-purple"><i class="bi bi-people"></i></div>
-      <div>
-        <div class="sp-stat-label">Total User</div>
-        <div class="sp-stat-value">{{ count($users) }}</div>
-      </div>
-    </div>
-    <div class="sp-stat-card">
-      <div class="sp-stat-icon is-green"><i class="bi bi-check-circle"></i></div>
-      <div>
-        <div class="sp-stat-label">User Aktif</div>
-        <div class="sp-stat-value">{{ collect($users)->where('STATUS', 1)->count() }}</div>
-        <div class="sp-stat-sub">{{ collect($users)->where('STATUS', '!=', 1)->count() }} tidak aktif</div>
-      </div>
-    </div>
-    <div class="sp-stat-card">
-      <div class="sp-stat-icon is-blue"><i class="bi bi-shield-check"></i></div>
-      <div>
-        <div class="sp-stat-label">Administrator</div>
-        <div class="sp-stat-value">{{ collect($users)->where('TINGKAT', 2)->count() }}</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Toolbar: search box (visual only — table search stays disabled per existing DataTables config) -->
-  <div class="sp-toolbar">
-    <div class="sp-search-wrap">
-      <i class="bi bi-search sp-search-icon"></i>
-      <input type="text" id="tabel_filter_visual" placeholder="Cari user...">
-    </div>
-  </div>
-
-          <div class="table-outer">
-            <div class="table-wrap">
-              <table class="tb" id="tabel">
-                <thead>
-                  <tr>
-                    <th scope="col">Actions</th>
-                    <th scope="col">Username</th>
-                    <th scope="col">Nama</th>
-                    <th scope="col">Level</th>
-                  </tr>
-                </thead>
-                <tbody id="tabel_data" class="text-right" >
-                @for ($i = 0; $i < count($users); $i++)
-                <tr>
-                  
-              <td style="text-align:center;">
-                <div class="action-buttons-wrap">
-                    <button data-toggle="tooltip" data-placement="top" title="Edit" class="btn-action-sm btn-action-success" title="Koreksi" type="button" onclick="editUser('{{ $users[$i]->username }}', '{{ $users[$i]->FullName }}', '{{ $users[$i]->kodeBag }}', '{{ $users[$i]->KodeJab }}', '{{ $users[$i]->KodeKasir }}', '{{ $users[$i]->limit }}', '{{ $users[$i]->STATUS }}', '{{ $users[$i]->TINGKAT }}', '{{ $users[$i]->keynik }}')" ><i class="bi bi-pen"></i></button>
-                    <button data-toggle="tooltip" data-placement="top" title="Menu" class="btn-action-sm btn-action-primary" type="button" onclick="editAkses('{{ $users[$i]->username }}')"><i class="bi bi-card-checklist"></i></button>
-                    <button data-toggle="tooltip" data-placement="top" title="Set Report" class="btn-action-sm btn-action-primary" type="button" onclick="editAksesReport('{{ $users[$i]->username }}')"><i class="bi bi-card-list"></i></button>
-                    <button data-toggle="tooltip" data-placement="top" title="Akses Gudang" class="btn-action-sm btn-action-primary" type="button" onclick="editAkses('{{ $users[$i]->username }}')"><i class="bi bi-box2"></i></button>
-                    <button data-toggle="tooltip" data-placement="top" title="Akses COA" class="btn-action-sm btn-action-primary" type="button" onclick="editCOA('{{ $users[$i]->username }}')"><i class="bi bi-card-heading"></i></button>
-                    <button data-toggle="tooltip" data-placement="top" title="COA Report" class="btn-action-sm btn-action-primary" type="button" onclick="editCOA('{{ $users[$i]->username }}')"><i class="bi bi-postcard"></i></button>
-                    <button data-toggle="tooltip" data-placement="top" title="Akses COA BS" class="btn-action-sm btn-action-primary" type="button" onclick="editCOA('{{ $users[$i]->username }}')"><i class="bi bi-postcard"></i></button> 
-                    <button data-toggle="tooltip" data-placement="top" title="Delete" class="btn-action-sm btn-action-danger" type="button" onclick="deleteUser('{{ $users[$i]->username }}')"><i class="bi bi-trash"></i></button>
-                </div>
-              </td>
-                  <td>{{ $users[$i]->USERID }}</td>
-                  <td>{{ $users[$i]->FullName }}</td>
-                  <td>
-                    @if($users[$i]->TINGKAT == 0)
-                    <span class="sp-badge is-user">User</span>
-                    @elseif($users[$i]->TINGKAT == 1)
-                    <span class="sp-badge is-supervisor">Supervisor</span>
-                    @elseif($users[$i]->TINGKAT == 2)
-                    <span class="sp-badge is-admin">Administrator</span>
-                    @endif
-                  </td>
-
-                </tr>
-                @endfor
-              </tbody>
-              </table>
-            </div>
+    <!-- Stat summary cards -->
+    <div class="sp-stats-row">
+      <div class="sp-stat-card">
+        <div class="sp-stat-icon is-purple"><i class="bi bi-people"></i></div>
+        <div>
+          <div class="sp-stat-label">Total User</div>
+          <div class="sp-stat-value">{{ count($users) }}</div>
         </div>
+      </div>
+      <div class="sp-stat-card">
+        <div class="sp-stat-icon is-green"><i class="bi bi-check-circle"></i></div>
+        <div>
+          <div class="sp-stat-label">User Aktif</div>
+          <div class="sp-stat-value">{{ collect($users)->where('STATUS', 1)->count() }}</div>
+          <div class="sp-stat-sub">{{ collect($users)->where('STATUS', '!=', 1)->count() }} Tidak Aktif</div>
+        </div>
+      </div>
+      <div class="sp-stat-card">
+        <div class="sp-stat-icon is-blue"><i class="bi bi-shield-check"></i></div>
+        <div>
+          <div class="sp-stat-label">Administrator</div>
+          <div class="sp-stat-value">{{ collect($users)->where('TINGKAT', 2)->count() }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toolbar: search box (visual only — table search stays disabled per existing DataTables config) -->
+    <div class="sp-toolbar">
+      <div class="sp-search-wrap">
+        <i class="bi bi-search sp-search-icon"></i>
+        <input type="text" id="tabel_filter_visual" placeholder="Cari user...">
+      </div>
+    </div>
+
+            <div class="table-outer">
+              <div class="table-wrap">
+                <table class="tb" id="tabel">
+                  <thead>
+                    <tr>
+                      <th scope="col">Actions</th>
+                      <th scope="col">Username</th>
+                      <th scope="col">Nama</th>
+                      <th scope="col">Level</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tabel_data" class="text-right" >
+                  @for ($i = 0; $i < count($users); $i++)
+                  <tr>
+                    
+                <td style="text-align:center;">
+                  <div class="action-buttons-wrap">
+                      <button data-toggle="tooltip" data-placement="top" title="Edit" class="btn-action-sm btn-action-success" title="Koreksi" type="button" onclick="editUser('{{ $users[$i]->username }}', '{{ $users[$i]->FullName }}', '{{ $users[$i]->kodeBag }}', '{{ $users[$i]->KodeJab }}', '{{ $users[$i]->KodeKasir }}', '{{ $users[$i]->limit }}', '{{ $users[$i]->STATUS }}', '{{ $users[$i]->TINGKAT }}', '{{ $users[$i]->keynik }}')" ><i class="bi bi-pen"></i></button>
+                      <button data-toggle="tooltip" data-placement="top" title="Menu" class="btn-action-sm btn-action-primary" type="button" onclick="editAkses('{{ $users[$i]->username }}')"><i class="bi bi-card-checklist"></i></button>
+                      <button data-toggle="tooltip" data-placement="top" title="Set Report" class="btn-action-sm btn-action-primary" type="button" onclick="editAksesReport('{{ $users[$i]->username }}')"><i class="bi bi-card-list"></i></button>
+                      <button data-toggle="tooltip" data-placement="top" title="Akses Gudang" class="btn-action-sm btn-action-primary" type="button" onclick="editAkses('{{ $users[$i]->username }}')"><i class="bi bi-box2"></i></button>
+                      <button data-toggle="tooltip" data-placement="top" title="Akses COA" class="btn-action-sm btn-action-primary" type="button" onclick="editCOA('{{ $users[$i]->username }}')"><i class="bi bi-card-heading"></i></button>
+                      <button data-toggle="tooltip" data-placement="top" title="COA Report" class="btn-action-sm btn-action-primary" type="button" onclick="editCOA('{{ $users[$i]->username }}')"><i class="bi bi-postcard"></i></button>
+                      <button data-toggle="tooltip" data-placement="top" title="Akses COA BS" class="btn-action-sm btn-action-primary" type="button" onclick="editCOA('{{ $users[$i]->username }}')"><i class="bi bi-postcard"></i></button> 
+                      <button data-toggle="tooltip" data-placement="top" title="Delete" class="btn-action-sm btn-action-danger" type="button" onclick="deleteUser('{{ $users[$i]->username }}')"><i class="bi bi-trash"></i></button>
+                  </div>
+                </td>
+                    <td>{{ $users[$i]->USERID }}</td>
+                    <td>{{ $users[$i]->FullName }}</td>
+                    <td>
+                      @if($users[$i]->TINGKAT == 0)
+                      <span class="sp-badge is-user">User</span>
+                      @elseif($users[$i]->TINGKAT == 1)
+                      <span class="sp-badge is-supervisor">Supervisor</span>
+                      @elseif($users[$i]->TINGKAT == 2)
+                      <span class="sp-badge is-admin">Administrator</span>
+                      @endif
+                    </td>
+
+                  </tr>
+                  @endfor
+                </tbody>
+                </table>
+              </div>
+          </div>
+  </div>
+
 </div>
 
 <!-- start modal akses menu -->
@@ -667,7 +280,7 @@
 
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal" >Batal</button>
-       // <button type="button" class="btn btn-primary" onclick="submitAksesReport()">Submit</button>
+        <button type="button" class="btn btn-primary" onclick="submitAksesReport()">Submit</button>
       </div>
     </div>
   </div>
@@ -1750,14 +1363,12 @@
       success: function(res) {
         console.log(res)
 
-
       }
     })
 
-
   }
 
-  function clickUpdateAksesMenuReport ( index , kodemenu) {
+  function clickUpdateAksesMenuReport (index , kodemenu) {
 
     console.log('clickUpdateAksesMenuReport')
     console.log(index, kodemenu)

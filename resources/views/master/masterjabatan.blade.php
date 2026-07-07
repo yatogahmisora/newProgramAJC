@@ -1,0 +1,383 @@
+@extends('newmaster')
+@section('buttons')
+
+@endsection
+@section('content')
+
+<div class="container-fluid">
+
+<link rel="stylesheet" href="{{ asset('css/tableMaster2.css') }}">
+
+  <div class="sp-breadcrumb">
+    <span>Beranda</span>
+    <span class="sp-sep">›</span>
+    <span>Master</span>
+    <span class="sp-sep">›</span>
+    <span class="sp-crumb-active">Jabatan</span>
+  </div>
+
+  <div class="sp-page-head">
+    <div>
+      <h1>Master Jabatan</h1>
+    </div>
+    <button class="btn btn-primary" onclick="buttonAdd()">+ Add Jabatan</button>
+  </div>
+
+<div id="contentContainer" class="container-fluid">
+
+  <input type="hidden" name="_token" id="_token" value="{!! csrf_token() !!}" />
+
+<div class="sp-toolbar">
+    <div class="sp-search-wrap">
+      <i class="bi bi-search sp-search-icon"></i>
+      <input type="text" id="tabel_filter_visual" placeholder="Cari user...">
+    </div>
+  </div>
+
+          <div class="table-outer">
+            <div class="table-wrap">
+              <table class="tb" id="tabel">
+                <thead>
+                  <tr>
+                    <th scope="col">Actions</th>
+                    <th scope="col">Kode</th>
+                    <th scope="col">Nama Jabatan</th>
+                  </tr>
+                </thead>
+                <tbody id="tabel_data" class="text-right">
+              </tbody>
+              </table>
+            </div>
+        </div>
+
+</div>
+
+
+<!-- start modal add -->
+<div class="modal fade"  id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered"  role="document" style="max-width: 500px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- <h1>Tes Modal</h1> -->
+
+        <div class="container-fluid">
+          <input type="hidden" name="noUrut" id="input_add_noUrut" value="" />
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Kode Jabatan</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_add_kode" placeholder="Kode Jabatan">
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row mt-2">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Nama Jabatan</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_add_nama" placeholder="Nama Jabatan">
+                </div>
+              </div>
+
+            </div>
+
+
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" onclick="submitAdd()">Submit</button>
+  </div>
+</div>
+</div>
+</div>
+<!-- End modal add-->
+
+
+
+
+
+<!-- start modal edit -->
+<div class="modal fade"  id="formEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered"  role="document" style="max-width: 500px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- <h1>Tes Modal</h1> -->
+
+        <div class="container-fluid">
+          <!-- <input type="hidden" name="noUrut" id="input_add_noUrut" value="" /> -->
+
+            <div class="row">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Kode Jenis</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_edit_kode" placeholder="Kode Jenis" disabled>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row mt-2">
+              <div class="col-4 text-left">
+                <div class="form-group text-left">
+                  <label class="text-left">Nama Jenis</label>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="input_edit_nama" placeholder="Nama Jenis">
+                </div>
+              </div>
+
+            </div>
+
+
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" onclick="submitEdit()">Submit</button>
+  </div>
+</div>
+</div>
+</div>
+<!-- End modal edit-->
+
+
+@endsection
+
+@section('js')
+<script type="text/javascript">
+
+let dataRefresh = []
+
+function loadAll () {
+  console.log('asd')
+  let _token = $("#_token").val();
+
+
+  $('#tabel').DataTable().destroy();
+
+  $.ajax({
+    url: "{!! url('masterjabatanloadall') !!}",
+    type: "get",
+    async: false,
+    data: {
+      _token : _token,
+    },
+    success: function(res) {
+      console.log(res)
+      dataRefresh = res
+  }})
+
+  let rowTable = ""
+  dataRefresh.forEach((item, i) => {
+    let temp = ""
+
+    rowTable += `<tr>
+    <td class="text-center">
+      <div class="action-buttons-wrap">
+          <button data-toggle="tooltip" data-placement="top" title="Menu" class="btn-action-sm btn-action-success" type="button" onclick="buttonEdit('${item.KODEJAB}')"><i class="bi bi-pen"></i></button>
+          <button data-toggle="tooltip" data-placement="top" title="Menu" class="btn-action-sm btn-action-danger" type="button" onclick="buttonDelete('${item.KODEJAB}')"><i class="bi bi-trash"></i></button>
+      </div> 
+    </td>
+    <td>${item.KODEJAB}</td>
+    <td>${item.NamaJab}</td>
+    </tr>`
+  });
+
+ document.getElementById("tabel_data").innerHTML = rowTable
+  $("#tabel").DataTable({
+    "lengthChange": false,
+    "paging": false,
+    "searching": true,
+    "dom": 'tip'
+  });
+
+}
+
+$("#tabel_filter_visual").on("keyup", function () {
+  $("#tabel").DataTable().search(this.value).draw();
+});
+
+function buttonAdd () {
+
+  document.getElementById("input_add_kode").value = ''
+  document.getElementById("input_add_nama").value = ''
+
+
+  $("#form").modal('toggle')
+
+}
+
+function buttonEdit (kode) {
+  console.log(kode)
+  let _token = $("#_token").val();
+  $.ajax({
+    url: "{!! url('masterjabatanspdetail') !!}",
+    type: "get",
+    async: false,
+    data: {
+      _token : _token,
+      kode
+    },
+    success: function(res) {
+
+      console.log(res)
+      document.getElementById("input_edit_kode").value = res[0].KODEJAB
+      document.getElementById("input_edit_nama").value = res[0].NamaJab
+
+    }})
+    $("#formEdit").modal('toggle')
+}
+
+function buttonDelete (kode) {
+  console.log(kode)
+  let _token = $("#_token").val();
+
+
+  alertify.confirm('Hapus Area', 'Apakah yakin ingin menghapus Data ' + kode + ' ?',
+      function() {
+        console.log('yes')
+
+        $.ajax({
+          url: "{!! url('masterjabatanspdelete') !!}",
+          type: "post",
+          async: false,
+          data: {
+            _token : _token,
+            kode
+          },
+          success: function(res) {
+            if (res != 1) {
+              alertify.warning(res);
+            } else {
+              console.log(res)
+              loadAll()
+              alertify.success("Data Jabatan telah dihapus");
+
+            }
+          }})
+      }
+    ,function(){
+      console.log('no')
+    });
+
+
+}
+//
+function submitEdit () {
+
+  let _token = $("#_token").val();
+  let kode = $("#input_edit_kode").val();
+  let nama = $("#input_edit_nama").val();
+  console.log(kode,nama)
+  if (!kode) {
+    alertify.warning("Kode  harus diisi");
+    return
+  }
+
+  if (!nama) {
+    alertify.warning("Nama  harus diisi");
+    return
+  }
+
+  $.ajax({
+    url: "{!! url('masterjabatanspedit') !!}",
+    type: "post",
+    async: false,
+    data: {
+      _token : _token,
+      kode,
+      nama
+    },
+    success: function(res) {
+
+      if (res != 1) {
+        alertify.warning(res);
+      }  else {
+        console.log(res ,'!')
+        // $("#formEdit").modal('toggle')
+        alertify.success("Data Jabatan telah diedit");
+        loadAll()
+        $("#formEdit").modal('toggle')
+      }
+
+    }})
+
+}
+//
+function submitAdd () {
+
+  let _token = $("#_token").val();
+  let kode = $("#input_add_kode").val();
+  let nama = $("#input_add_nama").val();
+
+  if (!kode) {
+    alertify.warning("Kode harus diisi");
+    return
+  }
+
+  if (!nama) {
+    alertify.warning("Nama Jabatan harus diisi");
+    return
+  }
+
+  $.ajax({
+    url: "{!! url('masterjabatanspadd') !!}",
+    type: "post",
+    async: false,
+    data: {
+      _token : _token,
+      kode,
+      nama
+    },
+    success: function(res) {
+
+      if (res != 1) {
+        alertify.warning(res);
+      }  else {
+        console.log(res ,'!')
+        // $("#formEdit").modal('toggle')
+        alertify.success("Data Jabatan telah ditambah");
+        loadAll()
+        $("#form").modal('toggle')
+      }
+
+    }})
+
+  // console.log(kodearea, namaarea)
+}
+
+window.onload = function() {
+    loadAll();
+};
+
+
+
+</script>
+
+
+
+
+@endsection
