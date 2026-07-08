@@ -1,97 +1,63 @@
-@extends('master.newmaster')
+@extends('newmaster')
 @section('buttons')
 
 @endsection
 @section('content')
 
-<div class="container-fluid">
 
-  <!-- <div id="qrcode"></div> -->
-<div class="row mt-4">
-      <div class="col-6 text-left">
-        <h2 style="margin-top:-85px;">Master Customer</h2>
-      </div>
-      <div class="col-6 text-right">
-        <button type="button" class="btn btn-primary btn-lg" style="
-            height: 30px; 
-            margin-top: -150px; 
-            padding: 4px 12px; 
-            border-radius: 20px; 
-            font-size: 0.75rem; 
-            font-weight: 600; 
-            text-transform: uppercase; 
-            transition: background-color 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
-            onclick="buttonAdd()">
-          Add Customer
-        </button>
-      </div>
-      {{-- <div class="col-6 text-right">
-        <button type="button" class="btn btn-primary btn-lg" style="
-            height: 30px; 
-            margin-top: -150px; 
-            padding: 4px 12px; 
-            border-radius: 20px; 
-            font-size: 0.75rem; 
-            font-weight: 600; 
-            text-transform: uppercase; 
-            transition: background-color 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
-            onclick="loadAll()">
-          tes load all
-        </button>
-      </div> --}}
+<link rel="stylesheet" href="{{ asset('css/tableMaster2.css') }}">
+
+  <div class="sp-breadcrumb">
+    <span>Beranda</span>
+    <span class="sp-sep">›</span>
+    <span>Master</span>
+    <span class="sp-sep">›</span>
+    <span class="sp-crumb-active">Customer</span>
+  </div>
+
+  <div class="sp-page-head">
+    <div>
+      <h1>Master Customer</h1>
     </div>
-<!-- <button onclick="loadAll()">tes</button> -->
-</div>
+    <button class="btn btn-primary" onclick="buttonAdd()">+ Add Customer</button>
+  </div>
 
-<div id="printContainer" style="display:none">
+<div id="contentContainer" class="container-fluid">
 
-</div>
-<div id="contentContainer" class="container-fluid" style='margin-top:-95px;' >
-  <input type="hidden" id="periode_tahun" value="{!! $periode->tahun !!}" />
-  <input type="hidden" id="periode_bulan" value="{!! $periode->bulan !!}" />
   <input type="hidden" name="_token" id="_token" value="{!! csrf_token() !!}" />
-          <div class="row mt-4">
-              <!-- <div class="col-12 text-right">
-                  <button type="button" class="btn btn-primary btn-lg " style="height: 60px; " onclick="buttonAdd()"  >Add Koreksi Stock Gudang</button>
-              </div> -->
-          </div>
-          <div class="row mt-3">
-            <div class="col-12" style="overflow:auto;">
-              <div class="">
 
-                    <table id="tabel" class="table table-bordered table-striped"  >
-                      <thead id='theadCustom' class="text-center" style='white-space:nowrap;'>
-                        <tr>
-                          <th scope="col">Actions</th>
-                          <th scope="col">Kode</th>
-                          <th scope="col">Bentuk Usaha</th>
-                          <th scope="col">Nama</th>
-                          <th scope="col">Alamat</th>
-                          <th scope="col">Kota</th>
-                          <!-- <th scope="col">Kode Pos</th> -->
-                          <th scope="col">Negara</th>
-                          <th scope="col">Telpon</th>
-                          <!-- <th scope="col">Fax</th> -->
-                          <th scope="col">Email</th>
+<div class="sp-toolbar">
+    <div class="sp-search-wrap">
+      <i class="bi bi-search sp-search-icon"></i>
+      <input type="text" id="tabel_filter_visual" placeholder="Cari user...">
+    </div>
+  </div>
 
-                        </tr>
-                      </thead>
-
-
-                      <tbody id="tabel_data" class="text-left" >
-                      </tbody>
-
-
-                    </table>
-              </div>
-            </div>
-          </div>
-
-
+  <div class="table-outer">
+    <div class="table-wrap">
+      <table class="tb" id="tabel">
+        <thead>
+          <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Kode</th>
+            <th scope="col">Bentuk Usaha</th>
+            <th scope="col">Nama</th>
+            <th scope="col">Alamat</th>
+            <th scope="col">Kota</th>
+            <!-- <th scope="col">Kode Pos</th> -->
+            <th scope="col">Negara</th>
+            <th scope="col">Telpon</th>
+            <!-- <th scope="col">Fax</th> -->
+            <th scope="col">Email</th>
+          </tr>
+        </thead>
+        <tbody id="tabel_data" class="text-right">
+      </tbody>
+      </table>
+    </div>
 </div>
 
+</div>
 
 <!-- start modal add -->
 <div class="modal fade"  id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -1302,7 +1268,7 @@ function loadAll () {
         },
         orderable: false,
         searchable: false,
-        className: "text-center"
+        className: "text-center action-buttons-wrap"
       },
       { data: 'KODECUSTSUPP' },
       { data: 'USAHA', defaultContent: '' },

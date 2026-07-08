@@ -1,71 +1,59 @@
-@extends('master.newmaster')
+@extends('newmaster')
 @section('buttons')
 
 @endsection
 @section('content')
 
-<div class="container-fluid">
+<link rel="stylesheet" href="{{ asset('css/tableMaster2.css') }}">
 
-  <!-- <div id="qrcode"></div> -->
-<div class="row mt-4">
-      <div class="col-6 text-left">
-        <h2 style="margin-top:-85px;">Master Sales</h2>
-      </div>
-      {{-- <div class="col-6 text-right">
-        <button type="button" class="btn btn-primary btn-lg" style="
-            height: 30px; 
-            margin-top: -150px; 
-            padding: 4px 12px; 
-            border-radius: 20px; 
-            font-size: 0.75rem; 
-            font-weight: 600; 
-            text-transform: uppercase; 
-            transition: background-color 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
-            onclick="buttonAdd()">
-          Add Sales
-        </button>
-      </div> --}}
+  <div class="sp-breadcrumb">
+    <span>Beranda</span>
+    <span class="sp-sep">›</span>
+    <span>Master</span>
+    <span class="sp-sep">›</span>
+    <span class="sp-crumb-active">Sales</span>
+  </div>
+
+  <div class="sp-page-head">
+    <div>
+      <h1>Master Sales</h1>
     </div>
-</div>
+    <button class="btn btn-primary" onclick="buttonAdd()">+ Add Sales</button>
+  </div>
 
+<div id="contentContainer" class="container-fluid">
 
-<div id="printContainer" style="display:none">
-
-</div>
-<div id="contentContainer" class="container-fluid" style='margin-top:-80px;' >
-  <input type="hidden" id="periode_tahun" value="{!! $periode->tahun !!}" />
-  <input type="hidden" id="periode_bulan" value="{!! $periode->bulan !!}" />
   <input type="hidden" name="_token" id="_token" value="{!! csrf_token() !!}" />
-    <div class="row mt-4">
-        <!-- <div class="col-12 text-right">
-            <button type="button" class="btn btn-primary btn-lg " style="height: 60px; " onclick="buttonAdd()"  >Add Koreksi Stock Gudang</button>
-        </div> -->
+
+<div class="sp-toolbar">
+    <div class="sp-search-wrap">
+      <i class="bi bi-search sp-search-icon"></i>
+      <input type="text" id="tabel_filter_visual" placeholder="Cari user...">
     </div>
-    <div class="row mt-3">
-      <div class="col-12" style="overflow:auto;">
-          <table id="tabel" class="table table-bordered table-striped">
+  </div>
 
-            <thead style='white-space:nowrap;'  id='theadCustom' class="text-center">
-              <tr>
-                <th scope="col">Actions</th>
-                <th scope="col">Nama Sales</th>
-                <th scope="col">Telepon HP</th>
-                <th scope="col">Kode Gudang</th>
-                <th scope="col">Nama Gudang</th>
-                <th scope="col">Kode Cost</th>
-                <th scope="col">Nama Cost</th>
-              </tr>
-            </thead>
-
-            <tbody style='white-space:nowrap;' id="tabel_data" class="text-left" >
-            </tbody>
-
-          </table>
-      </div>
+  <div class="table-outer">
+    <div class="table-wrap">
+      <table class="tb" id="tabel">
+        <thead>
+          <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Nama Sales</th>
+            <th scope="col">Telepon HP</th>
+            <th scope="col">Kode Gudang</th>
+            <th scope="col">Nama Gudang</th>
+            <th scope="col">Kode Cost</th>
+            <th scope="col">Nama Cost</th>
+          </tr>
+        </thead>
+        <tbody id="tabel_data" class="text-right">
+      </tbody>
+      </table>
     </div>
 </div>
 
+</div>
+  
 <!-- start modal edit -->
 <div class="modal fade"  id="formEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered"  role="document" style="max-width: 500px">
@@ -340,9 +328,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Sales Customer</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <!-- <h1>Tes Modal</h1> -->
@@ -423,7 +409,6 @@
 
             <div class="row mt-2">
               <div class="col-md-12 text-right">
-                <button type="button" class="btn btn-secondary" onclick="closeShowSales()" >Batal</button>
                 <button type="button" onclick="submitAddTarget()" class="btn btn-primary" >Add</button>
               </div>
 
@@ -577,15 +562,17 @@ function loadAll () {
 
     rowTable += `<tr>
     <td class="text-center">
-      <button class="btn btn-success btn-sm hover-tooltip" type="button" onclick="buttonEdit('${item.KeyNIK}')" data-tooltip="Koreksi Gudang/Stok">
+      <div class="action-buttons-wrap">
+      <button class="btn-action-sm btn-action-success hover-tooltip" type="button" onclick="buttonEdit('${item.KeyNIK}')" data-tooltip="Koreksi Gudang/Stok">
         <i class="bi bi-pen"></i>
       </button>
-      <button class="btn btn-warning btn-sm hover-tooltip" type="button" onclick="buttonSales('${item.KeyNIK}')" data-tooltip="Sales Cust">
+      <button class="btn-action-sm btn-action-warning hover-tooltip" type="button" onclick="buttonSales('${item.KeyNIK}')" data-tooltip="Sales Cust">
         <i class="bi bi-receipt"></i>
       </button>
-      <button class="btn btn-primary btn-sm hover-tooltip" type="button" onclick="buttonTarget('${item.KeyNIK}')" data-tooltip="Target">
+      <button class="btn-action-sm btn-action-primary hover-tooltip" type="button" onclick="buttonTarget('${item.KeyNIK}')" data-tooltip="Target">
         <i class="bi bi-bullseye"></i>
       </button>
+      </div>
     </td>
     <td>${item.Nama || ''}</td>
     <td>${item.TeleponHP || ''}</td>
@@ -596,13 +583,20 @@ function loadAll () {
     </tr>`
   });
 
+  
   document.getElementById("tabel_data").innerHTML = rowTable
   $("#tabel").DataTable({
     "lengthChange": true,
-      "paging": true
-    });
+    "paging": true,
+    "searching": true,
+    "dom": 'tip'
+  });
 
 }
+
+$("#tabel_filter_visual").on("keyup", function () {
+  $("#tabel").DataTable().search(this.value).draw();
+});
 
 
 function buttonEdit (keynik) {

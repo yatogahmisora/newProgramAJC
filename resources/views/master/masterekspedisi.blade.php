@@ -1,91 +1,66 @@
-@extends('master.newmaster')
+@extends('newmaster')
 @section('buttons')
 
 @endsection
 @section('content')
 
-<style>
-.tight-rows .row {
-    margin-bottom: 4px !important;
-}
+<link rel="stylesheet" href="{{ asset('css/tableMaster2.css') }}">
 
-.tight-rows .form-group {
-    margin-bottom: 4px !important;
-}
-</style>
+  <div class="sp-breadcrumb">
+    <span>Beranda</span>
+    <span class="sp-sep">›</span>
+    <span>Master</span>
+    <span class="sp-sep">›</span>
+    <span class="sp-crumb-active">Ekspedisi</span>
+  </div>
 
-{{-- end tampilan search bar 1 --}}
-<div class="container-fluid">
+  <div class="sp-page-head">
+    <div>
+      <h1>Master Ekspedisi</h1>
+    </div>
+    <button class="btn btn-primary" onclick="buttonAdd()">+ Add Ekspedisi</button>
+  </div>
 
-  <!-- <div id="qrcode"></div> -->
-  <div class="row mt-4">
-      <div class="col-6 text-left">
-        <h2 style="margin-top:-85px;">Master Ekspedisi</h2>
-      </div>
-      <div class="col-6 text-right">
-        <button type="button" class="btn btn-primary btn-lg" style="
-            height: 30px; 
-            margin-top: -150px; 
-            padding: 4px 12px; 
-            border-radius: 20px; 
-            font-size: 0.75rem; 
-            font-weight: 600; 
-            text-transform: uppercase; 
-            transition: background-color 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
-            onclick="buttonAdd()">
-          Add Ekspedisi
-        </button>
-      </div>
-</div>
+<div id="contentContainer" class="container-fluid">
 
-<div id="printContainer" style="display:none">
-
-</div>
-<div id="contentContainer" class="container-fluid" style="max-width: 1800px; margin-top:-95px">
-  <input type="hidden" id="periode_tahun" value="{!! $periode->tahun !!}" />
-  <input type="hidden" id="periode_bulan" value="{!! $periode->bulan !!}" />
   <input type="hidden" name="_token" id="_token" value="{!! csrf_token() !!}" />
-          <div class="row mt-4">
-              <!-- <div class="col-12 text-right">
-                  <button type="button" class="btn btn-primary btn-lg " style="height: 60px; " onclick="buttonAdd()"  >Add Koreksi Stock Gudang</button>
-              </div> -->
-          </div>
-          <div class="row mt-3">
-            <div class="col-12" style="overflow:auto;">
-              <div class="">
 
-                    <table id="tabel" class="table table-bordered table-striped">
-                      <thead id='theadCustom' class="text-center text-white" style='white-space:nowrap;'>
-                        <tr>
-                          <th scope="col">Actions</th>
-                          <th scope="col">Kode</th>
-                          <th scope="col">Bentuk Usaha</th>
-                          <th scope="col">Nama</th>
-                          <th scope="col">Alamat</th>
-                          <th scope="col">Kota</th>
-                          <th scope="col">Kode Pos</th>
-                          <th scope="col">Negara</th>
-                          <th scope="col">Telepon</th>
-                          <th scope="col">Fax</th>
-                          <th scope="col">Email</th>
-                          <th scope="col">Pph 23</th>
-                          <th scope="col">Pph 21</th>
-                          <th scope="col">PPN</th>
+<div class="sp-toolbar">
+    <div class="sp-search-wrap">
+      <i class="bi bi-search sp-search-icon"></i>
+      <input type="text" id="tabel_filter_visual" placeholder="Cari user...">
+    </div>
+  </div>
 
-                        </tr>
-                      </thead>
-
-                      <tbody id="tabel_data" class="text-left">
-                      </tbody>
-
-                    </table>
-              </div>
-            </div>
-          </div>
-
+  <div class="table-outer">
+    <div class="table-wrap">
+      <table class="tb" id="tabel">
+        <thead>
+          <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Kode</th>
+            <th scope="col">Bentuk Usaha</th>
+            <th scope="col">Nama</th>
+            <th scope="col">Alamat</th>
+            <th scope="col">Kota</th>
+            <th scope="col">Kode Pos</th>
+            <th scope="col">Negara</th>
+            <th scope="col">Telepon</th>
+            <th scope="col">Fax</th>
+            <th scope="col">Email</th>
+            <th scope="col">Pph 23</th>
+            <th scope="col">Pph 21</th>
+            <th scope="col">PPN</th>
+          </tr>
+        </thead>
+        <tbody id="tabel_data" class="text-right">
+      </tbody>
+      </table>
+    </div>
+</div>
 
 </div>
+
 <!-- start modal add -->
 <div class="modal fade"  id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered"  role="document" style="max-width: 800px">
@@ -876,9 +851,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Detail Akun</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <!-- <h1>Tes Modal</h1> -->
@@ -1266,14 +1239,16 @@ function loadAll () {
     } else {
       statusCell = `<td class="text-success text-center"><i class="bi bi-check2" style="-webkit-text-stroke-width: 2px;"></i></td>`;
     }
-    rowTable += `<tr class='theadCustom'>
-    <td style="white-space:nowrap;" class='text-center'>
-      <button class="btn btn-success btn-sm hover-tooltip" type="button" onclick="buttonEdit('${item.KODECUSTSUPP}')" data-tooltip="Edit Ekspedisi">
-            <i class="bi bi-pen"></i>
-          </button>
-      <button class="btn btn-danger btn-sm hover-tooltip" type="button" onclick="buttonDelete('${item.KODECUSTSUPP}')" data-tooltip="Delete Ekspedisi">
-            <i class="bi bi-trash"></i>
-          </button>
+    rowTable += `<tr>
+    <td class='text-center'>
+      <div class="action-buttons-wrap">
+        <button class="btn-action-sm btn-action-success hover-tooltip" type="button" onclick="buttonEdit('${item.KODECUSTSUPP}')" data-tooltip="Edit Ekspedisi">
+              <i class="bi bi-pen"></i>
+            </button>
+        <button class="btn-action-sm btn-action-danger hover-tooltip" type="button" onclick="buttonDelete('${item.KODECUSTSUPP}')" data-tooltip="Delete Ekspedisi">
+              <i class="bi bi-trash"></i>
+            </button>
+      </div>
     </td>
     <td>${item.KODECUSTSUPP || ''}</td>
     <td>${item.USAHA || ''}</td>
@@ -1295,10 +1270,16 @@ function loadAll () {
   document.getElementById("tabel_data").innerHTML = rowTable
   $("#tabel").DataTable({
     "lengthChange": true,
-      "paging": true
-    });
+    "paging": true,
+    "searching": true,
+    "dom": 'tip'
+  });
 
 }
+
+$("#tabel_filter_visual").on("keyup", function () {
+  $("#tabel").DataTable().search(this.value).draw();
+});
 
 function buttonAdd () {
 

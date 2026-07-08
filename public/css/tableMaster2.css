@@ -116,6 +116,7 @@
     }
     .btn-action-sm:hover{ filter: brightness(0.97); transform: translateY(-1px); }
     .btn-action-success{ color: var(--sp-green); border-color: #cdebd7; background: var(--sp-green-bg); }
+    .btn-action-warning{ color: var(--sp-amber); border-color: #cdebd7; background: var(--sp-amber-bg); }
     .btn-action-primary{ color: var(--sp-blue); border-color: #cfdcff; background: var(--sp-blue-bg); }
     .btn-action-danger { color: var(--sp-red);  border-color: #f7cfcf; background: var(--sp-red-bg); }
     .action-buttons-wrap{

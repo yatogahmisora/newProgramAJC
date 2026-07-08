@@ -1,93 +1,59 @@
-@extends('master.newmaster')
+@extends('newmaster')
 @section('buttons')
 
 @endsection
 @section('content')
 
-{{-- end tampilan search bar 1 --}}
-<div class="container-fluid">
 
-  <!-- <div id="qrcode"></div> -->
-  <div class="row mt-4">
-      <div class="col-6 text-left">
-        <h2 style="margin-top:-85px;">Master Supplier Bank Account</h2>
-      </div>
-      {{-- <div class="col-6 text-right">
-        <button type="button" class="btn btn-primary btn-lg" style="
-            height: 30px; 
-            margin-top: -150px; 
-            padding: 4px 12px; 
-            border-radius: 20px; 
-            font-size: 0.75rem; 
-            font-weight: 600; 
-            text-transform: uppercase; 
-            transition: background-color 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
-            onclick="buttonAdd()">
-          Add Valas
-        </button>
-      </div> --}}
-      {{-- <div class="col-6 text-right">
-        <button type="button" class="btn btn-primary btn-lg" style="
-            height: 30px; 
-            margin-top: -150px; 
-            padding: 4px 12px; 
-            border-radius: 20px; 
-            font-size: 0.75rem; 
-            font-weight: 600; 
-            text-transform: uppercase; 
-            transition: background-color 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
-            onclick="loadAll()">
-          tes load all
-        </button>
-      </div> --}}
+<link rel="stylesheet" href="{{ asset('css/tableMaster2.css') }}">
+
+  <div class="sp-breadcrumb">
+    <span>Beranda</span>
+    <span class="sp-sep">›</span>
+    <span>Master</span>
+    <span class="sp-sep">›</span>
+    <span class="sp-crumb-active">Supplier Bank Account</span>
+  </div>
+
+  <div class="sp-page-head">
+    <div>
+      <h1>Master Supplier Bank Account</h1>
     </div>
-<!-- <button onclick="loadAll()">tes</button> -->
-</div>
+    {{-- <button class="btn btn-primary" onclick="buttonAdd()">+ Add Supplier Bank Account</button> --}}
+  </div>
 
-<div id="printContainer" style="display:none">
+<div id="contentContainer" class="container-fluid">
 
-</div>
-<div id="contentContainer" class="container-fluid" style="max-width: 1800px; margin-top:-95px">
-  <input type="hidden" id="periode_tahun" value="{!! $periode->tahun !!}" />
-  <input type="hidden" id="periode_bulan" value="{!! $periode->bulan !!}" />
   <input type="hidden" name="_token" id="_token" value="{!! csrf_token() !!}" />
-          <div class="row mt-4">
-              <!-- <div class="col-12 text-right">
-                  <button type="button" class="btn btn-primary btn-lg " style="height: 60px; " onclick="buttonAdd()"  >Add Koreksi Stock Gudang</button>
-              </div> -->
-          </div>
-          <div class="row mt-3">
-            <div class="col-12" style="overflow:auto;">
-              <div class="">
 
-                    <table id="tabel" class="table table-bordered table-striped">
-                      <thead id='theadCustom' class="text-center text-white">
-                        <tr>
-                          <th scope="col">Actions</th>
-                          <th scope="col">Kode Supplier</th>
-                          <th scope="col">Nama Supplier</th>
-                          <th scope="col">Bank</th>
-                          <th scope="col">No. Acc</th>
-                          <th scope="col">ATN</th>
-                          <th scope="col">Bank Temp</th>
-                          <th scope="col">No ACC Temp</th>
-                          <th scope="col">AN Temp</th>
+<div class="sp-toolbar">
+    <div class="sp-search-wrap">
+      <i class="bi bi-search sp-search-icon"></i>
+      <input type="text" id="tabel_filter_visual" placeholder="Cari user...">
+    </div>
+  </div>
 
-                        </tr>
-                      </thead>
-
-
-                      <tbody id="tabel_data" class="text-left">
-                      </tbody>
-
-
-                    </table>
-              </div>
+          <div class="table-outer">
+            <div class="table-wrap">
+              <table class="tb" id="tabel">
+                <thead>
+                  <tr>
+                    <th scope="col">Actions</th>
+                    <th scope="col">Kode Supplier</th>
+                    <th scope="col">Nama Supplier</th>
+                    <th scope="col">Bank</th>
+                    <th scope="col">No. Acc</th>
+                    <th scope="col">ATN</th>
+                    <th scope="col">Bank Temp</th>
+                    <th scope="col">No ACC Temp</th>
+                    <th scope="col">AN Temp</th>
+                  </tr>
+                </thead>
+                <tbody id="tabel_data" class="text-right">
+              </tbody>
+              </table>
             </div>
-          </div>
-
+        </div>
 
 </div>
 
@@ -287,15 +253,11 @@ function loadAll () {
 
     rowTable += `<tr class='theadCustom'>
     <td style="white-space:nowrap;" class='text-center'>
-      <button class="btn btn-primary btn-sm hover-tooltip" type="button" onclick="buttonUpdateBank('${item.KODECUSTSUPP}')" data-tooltip="Update Bank Acc">
-            <i class="bi bi-send"></i>
-          </button>
-      <button class="btn btn-success btn-sm hover-tooltip" type="button" onclick="buttonEdit('${item.KODECUSTSUPP}')" data-tooltip="Edit Bank Acc">
-            <i class="bi bi-pen"></i>
-          </button>
-      <button class="btn btn-danger btn-sm hover-tooltip" type="button" onclick="buttonDelete('${item.KODECUSTSUPP}')" data-tooltip="Delete Bank Acc">
-            <i class="bi bi-trash"></i>
-          </button>
+      <div class="action-buttons-wrap">
+          <button data-toggle="tooltip" data-placement="top" title="Menu" class="btn-action-sm btn-action-primary" type="button" onclick="buttonUpdateBank('${item.KODECUSTSUPP}')"><i class="bi bi-send"></i></button>
+          <button data-toggle="tooltip" data-placement="top" title="Menu" class="btn-action-sm btn-action-success" type="button" onclick="buttonEdit('${item.KODECUSTSUPP}')"><i class="bi bi-pen"></i></button>
+          <button data-toggle="tooltip" data-placement="top" title="Menu" class="btn-action-sm btn-action-danger" type="button" onclick="buttonDelete('${item.KODECUSTSUPP}')"><i class="bi bi-trash"></i></button>
+      </div>
     </td>
     <td>${item.KODECUSTSUPP || ''}</td>
     <td>${item.NAMACUSTSUPP || ''}</td>
@@ -311,11 +273,17 @@ function loadAll () {
 
   document.getElementById("tabel_data").innerHTML = rowTable
   $("#tabel").DataTable({
-    "lengthChange": false,
-      "paging": false
-    });
+    "lengthChange": true,
+    "paging": true,
+    "searching": true,
+    "dom": 'tip'
+  });
 
 }
+
+$("#tabel_filter_visual").on("keyup", function () {
+  $("#tabel").DataTable().search(this.value).draw();
+});
 
 function buttonAdd () {
   document.getElementById("input_add_kode").value = ""

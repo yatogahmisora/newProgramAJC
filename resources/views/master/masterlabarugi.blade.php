@@ -1,11 +1,57 @@
-@extends('master.newmaster')
+@extends('newmaster')
 @section('buttons')
 
 @endsection
 @section('content')
 <div class="container-fluid">
 
-  <!-- <div id="qrcode"></div> -->
+
+<link rel="stylesheet" href="{{ asset('css/tableMaster2.css') }}">
+
+  <div class="sp-breadcrumb">
+    <span>Beranda</span>
+    <span class="sp-sep">›</span>
+    <span>Master</span>
+    <span class="sp-sep">›</span>
+    <span class="sp-crumb-active">Laba Rugi</span>
+  </div>
+
+  <div class="sp-page-head">
+    <div>
+      <h1>Master Laba Rugi</h1>
+    </div>
+    <button class="btn btn-primary" onclick="buttonAdd()">+ Add Laba Rugi</button>
+  </div>
+
+<div id="contentContainer" class="container-fluid">
+
+  <input type="hidden" name="_token" id="_token" value="{!! csrf_token() !!}" />
+
+<div class="sp-toolbar">
+    <div class="sp-search-wrap">
+      <i class="bi bi-search sp-search-icon"></i>
+      <input type="text" id="tabel_filter_visual" placeholder="Cari user...">
+    </div>
+  </div>
+
+          <div class="table-outer">
+            <div class="table-wrap">
+              <table class="tb" id="tabel">
+                <thead>
+                  <tr>
+                    <th scope="col">Actions</th>
+                    <th scope="col">Kode Satuan</th>
+                    <th scope="col">Kode Sat Tax</th>
+                  </tr>
+                </thead>
+                <tbody id="tabel_data" class="text-right">
+              </tbody>
+              </table>
+            </div>
+        </div>
+
+</div>
+
 <div class="row mt-4">
       <div class="col-6 text-left">
         <h2 style="margin-top:-85px;">Master Laba, Rugi & HPP</h2>
