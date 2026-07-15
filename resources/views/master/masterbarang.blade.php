@@ -1,97 +1,62 @@
-@extends('master.newmaster')
+@extends('newmaster')
 @section('buttons')
 
 @endsection
 @section('content')
 
-<div class="container-fluid">
+<link rel="stylesheet" href="{{ asset('css/tableMaster2.css') }}">
 
-  <!-- <div id="qrcode"></div> -->
-<div class="row mt-4">
-      <div class="col-6 text-left">
-        <h2 style="margin-top:-85px;">Master Barang</h2>
-      </div>
-      <div class="col-6 text-right">
-        <button type="button" class="btn btn-primary btn-lg" style="
-            height: 30px; 
-            margin-top: -150px; 
-            padding: 4px 12px; 
-            border-radius: 20px;  
-            font-size: 0.75rem; 
-            font-weight: 600; 
-            text-transform: uppercase; 
-            transition: background-color 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
-            onclick="buttonAdd()">
-          Add Barang
-        </button>
-      </div>
-      {{-- <div class="col-6 text-right">
-        <button type="button" class="btn btn-primary btn-lg" style="
-            height: 30px; 
-            margin-top: -150px; 
-            padding: 4px 12px; 
-            border-radius: 20px; 
-            font-size: 0.75rem; 
-            font-weight: 600; 
-            text-transform: uppercase; 
-            transition: background-color 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
-            onclick="loadAll()">
-          tes load all
-        </button>
-      </div> --}}
+  <div class="sp-breadcrumb">
+    <span>Beranda</span>
+    <span class="sp-sep">›</span>
+    <span>Master</span>
+    <span class="sp-sep">›</span>
+    <span class="sp-crumb-active">Barang</span>
+  </div>
+
+  <div class="sp-page-head">
+    <div>
+      <h1>Master Barang</h1>
     </div>
-<!-- <button onclick="loadAll()">tes</button> -->
-</div>
+    <button class="btn btn-primary" onclick="buttonAdd()">+ Add Barang</button>
+  </div>
 
+<div id="contentContainer" class="container-fluid">
 
-<div id="printContainer" style="display:none">
-
-</div>
-<div id="contentContainer" class="container-fluid" style='margin-top:-95px;' >
-  <input type="hidden" id="periode_tahun" value="{!! $periode->tahun !!}" />
-  <input type="hidden" id="periode_bulan" value="{!! $periode->bulan !!}" />
   <input type="hidden" name="_token" id="_token" value="{!! csrf_token() !!}" />
-          <div class="row mt-4">
-              <!-- <div class="col-12 text-right">
-                  <button type="button" class="btn btn-primary btn-lg " style="height: 60px; " onclick="buttonAdd()"  >Add Koreksi Stock Gudang</button>
-              </div> -->
-          </div>
-          <div class="row mt-3">
-            <div class="col-12" style="overflow:auto;">
-              <div class="">
 
-                    <table id="tabel" class="table table-bordered table-striped"  >
-                      <thead style='white-space:nowrap;'  id='theadCustom' class="text-center">
-                        <tr>
-                          <th scope="col">Actions</th>
-                          <th scope="col">Kode Brg</th>
-                          <th scope="col">Nama Brg</th>
-                          <th scope="col">Agen</th>
-                          <!-- <th scope="col">Group</th> -->
-                          <!-- <th scope="col">Header Group</th> -->
-                          <th scope="col">SubJenis</th>
-                          <th scope="col">Jenis Barang</th>
-                          <th scope="col">Nama Merk</th>
-                          <th scope="col">SKU</th>
-                          <th scope="col">Sat 1</th>
-                          <th scope="col">Sat 2</th>
-                          <th scope="col">Part Number</th>
-                        </tr>
-                      </thead>
+<div class="sp-toolbar">
+    <div class="sp-search-wrap">
+      <i class="bi bi-search sp-search-icon"></i>
+      <input type="text" id="tabel_filter_visual" placeholder="Cari user...">
+    </div>
+  </div>
 
-
-                      <tbody style='white-space:nowrap;' id="tabel_data" class="text-left" >
-                        
-                      </tbody>
-
-
-                    </table>
-              </div>
-            </div>
-          </div>
-
+  <div class="table-outer">
+    <div class="table-wrap">
+      <table class="tb" id="tabel">
+        <thead>
+          <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Kode Brg</th>
+            <th scope="col">Nama Brg</th>
+            <th scope="col">Agen</th>
+            <!-- <th scope="col">Group</th> -->
+            <!-- <th scope="col">Header Group</th> -->
+            <th scope="col">SubJenis</th>
+            <th scope="col">Jenis Barang</th>
+            <th scope="col">Nama Merk</th>
+            <th scope="col">SKU</th>
+            <th scope="col">Sat 1</th>
+            <th scope="col">Sat 2</th>
+            <th scope="col">Part Number</th>
+          </tr>
+        </thead>
+        <tbody id="tabel_data" class="text-right">
+      </tbody>
+      </table>
+    </div>
+</div>
 
 </div>
 
@@ -124,7 +89,7 @@
             </div>
 
           </div>
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Group</label>
@@ -143,7 +108,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">HeadGroup</label>
@@ -158,7 +123,7 @@
               </div>
 
             </div>
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">SubGroup</label>
@@ -173,7 +138,7 @@
               </div>
 
             </div>
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">SubKategori</label>
@@ -188,7 +153,7 @@
               </div>
 
             </div>
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Merk</label>
@@ -203,7 +168,7 @@
               </div>
 
             </div>
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Kode Barang</label>
@@ -216,7 +181,7 @@
               </div>
 
             </div>
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Nama Barang</label>
@@ -229,7 +194,7 @@
               </div>
 
             </div>
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Nama Barang 2</label>
@@ -245,7 +210,7 @@
 
             <br/>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-2 text-left">
                 <!-- <div class="form-group text-left">
                   <label class="text-left">Satuan</label>
@@ -269,7 +234,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-2 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Satuan</label>
@@ -308,7 +273,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-2 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Satuan 2</label>
@@ -349,7 +314,7 @@
 
    
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-2 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Satuan 3</label>
@@ -397,7 +362,7 @@
 
             <br/>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-2 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Qty Min</label>
@@ -420,7 +385,7 @@
               </div>
 
             </div>
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-2 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Toleransi</label>
@@ -447,7 +412,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-2 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Status</label>
@@ -474,7 +439,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
 
               <div class="col-2 text-left">
                 <div class="form-group text-left">
@@ -489,7 +454,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-2 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Lokasi</label>
@@ -503,7 +468,7 @@
 
 
             </div>
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-2 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Kode SKU</label>
@@ -565,7 +530,7 @@
             </div>
 
           </div>
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Group</label>
@@ -584,7 +549,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">HeadGroup</label>
@@ -599,7 +564,7 @@
               </div>
 
             </div>
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">SubGroup</label>
@@ -614,7 +579,7 @@
               </div>
 
             </div>
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">SubKategori</label>
@@ -629,7 +594,7 @@
               </div>
 
             </div>
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Merk</label>
@@ -644,7 +609,7 @@
               </div>
 
             </div>
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Kode Barang</label>
@@ -657,7 +622,7 @@
               </div>
 
             </div>
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Nama Barang</label>
@@ -670,7 +635,7 @@
               </div>
 
             </div>
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Nama Barang 2</label>
@@ -686,7 +651,7 @@
 
             <br/>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-2 text-left">
                 <!-- <div class="form-group text-left">
                   <label class="text-left">Satuan</label>
@@ -710,7 +675,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-2 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Satuan</label>
@@ -758,7 +723,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-2 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Satuan 2</label>
@@ -797,7 +762,7 @@
 
              </div>
 
-              <div class="row">
+              <div class="row mt-2">
               <div class="col-2 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Satuan 3</label>
@@ -848,7 +813,7 @@
 
             <br/>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-2 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Qty Min</label>
@@ -871,7 +836,7 @@
               </div>
 
             </div>
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-2 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Toleransi</label>
@@ -898,7 +863,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-2 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Status</label>
@@ -925,7 +890,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
 
               <div class="col-2 text-left">
                 <div class="form-group text-left">
@@ -940,7 +905,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-2 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Lokasi</label>
@@ -954,7 +919,7 @@
 
 
             </div>
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-2 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Kode SKU</label>
@@ -1329,14 +1294,9 @@ function loadAll () {
         data: "KODEBRG",
         render: function(data, type, row) {
           return `
-            <div class="action-buttons text-center" style="position: relative;">
-              <button class="btn btn-success btn-sm hover-tooltip" type="button" onclick="buttonEdit('${row.KODEBRG}')" data-tooltip="Edit Barang">
-                <i class="bi bi-pen"></i>
-              </button>
-              <button class="btn btn-danger btn-sm hover-tooltip" type="button" onclick="buttonDelete('${row.KODEBRG}')" data-tooltip="Delete Barang">
-                <i class="bi bi-trash"></i>
-              </button>
-             
+            <div class="action-buttons-wrap text-center" style="position: relative;">
+              <button data-toggle="tooltip" data-placement="top" title="Menu" class="btn-action-sm btn-action-success" type="button" onclick="buttonEdit('${row.KODEBRG}')"><i class="bi bi-pen"></i></button>
+              <button data-toggle="tooltip" data-placement="top" title="Menu" class="btn-action-sm btn-action-danger" type="button" onclick="buttonDelete('${row.KODEBRG}')"><i class="bi bi-trash"></i></button>
             </div>
           `;
         },

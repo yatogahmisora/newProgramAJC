@@ -205,4 +205,55 @@ class HomeController extends Controller
     return response()->json($menul0);
 }
 
+public function getMenuReport($headermenu = 1)
+{
+    $rows = DB::connection('SML')->table('dbmenureport')
+        ->orderBy('KODEMENU')
+        ->get();
+
+    return response()->json($this->buildReportTree($rows, null, 0));
+}
+
+private function buildReportTree($rows, $parentKode, $depth)
+{
+    // Hard depth guard — same safety net you already need after the
+    // circular-recursion / memory-exhaustion issue on the main menu tree.
+    if ($depth > 10) {
+        return [];
+    }
+
+    $candidates = $rows->filter(function ($row) use ($parentKode) {
+        if ($parentKode === null) {
+            return $row->L0 == 1;
+        }
+        return $row->KODEMENU !== $parentKode
+            && str_starts_with($row->KODEMENU, $parentKode);
+    });
+
+    // Keep only the closest descendants — drop a candidate if another
+    // candidate is a longer/closer ancestor of it, so we don't attach
+    // grandchildren directly under this node.
+    $result = [];
+    foreach ($candidates as $row) {
+        $hasCloserParent = $candidates->contains(function ($other) use ($row, $parentKode) {
+            return $other->KODEMENU !== $row->KODEMENU
+                && str_starts_with($row->KODEMENU, $other->KODEMENU)
+                && strlen($other->KODEMENU) > strlen($parentKode ?? '');
+        });
+
+        if ($hasCloserParent) continue;
+
+        $result[] = [
+            'KODEMENU'   => $row->KODEMENU,
+            'Keterangan' => $row->Keterangan,
+            'href'       => $row->href,
+            'ACCESS'     => $row->ACCESS,
+            'icon'       => $row->icon ?? null,
+            'child'      => $this->buildReportTree($rows, $row->KODEMENU, $depth + 1),
+        ];
+    }
+
+    return $result;
+}
+
 }

@@ -45,7 +45,8 @@ Route::get('/homepurchasing', [HomeController::class, 'purchasingIndex'])->middl
 Route::get('/homemaster', [HomeController::class, 'masterIndex'])->middleware('auth');
 Route::get('/homereport', [HomeController::class, 'reportIndex'])->middleware('auth');
 Route::get('/homeberkas', [HomeController::class, 'berkasIndex'])->middleware('auth');
-Route::get('/getmenu/{headermenu}', [HomeController::class, 'GetMenu']);
+Route::get('/getmenu/{headermenu}', [HomeController::class, 'GetMenu']);// routes/web.php
+Route::get('/getmenureport/{headermenu}', [HomeController::class, 'getMenuReport']);
 
 Route::get('/setperiode', [NewSetupPeriodeKerjaController::class, 'index'])->middleware('auth');
 Route::post('/newsetupperiodekerjaupdate', [NewSetupPeriodeKerjaController::class, 'updatePeriodeKerja'])->middleware('auth');

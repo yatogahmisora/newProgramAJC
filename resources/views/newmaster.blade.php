@@ -797,29 +797,7 @@
     console.error('Failed to load menu from /getmenu');
   });
 
-  const reportCategories = [
-  {
-    title: 'Laporan Keuangan',
-    items: [
-      { label: 'Laporan Laba Rugi', icon: 'trending-up' },
-      { label: 'Neraca',            icon: 'bar-chart' },
-      { label: 'Buku Besar',        icon: 'file-text' },
-    ]
-  },
-  {
-    title: 'Laporan Gudang',
-    items: [
-      { label: 'Mutasi Bahan Baku', icon: 'warehouse' },
-      { label: 'Stock Opname',      icon: 'check-square' },
-    ]
-  },
-  {
-    title: 'Laporan Aktivitas',
-    items: [
-      { label: 'Aktivitas Pemakai', icon: 'file-text' },
-    ]
-  },
-];
+let reportCategories = [];
 
 function renderSidebarFooter() {
   const footer = document.getElementById('sidebar-footer');
@@ -835,7 +813,6 @@ function renderSidebarFooter() {
 function showReportPage() {
   activeModuleKey = null;
 
-  // Clear active state on regular modules, mark Report as active
   document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('active'));
   const reportItem = document.getElementById('nav-report-item');
   if (reportItem) reportItem.classList.add('active');
@@ -850,20 +827,6 @@ function showReportPage() {
   if (blade) blade.style.display = 'none';
   if (dyn)   dyn.style.display = 'none';
 
-  const categoriesHtml = reportCategories.map(cat => `
-    <div class="report-category">
-      <div class="report-category-title">${cat.title}</div>
-      <div class="report-grid">
-        ${cat.items.map(item => `
-          <div class="report-card" onclick="openReport('${item.label}')">
-            <div class="report-card-icon">${icon(item.icon)}</div>
-            <div class="report-card-label">${item.label}</div>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-  `).join('');
-
   report.style.display = 'block';
   report.innerHTML = `
     <div class="container-fluid clearfix">
@@ -871,9 +834,70 @@ function showReportPage() {
         ${icon('chevron')} Kembali
       </button>
       <div class="page-title">Report</div>
-      ${categoriesHtml}
+      <div id="report-categories-container" class="text-muted">Memuat data laporan...</div>
     </div>
   `;
+
+  loadReportMenu(renderReportCategories);
+}
+
+function renderReportCategories() {
+  const container = document.getElementById('report-categories-container');
+  if (!container) return;
+
+  if (!reportCategories.length) {
+    container.innerHTML = `<div class="text-muted">Tidak ada laporan tersedia.</div>`;
+    return;
+  }
+
+  container.className = '';
+  container.innerHTML = reportCategories.map(cat => `
+    <div class="report-category">
+      <div class="report-category-title">${cat.title}</div>
+      <div class="report-grid">
+        ${cat.items.map(item => `
+          <div class="report-card" onclick="openReport('${encodeURIComponent(item.href)}')">
+            <div class="report-card-icon">${icon(item.icon)}</div>
+            <div class="report-card-label">${item.label}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function loadReportMenu(callback) {
+  $.get('{{ url("getmenureport/1") }}', function (data) {
+    const tree = buildMenu(data); // reuse the same mapMenuNode/buildMenu as the sidebar
+
+    reportCategories = tree
+      .map(cat => ({
+        title: cat.label,
+        items: flattenReportItems(cat)
+      }))
+      .filter(cat => cat.items.length > 0);
+
+    if (callback) callback();
+  }).fail(function () {
+    console.error('Failed to load report menu from /getmenureport');
+    reportCategories = [];
+    if (callback) callback();
+  });
+}
+
+function flattenReportItems(node) {
+  let items = [];
+  (node.children || []).forEach(child => {
+    if (child.href && child.href !== '#' && child.href !== '') {
+      items.push({
+        label: child.label,
+        icon: getChildIcon(child.label, child.icon),
+        href: child.href
+      });
+    }
+    items = items.concat(flattenReportItems(child));
+  });
+  return items;
 }
 
 function closeReportPage() {
@@ -887,11 +911,10 @@ function closeReportPage() {
     `<span>Beranda</span>`;
 }
 
-function openReport(label) {
-  // Prototype: just log for now — once endpoints exist per report,
-  // this will route to the actual report page (like navToChild does).
-  console.log('openReport ->', label);
-  alertify.message('Report "' + label + '" belum terhubung ke halaman aslinya.');
+function openReport(encodedHref) {
+  // Same navigation pattern as the sidebar's goTo() — actually route
+  // to the report page instead of the old placeholder alertify message.
+  goTo(encodedHref);
 }
 
 function goHome() {

@@ -5,14 +5,12 @@ use App\Http\Controllers\Controller;
 
 
 use Illuminate\Http\Request;
-use App\Model\NewMenu;
-use App\Model\NewAksesMenu;
-use App\Model\NewPeriode;
-use App\Model\NewUsers;
+use App\Models\NewMenu;
+use App\Models\NewAksesMenu;
+use App\Models\NewPeriode;
+use App\Models\NewUsers;
 use Illuminate\Support\Facades\DB;
 // use App\Model\VWPerkiraan;
-
-
 
 // use App\Http\Controllers\NewMenuController;
  
@@ -20,8 +18,6 @@ class MasterBarangController extends Controller
 {
 
   public function index(Request $req) {
-
-
 
     // $users = DB::connection("SML")->select('select * from new_users');
     $periode = NewPeriode::where('user_id' , \Auth::User()->username)->first();

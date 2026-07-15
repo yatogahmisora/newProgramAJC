@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-// use App\Http\Controllers\Purchasing\PembelianPermintaanNonAgenController;
+use App\Http\Controllers\Purchasing\PembelianPermintaanNonAgenController;
 // use App\Http\Controllers\Purchasing\PembelianPermintaanAgenController;
 // use App\Http\Controllers\Purchasing\PembelianPermintaanNonStockController;
 // use App\Http\Controllers\Purchasing\PembelianClosingPRController;
@@ -24,17 +24,17 @@ use App\Http\Controllers\Purchasing\POController;
 Route::middleware('auth')->group(function () {
 
     // ── PEMBELIAN PERMINTAAN NON AGEN ─────────────────────────────────────
-    // Route::get('/purchaseRequestCetak',                         [PembelianPermintaanNonAgenController::class, 'spCetak']);
-    // Route::get('/pembelianpermintaannonagen',                   [PembelianPermintaanNonAgenController::class, 'index']);
-    // Route::get('/pembelianpermintaannonagenspnobukti',          [PembelianPermintaanNonAgenController::class, 'getNoBukti']);
-    // Route::get('/pembelianpermintaannonagenlistbarang',         [PembelianPermintaanNonAgenController::class, 'listBarang']);
-    // Route::post('/pembelianpermintaannonagenspadd',             [PembelianPermintaanNonAgenController::class, 'spAdd']);
-    // Route::get('/pembelianpermintaannonagenspdetail',           [PembelianPermintaanNonAgenController::class, 'spDetail']);
-    // Route::get('/pembelianpermintaannonagenloadall',            [PembelianPermintaanNonAgenController::class, 'loadAll']);
-    // Route::post('/pembelianpermintaannonagenspdelete',          [PembelianPermintaanNonAgenController::class, 'spDelete']);
-    // Route::get('/pembelianpermintaannonagenlistdepartemen',     [PembelianPermintaanNonAgenController::class, 'listDepartemen']);
-    // Route::post('/pembelianpermintaannonagenupdateotorisasi',   [PembelianPermintaanNonAgenController::class, 'updateOtorisasi']);
-    // Route::post('/pembelianpermintaannonagenupdatebatalotorisasi', [PembelianPermintaanNonAgenController::class, 'updateBatalOtorisasi']);
+    Route::get('/purchaseRequestCetak',                         [PembelianPermintaanNonAgenController::class, 'spCetak']);
+    Route::get('/pembelianpermintaannonagen',                   [PembelianPermintaanNonAgenController::class, 'index']);
+    Route::get('/pembelianpermintaannonagenspnobukti',          [PembelianPermintaanNonAgenController::class, 'getNoBukti']);
+    Route::get('/pembelianpermintaannonagenlistbarang',         [PembelianPermintaanNonAgenController::class, 'listBarang']);
+    Route::post('/pembelianpermintaannonagenspadd',             [PembelianPermintaanNonAgenController::class, 'spAdd']);
+    Route::get('/pembelianpermintaannonagenspdetail',           [PembelianPermintaanNonAgenController::class, 'spDetail']);
+    Route::get('/pembelianpermintaannonagenloadall',            [PembelianPermintaanNonAgenController::class, 'loadAll']);
+    Route::post('/pembelianpermintaannonagenspdelete',          [PembelianPermintaanNonAgenController::class, 'spDelete']);
+    Route::get('/pembelianpermintaannonagenlistdepartemen',     [PembelianPermintaanNonAgenController::class, 'listDepartemen']);
+    Route::post('/pembelianpermintaannonagenupdateotorisasi',   [PembelianPermintaanNonAgenController::class, 'updateOtorisasi']);
+    Route::post('/pembelianpermintaannonagenupdatebatalotorisasi', [PembelianPermintaanNonAgenController::class, 'updateBatalOtorisasi']);
 
     // // ── PEMBELIAN PERMINTAAN AGEN ─────────────────────────────────────────
     // Route::get('/pembelianpermintaanagen',                      [PembelianPermintaanAgenController::class, 'index']);

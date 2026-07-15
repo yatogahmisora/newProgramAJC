@@ -1,170 +1,65 @@
-@extends('master.newmaster')
+@extends('newmaster')
 @section('buttons')
 
 @endsection
 @section('content')
-<div class="container-fluid">
-<script src="https://cdn.jsdelivr.net/npm/autonumeric@4.6.0/dist/autoNumeric.min.js"></script>
-  <style>
-    .input-group-select {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    
-    .btn-select {
-        white-space: nowrap;
-        min-width: 80px;
-    }
-    
-    .modal-body {
-        padding: 1.5rem;
-    }
-    
-    .form-row {
-        margin-bottom: 1rem;
-    }
-    
-    .form-group {
-        margin-bottom: 0.75rem;
-    }
-    
-    .percentage-input {
-        max-width: 80px;
-    }
-    
-    .date-label {
-        font-size: 0.875rem;
-        margin-bottom: 0.25rem;
-    }
-  </style>
 
- <div class="row mt-4">
-      <div class="col-6 text-left">
-        <h2 style="margin-top:-85px;">Master Aktiva</h2>
-      </div>
-      <div class="col-6 text-right">
-        <button type="button" class="btn btn-primary btn-lg" style="
-            height: 30px; 
-            margin-top: -150px; 
-            padding: 4px 12px; 
-            border-radius: 20px; 
-            font-size: 0.75rem; 
-            font-weight: 600; 
-            text-transform: uppercase; 
-            transition: background-color 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
-            data-toggle="modal" data-target="#formAdd"
-            onclick='cleanFormAdd()'>
-          Add Aktiva
-        </button>
-      </div>
-      {{-- <div class="col-6 text-right">
-        <button type="button" class="btn btn-primary btn-lg" style="
-            height: 30px; 
-            margin-top: -150px; 
-            padding: 4px 12px; 
-            border-radius: 20px; 
-            font-size: 0.75rem; 
-            font-weight: 600; 
-            text-transform: uppercase; 
-            transition: background-color 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
-            onclick="loadAll()">
-          tes load all
-        </button>
-      </div> --}}
+<link rel="stylesheet" href="{{ asset('css/tableMaster2.css') }}">
+
+  <div class="sp-breadcrumb">
+    <span>Beranda</span>
+    <span class="sp-sep">›</span>
+    <span>Master</span>
+    <span class="sp-sep">›</span>
+    <span class="sp-crumb-active">Aktiva</span>
+  </div>
+
+  <div class="sp-page-head">
+    <div>
+      <h1>Master Aktiva</h1>
+    </div>
+    <button class="btn btn-primary" onclick="buttonAdd()">+ Add Aktiva</button>
+  </div>
+
+<div id="contentContainer" class="container-fluid">
+
+  <input type="hidden" name="_token" id="_token" value="{!! csrf_token() !!}" />
+
+<div class="sp-toolbar">
+  <div class="sp-search-wrap">
+    <i class="bi bi-search sp-search-icon"></i>
+    <input type="text" id="tabel_filter_visual" placeholder="Cari user...">
+  </div>
+
+</div>
+
+  <div class="table-outer">
+    <div class="table-wrap">
+      <table class="tb" id="tabel">
+        <thead>
+          <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Kode Aktiva</th>
+            <th scope="col">Keterangan</th>
+            <th scope="col">Tanggal</th>
+            <th scope="col">Devisi</th>
+            <th scope="col">Tipe Aktiva</th>
+            <th scope="col">Kelompok</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Susut</th>
+            <th scope="col">Metode</th>
+            <th scope="col">Akumulasi</th>
+            <th scope="col">Biaya Penyusutan 1</th>
+            <th scope="col">Persen Biaya 1</th>
+            <th scope="col">Biaya Penyusutan 2</th>
+            <th scope="col">Persen Biaya 2</th>
+          </tr>
+        </thead>
+        <tbody id="tabel_data" class="text-right">
+      </tbody>
+      </table>
     </div>
 </div>
-
-<div id="printContainer" style="display:none">
-
-</div>
-<div id="contentContainer" class="container-fluid" style="max-width: 2000px; margin-top:-95px">
-  <input type="hidden" id="periode_tahun" value="{!! $periode->tahun !!}" />
-  <input type="hidden" id="periode_bulan" value="{!! $periode->bulan !!}" />
-  <input type="hidden" name="_token" id="_token" value="{!! csrf_token() !!}" />
-          <div class="row mt-4">
-              <!-- <div class="col-12 text-right">
-                  <button type="button" class="btn btn-primary btn-lg " style="height: 60px; " onclick="buttonAdd()"  >Add Koreksi Stock Gudang</button>
-              </div> -->
-          </div>
-          <div class="row mt-3">
-            <div class="col-12" style="overflow:auto;">
-              <div>
-
-                    <table id="tabel" class="table table-bordered table-striped"  >
-                      <thead id='theadCustom' class="text-center">
-                        <tr style='white-space:nowrap;'>
-                          <th scope="col">Actions</th>
-                          <th scope="col">Kode Aktiva</th>
-                          <th scope="col">Keterangan</th>
-                          <th scope="col">Tanggal</th>
-                          <th scope="col">Devisi</th>
-                          <th scope="col">Tipe Aktiva</th>
-                          <th scope="col">Kelompok</th>
-                          <th scope="col">Quantity</th>
-                          <th scope="col">Susut</th>
-                          <th scope="col">Metode</th>
-                          <th scope="col">Akumulasi</th>
-                          <th scope="col">Biaya Penyusutan 1</th>
-                          <th scope="col">Persen Biaya 1</th>
-                          <th scope="col">Biaya Penyusutan 2</th>
-                          <th scope="col">Persen Biaya 2</th>
-
-                        </tr>
-                      </thead>
-
-                      <tbody id="tabel_data" class="text-left" >
-                        {{-- @for ($i = 0; $i < count($listData); $i++)
-                        <tr style='white-space:nowrap;'>
-                          <td style="white-space:nowrap; " class='text-center'>
-                            <button class="btn btn-primary btn-sm" type="button" 
-                                    data-bs-toggle="tooltip" 
-                                    data-bs-placement="top" 
-                                    title="Saldo Awal" 
-                                    onclick="buttonSaldoAwal('{{ $listData[$i]->KodeAktiva }}')">
-                              <i class="bi bi-currency-dollar"></i>
-                            </button>
-                            <button class="btn btn-success btn-sm" type="button" 
-                                    data-bs-toggle="tooltip" 
-                                    data-bs-placement="top" 
-                                    title="Edit Aktiva" 
-                                    onclick="buttonEdit('{{ $listData[$i]->KodeAktiva }}')">
-                              <i class="bi bi-pen"></i>
-                            </button>
-                            <button class="btn btn-danger btn-sm" type="button" 
-                                    data-bs-toggle="tooltip" 
-                                    data-bs-placement="top" 
-                                    title="Delete Aktiva" 
-                                    onclick="buttonDelete('{{ $listData[$i]->KodeAktiva }}')">
-                              <i class="bi bi-trash"></i>
-                            </button>
-                          </td>
-                          <td>{{ $listData[$i]->KodeAktiva }}</td>
-                          <td>{{ $listData[$i]->Keterangan }}</td>
-                          <td>{{ $listData[$i]->Tanggal ? date('d-m-Y', strtotime($listData[$i]->Tanggal)) : '' }}</td>
-                          <td>{{ $listData[$i]->NamaDevisi }}</td>
-                          <td>{{ $listData[$i]->MyTipe }}</td>
-                          <td>{{ $listData[$i]->NamaPerkiraan }}</td>
-                          <td class='text-right'>{{ $listData[$i]->Quantity }}</td>
-                          <td class='text-right'>{{ $listData[$i]->Susut }}</td>
-                          <td>{{ $listData[$i]->Metode }}</td>
-                          <td>{{ $listData[$i]->akumulasi }}</td>
-                          <td>{{ $listData[$i]->Biaya }}</td>
-                          <td class='text-right'>{{ $listData[$i]->PersenBiaya1 }}</td>
-                          <td>{{ $listData[$i]->Biaya2 }}</td>
-                          <td class='text-right'>{{ $listData[$i]->PersenBiaya2 }}</td>
-                      </tr>
-                      @endfor --}}
-                      </tbody>
-
-
-                    </table>
-              </div>
-            </div>
-          </div>
-
 
 </div>
 
@@ -1154,11 +1049,13 @@ dataRefresh.forEach((item, i) => {
   }
 
   rowTable += `<tr style='white-space:nowrap;'>
-  <td class="text-center" style='white-space:nowrap;'>
-    <button class="btn btn-primary btn-sm hover-tooltip" data-tooltip='Saldo Awal' type="button" onclick="buttonSaldoAwal('${item.KodeAktiva}')"><i class="bi bi-currency-dollar"></i></button>
-    <button class="btn btn-success btn-sm hover-tooltip" data-tooltip='Edit Aktiva' type="button" onclick="buttonEdit('${item.KodeAktiva}')"><i class="bi bi-pen"></i></button>
-    <button class="btn btn-danger btn-sm hover-tooltip" data-tooltip='Delete Aktiva' type="button" onclick="buttonDelete('${item.KodeAktiva}')"><i class="bi bi-trash"></i></button>
-  </td>
+    <td style="white-space:nowrap;" class='text-center'>
+      <div class="action-buttons-wrap">
+          <button data-toggle="tooltip" data-placement="top" title="Menu" class="btn-action-sm btn-action-primary" type="button" onclick="buttonSaldoAwal('${item.KodeAktiva}')"><i class="bi bi-currency-dollar"></i></button>
+          <button data-toggle="tooltip" data-placement="top" title="Menu" class="btn-action-sm btn-action-success" type="button" onclick="buttonEdit('${item.KodeAktiva}')"><i class="bi bi-pen"></i></button>
+          <button data-toggle="tooltip" data-placement="top" title="Menu" class="btn-action-sm btn-action-danger" type="button" onclick="buttonDelete('${item.KodeAktiva}')"><i class="bi bi-trash"></i></button>
+      </div>
+    </td>
   <td>${item.KodeAktiva ?? ''}</td>
   <td>${item.Keterangan ?? ''}</td>
   <td>${formattedDate}</td>
@@ -1178,12 +1075,17 @@ dataRefresh.forEach((item, i) => {
 
   document.getElementById("tabel_data").innerHTML = rowTable
   $("#tabel").DataTable({
-    "lengthChange": false,
-      "paging": false ,
-    });
+    "lengthChange": true,
+    "paging": true,
+    "searching": true,
+    "dom": 'tip'
+  });
 
 }
-//
+
+$("#tabel_filter_visual").on("keyup", function () {
+  $("#tabel").DataTable().search(this.value).draw();
+});
 
 function buttonPilihGroupAktiva(selectedPerkiraan, selectedKeterangan, selectedPersen, selectedAkumulasi, selectedBiaya1, selectedBiaya2) {
   $("#input_add_GroupAktiva").val(selectedPerkiraan);

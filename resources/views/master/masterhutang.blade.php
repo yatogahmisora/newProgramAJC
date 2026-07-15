@@ -1,127 +1,71 @@
-@extends('master.newmaster')
+@extends('newmaster')
 @section('buttons')
 
 @endsection
 @section('content')
 
-<link rel="stylesheet" href="public/css/tabelCustom.css">
+<link rel="stylesheet" href="{{ asset('css/tableMaster2.css') }}">
 
-<div class="container-fluid">
-<div class="row mt-4">
-      <div class="col-6 text-left">
-        <h2 style="margin-top:-85px;">Master Hutang</h2>
-      </div>
-<!-- <button onclick="loadAll()">tes</button> -->
-</div>
+  <div class="sp-breadcrumb">
+    <span>Beranda</span>
+    <span class="sp-sep">›</span>
+    <span>Master</span>
+    <span class="sp-sep">›</span>
+    <span class="sp-crumb-active">Hutang</span>
+  </div>
 
-<style>
-  .hover-tooltip {
-  position: relative;
-}
+  <div class="sp-page-head">
+    <div>
+      <h1>Master Hutang</h1>
+    </div>
+    {{-- <button class="btn btn-primary" onclick="buttonAdd()">+ Add Hutang</button> --}}
+  </div>
 
-.hover-tooltip::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  bottom: 125%;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: black;
-  color: white;
-  padding: 6px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s, visibility 0.3s;
-  z-index: 1000;
-  pointer-events: none;
-}
+<div id="contentContainer" class="container-fluid">
 
-.hover-tooltip::before {
-  content: '';
-  position: absolute;
-  bottom: 115%;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 5px solid transparent;
-  border-top-color: black;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s, visibility 0.3s;
-  z-index: 1000;
-  pointer-events: none;
-}
-
-.hover-tooltip:hover::after,
-.hover-tooltip:hover::before {
-  opacity: 1;
-  visibility: visible;
-}
-</style>
-
-<div id="printContainer" style="display:none">
-
-</div>
-<div id="contentContainer" class="container-fluid" style="max-width: 1900px; margin-top:-75px">
-  <input type="hidden" id="periode_tahun" value="{!! $periode->tahun !!}" />
-  <input type="hidden" id="periode_bulan" value="{!! $periode->bulan !!}" />
   <input type="hidden" name="_token" id="_token" value="{!! csrf_token() !!}" />
-          <div class="row mt-4">
-              <!-- <div class="col-12 text-right">
-                  <button type="button" class="btn btn-primary btn-lg " style="height: 60px; " onclick="buttonAdd()"  >Add Koreksi Stock Gudang</button>
-              </div> -->
-          </div>
-          <div class="row mt-3">
-            <div class="col-12" style='overflow:auto;'>
-              <div class="row col-12">
-                <div class="col-1 text-left">
-                  <div class="form-group text-left">
-                    <label class="text-left">Hutang : </label>
-                  </div>
-                </div>
-                <div class="col-2">
-                  <div class="form-group">
-                  <select name="devisi" id="perkiraanCustomer" class="form-control" onChange='loadAll()'>
-                    @foreach ($listDataCustomer as $customer)
-                        <option value="{{ $customer->keterangan }} ({{ $customer->Perkiraan }})">{{ $customer->keterangan }} ({{ $customer->Perkiraan }})</option>
-                    @endforeach
-                  </select>
-                  </div>
-                </div>
 
-            </div>
+<div class="sp-toolbar">
+  <div class="sp-search-wrap">
+    <i class="bi bi-search sp-search-icon"></i>
+    <input type="text" id="tabel_filter_visual" placeholder="Cari user...">
+  </div>
 
-              <div class="">
+  <div class="sp-filter-wrap">
+    <select id="perkiraanCustomer" class="form-select" onchange="loadAll()">
+      @foreach ($listDataCustomer as $customer)
+        <option value="{{ $customer->keterangan }} ({{ $customer->Perkiraan }})">
+          {{ $customer->keterangan }} ({{ $customer->Perkiraan }})
+        </option>
+      @endforeach
+    </select>
+  </div>
+</div>
 
-                    <table id="tabel" class="table table-bordered table-striped"  >
-                      <thead id='theadCustom' style='white-space:nowrap;' class="text-center">
-                        <tr>
-                          <th scope="col">Actions</th>
-                          <th scope="col">Kode Supplier</th>
-                          <th scope="col">Nama Supplier</th>
-                          <th scope="col">No Faktur</th>
-                          <th scope="col">Tanggal</th>
-                          <th scope="col">Jatuh Tempo</th>
-                          <th scope="col">Valas</th>
-                          <th scope="col">Kurs</th>
-                          <th scope="col">Debet(Rp)</th>
-                          <th scope="col">Debet Valas</th>
-                          <th scope="col">Kredit(Rp)</th>
-                          <th scope="col">Kredit Valas</th>
-
-                        </tr>
-                      </thead>
-
-                      <tbody style='white-space:nowrap;' id="tabel_data" class="text-left" >
-                      </tbody>
-
-
-                    </table>
-              </div>
-            </div>
-          </div>
-
+  <div class="table-outer">
+    <div class="table-wrap">
+      <table class="tb" id="tabel">
+        <thead>
+          <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Kode Supplier</th>
+            <th scope="col">Nama Supplier</th>
+            <th scope="col">No Faktur</th>
+            <th scope="col">Tanggal</th>
+            <th scope="col">Jatuh Tempo</th>
+            <th scope="col">Valas</th>
+            <th scope="col">Kurs</th>
+            <th scope="col">Debet(Rp)</th>
+            <th scope="col">Debet Valas</th>
+            <th scope="col">Kredit(Rp)</th>
+            <th scope="col">Kredit Valas</th>
+          </tr>
+        </thead>
+        <tbody id="tabel_data" class="text-right">
+      </tbody>
+      </table>
+    </div>
+</div>
 
 </div>
 
@@ -444,17 +388,13 @@ function loadAll () {
 
     rowTable += `<tr>
     <td class="text-center">
-      <button class="btn btn-primary btn-sm" type="button" onclick="buttonAdd('${item.KodeCustSupp}', '${item.Perkiraan}', '${item.NAMACUST}')">
-        <i class="bi bi-file-earmark-plus"></i>
-      </button>
+      <div class="action-buttons-wrap">
+      <button data-toggle="tooltip" data-placement="top" title="Menu" class="btn-action-sm btn-action-primary" type="button" onclick="buttonAdd'${item.KodeCustSupp}', '${item.Perkiraan}', '${item.NAMACUST}')"><i class="bi bi-file-earmark-plus"></i></button>
       ${item.NoFaktur != null ? `
-        <button class="btn btn-success btn-sm" type="button" onclick="buttonEdit('${item.NoFaktur}', '${item.KodeCustSupp}', '${item.Perkiraan}')">
-          <i class="bi bi-pen"></i>
-        </button>
-        <button class="btn btn-danger btn-sm" type="button" onclick="buttonDelete('${item.NoFaktur}')">
-          <i class="bi bi-trash"></i>
-        </button>
+        <button data-toggle="tooltip" data-placement="top" title="Menu" class="btn-action-sm btn-action-success" type="button" onclick="buttonEdit('${item.NoFaktur}', '${item.KodeCustSupp}', '${item.Perkiraan}')"><i class="bi bi-pen"></i></button>
+        <button data-toggle="tooltip" data-placement="top" title="Menu" class="btn-action-sm btn-action-danger" type="button" onclick="buttonDelete('${item.NoFaktur}')"><i class="bi bi-trash"></i></button>
       ` : ''}
+      </div>
     </td>
     <td>${item.KodeCustSupp}</td>
     <td>${item.NAMACUST}</td>
@@ -470,14 +410,19 @@ function loadAll () {
     </tr>`
   });
 
-
   document.getElementById("tabel_data").innerHTML = rowTable
   $("#tabel").DataTable({
-    "lengthChange": false,
-      "paging": false ,
-    });
+    "lengthChange": true,
+    "paging": true,
+    "searching": true,
+    "dom": 'tip'
+  });
 
 }
+
+$("#tabel_filter_visual").on("keyup", function () {
+  $("#tabel").DataTable().search(this.value).draw();
+});
 
 function buttonAdd (kodeSupplier, Perkiraan, namaSupplier) {
   document.getElementById("kodeSupplier").value = kodeSupplier
