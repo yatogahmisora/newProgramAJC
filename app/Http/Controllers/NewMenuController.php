@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\NewMenu;
-use App\Model\NewAksesMenu;
-use App\Model\NewPeriode;
-use App\Model\NewUsers;
-use App\Model\NewMenuReport;
+use App\Models\NewAksesMenu;
+use App\Models\NewPeriode;
+use App\Models\NewUsers;
+use App\Models\NewMenuReport;
 use Illuminate\Support\Facades\DB;
 
 class NewMenuController extends Controller
@@ -103,8 +103,8 @@ class NewMenuController extends Controller
         return $menul0;
   }
 
-
   public function getMenuL0Report () {
+
     $menul0 = NewMenuReport::where('L0' , 1)->join('DBFLMENUREPORT', 'DBFLMENUREPORT.L1' ,'=' , 'DBMENUREPORT.KODEMENU')->where('DBFLMENUREPORT.USERID' , \Auth::user()->username)->where('DBFLMENUREPORT.ACCESS' , 1)->where('DBMENUREPORT.HeaderMenu' , 1)->orderBy('KODEMENU')->get();
     $menul1 = NewMenuReport::where('L0' , 2)->join('DBFLMENUREPORT', 'DBFLMENUREPORT.L1' ,'=' , 'DBMENUREPORT.KODEMENU')->where('DBFLMENUREPORT.USERID' , \Auth::user()->username)->where('DBFLMENUREPORT.ACCESS' , 1)->where('DBMENUREPORT.HeaderMenu' , 1)->orderBy('KODEMENU')->get();
     $menul2 = NewMenuReport::where('L0' , 3)->join('DBFLMENUREPORT', 'DBFLMENUREPORT.L1' ,'=' , 'DBMENUREPORT.KODEMENU')->where('DBFLMENUREPORT.USERID' , \Auth::user()->username)->where('DBFLMENUREPORT.ACCESS' , 1)->where('DBMENUREPORT.HeaderMenu' , 1)->orderBy('KODEMENU')->get();

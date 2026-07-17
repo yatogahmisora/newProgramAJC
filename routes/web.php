@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\GlobalController;
+use App\Http\Controllers\HeaderTableController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewSetupPeriodeKerjaController;
 use App\Http\Controllers\MasterSatuanController;
@@ -45,8 +46,13 @@ Route::get('/homepurchasing', [HomeController::class, 'purchasingIndex'])->middl
 Route::get('/homemaster', [HomeController::class, 'masterIndex'])->middleware('auth');
 Route::get('/homereport', [HomeController::class, 'reportIndex'])->middleware('auth');
 Route::get('/homeberkas', [HomeController::class, 'berkasIndex'])->middleware('auth');
-Route::get('/getmenu/{headermenu}', [HomeController::class, 'GetMenu']);// routes/web.php
+
+Route::get('/getmenu/{headermenu}', [HomeController::class, 'GetMenu']);
 Route::get('/getmenureport/{headermenu}', [HomeController::class, 'getMenuReport']);
+
+Route::post('/getheadertable', [HeaderTableController::class, 'getHeaderTable'])->middleware('auth');
+Route::post('/saveheadertable', [HeaderTableController::class, 'saveHeaderTable'])->middleware('auth');
+Route::get('/savesetheadertable', [HeaderTableController::class, 'saveSetHeaderTable'])->middleware('auth');
 
 Route::get('/setperiode', [NewSetupPeriodeKerjaController::class, 'index'])->middleware('auth');
 Route::post('/newsetupperiodekerjaupdate', [NewSetupPeriodeKerjaController::class, 'updatePeriodeKerja'])->middleware('auth');
@@ -60,5 +66,5 @@ Route::get('/spgetstockakhir', [GlobalController::class, 'getStockAkhir'])->midd
 // require __DIR__.'/gudang.php';
 require __DIR__.'/purchasing.php';
 require __DIR__.'/master.php';
-// require __DIR__.'/report.php';
+require __DIR__.'/report.php';
 require __DIR__.'/berkas.php';

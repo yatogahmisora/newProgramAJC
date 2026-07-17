@@ -21,8 +21,8 @@ class HeaderTableController extends Controller
     $res = DB::connection('SML')->select(
         "select * from  DBHEADERTABLE where username = :username and href = :href ",
         [
-            "username" => $username,
-            "href" => $req->href
+          "username" => $username,
+          "href" => $req->href
         ]
     );
     if ($res) {
@@ -62,12 +62,12 @@ VALUES (:username , :href , :header , :tipe , :isshown , :value , :isnumber);",
 
   }
 
-
   public function getHeaderTable (Request $req) {
     $isnumberheadertable = [];
     $headertablevalue = [];
     $headertableheader = [];
     $headerisshown = [];
+    $isparsed = 0; 
     $username = \Auth::user()->username;
 
     $periode = app('App\Http\Controllers\GlobalController')->getPeriode();
@@ -76,7 +76,7 @@ VALUES (:username , :href , :header , :tipe , :isshown , :value , :isnumber);",
     if ($req->href == 'pembelianpermintaannonagen') {
       $otorisasi = DB::connection("SML")->select("select NoBukti , Tanggal  , IsOtorisasi1, TglOto1, OtoUser1  from vwppl where  bulan = :bulan and tahun = :tahun and IsJasa = 0 and pAgen = 0 "  , ["bulan" => $periode->bulan , "tahun" => $periode->tahun ]);
 
-  $otorisasi = collect($otorisasi)->groupBy('NOBUKTI');
+      $otorisasi = collect($otorisasi)->groupBy('NOBUKTI');
       $tempOtorisasi = [];
       foreach ($otorisasi as $groupedData) {
           $tempOtorisasi[] = $groupedData;
@@ -126,19 +126,15 @@ VALUES (:username , :href , :header , :tipe , :isshown , :value , :isnumber);",
           }
         }
 
-
-
-
       }
     }
+
     return [
       "isparsed" => $isparsed ,
       "headertableheader" => $headertableheader ,
       "isnumeric" => $isnumberheadertable,
       "headertablevalue" => $headertablevalue,
       "isshown" => $headerisshown];
-
-
 
   }
 

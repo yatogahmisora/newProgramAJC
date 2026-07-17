@@ -3,6 +3,7 @@
 use App\Http\Controllers\Berkas\NewSetPemakaiController;
 use App\Http\Controllers\Berkas\NewSetupPeriodeKerjaController;
 use App\Http\Controllers\Berkas\KunciPeriodeKerjaController;
+use App\Http\Controllers\Berkas\SetNomorTransaksiController;
 use App\Http\Controllers\Berkas\GantiPasswordController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +38,8 @@ Route::post('/newsetupperiodekerjaupdate', [NewSetupPeriodeKerjaController::clas
 Route::get('/kunciperiodekerja', [KunciPeriodeKerjaController::class, 'index']);
 Route::get('kunciperiodeload', [KunciPeriodeKerjaController::class, 'kunciPeriodeLoad']);
 Route::post('kunciperiodetoggle', [KunciPeriodeKerjaController::class, 'kunciPeriodeToggle']);
+
+Route::get('/setnomortransaksi', [SetNomorTransaksiController::class, 'index']);
 
 // GANTI PASSWORD
 Route::get('/gantipassword', [GantiPasswordController::class, 'index'])->middleware('auth');

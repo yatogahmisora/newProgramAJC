@@ -4,9 +4,10 @@ namespace App\Traits;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use App\Model\NewMenuReport;
-use App\Model\NewPeriode;
-use Carbon\Carbon;
+use App\Models\NewMenuReport;
+use App\Models\NewPeriode;
+
+use Carbon\Carbon;use Illuminate\Support\Arr;
 
 trait AksesTrait {
 	public function cekAkses($href) {
@@ -14,38 +15,38 @@ trait AksesTrait {
 
     	// $periode = NewPeriode::where('USERID' , \Auth::User()->username)->first();
 		$periode = collect(
-		    DB::connection('MGL')->select(
+		    DB::connection('SML')->select(
 		        'select top 1 bulan, tahun from DBPERIODE where user_id = ?',
 		        [\Auth::user()->username]
 		    )
 		)->first();
 		$menul0 = app('App\Http\Controllers\NewMenuController')->getMenuL0Report(5);
 
-		$program = DB::connection('MGL')->select('select * from DBPERUSAHAAN');
-		$akses = array_add($akses, 'program', $program[0]->NAMA);
-		$akses = array_add($akses, 'href', $href);
-		$akses = array_add($akses, 'user', \Auth::User()->username);
+		$program = DB::connection('SML')->select('select * from DBPERUSAHAAN');
+		$akses = Arr::add($akses, 'program', $program[0]->NAMA);
+		$akses = Arr::add($akses, 'href', $href);
+		$akses = Arr::add($akses, 'user', \Auth::User()->username);
 		
 		if ($href != "Home") {
 			$menu = NewMenuReport::where('href' , $href)->first();
 			$aksesmenu = $this->getAksesMenu($href);
-			$akses = array_add($akses, 'akses', $aksesmenu[0]);
-			$akses = array_add($akses, 'namamenu', $menu->Keterangan);
+			$akses = Arr::add($akses, 'akses', $aksesmenu[0]);
+			$akses = Arr::add($akses, 'namamenu', $menu->Keterangan);
 		} else {
-			$akses = array_add($akses, 'namamenu', "Home");
+			$akses = Arr::add($akses, 'namamenu', "Home");
 		}
 		
-		$akses = array_add($akses, 'periode', $periode);
-		$akses = array_add($akses, 'menul0' , $menul0);
+		$akses = Arr::add($akses, 'periode', $periode);
+		$akses = Arr::add($akses, 'menul0' , $menul0);
 
 		/* // Tidak jadi dipakai karena timestamp tidak akurat
 		$datetime = Carbon::now()->toDateTimeString();            // yyyy-mmm-dd hh:mm
 		$datetime = Str::replaceArray('-', ['', ''], $datetime);  // yyyymmmdd hh:mm:ss
 		$datetime = Str::replaceArray(':', ['', ''], $datetime);  // yyyymmmdd hhmmss
 		$datetime = Str::replaceArray(' ', ['_'], $datetime);     // yyyymmmdd_hhmmss
-		$akses = array_add($akses, 'xlsfilename', strtoupper($href) . "_" . $datetime);
+		$akses = Arr::add($akses, 'xlsfilename', strtoupper($href) . "_" . $datetime);
 		*/
-		$akses = array_add($akses, 'xlsfilename', strtoupper($href));
+		$akses = Arr::add($akses, 'xlsfilename', strtoupper($href));
 
 		return $akses;
 	}
@@ -73,7 +74,7 @@ trait AksesTrait {
 		$check = AksesMenu::where('id_user', \Auth::id())->where('kode_menu', $getKode->kode)->first();
 
 		$akses = array('userLoggedOut' => false);
-		$akses = array_add($akses, 'akses', $check);
+		$akses = Arr::add($akses, 'akses', $check);
 
 		if ($check->tampil == 1) {
 			User::where('id', \Auth::id())
@@ -99,13 +100,13 @@ trait AksesTrait {
 	  		
 			$periode = Periode::where('id_user', \Auth::id())->first();
 
-			$akses = array_add($akses, 'allowTransEdit', $this->allowTransEdit($checkUser->level));
+			$akses = Arr::add($akses, 'allowTransEdit', $this->allowTransEdit($checkUser->level));
 		} else {
 			return $akses;
 		}
 
-		$akses = array_add($akses, 'menu', $menu);
-		$akses = array_add($akses, 'periode', $periode);
+		$akses = Arr::add($akses, 'menu', $menu);
+		$akses = Arr::add($akses, 'periode', $periode);
 		return $akses;
 	}
 

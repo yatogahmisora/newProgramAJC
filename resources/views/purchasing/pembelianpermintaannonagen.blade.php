@@ -121,7 +121,7 @@
 
           <div class="col-2">
             <div class="form-group">
-              <select id="input_filter" style="height: 40px" class="form-control form-select-lg mb-3" aria-label=".form-select-lg example">
+              <select id="input_filter" style="height: 40px" class="form-control form-select mb-2" aria-label=".form-select-lg example">
                 <option value="2" selected>Semua PR</option>
                 <option value="0">PR Belum Otorisasi</option>
                 <option value="1">PR Sudah Otorisasi</option>
@@ -893,8 +893,6 @@
       </div>
       </div>
 
-
-
     </div>
   </div>
 </div>
@@ -1318,31 +1316,20 @@ function buttonHeaderTable () {
 
 }
 
-function buttonFilter () {
-  console.log('buttonFilter')
-  console.log('buttonFilterSO')
+function buttonFilter() {
   let href = window.location.pathname.split('/').filter(Boolean)[1];
 
-  let _token  = $("#_token").val()
-  let tglawal = $("#input_tanggalawal").val()
-  let tglakhir = $("#input_tanggalakhir").val()
-  let isoto = $("#input_filter").val()
-  let dataRefresh = [];
+  let _token   = $("#_token").val();
+  let tglawal  = $("#input_tanggalawal").val();
+  let tglakhir = $("#input_tanggalakhir").val();
+  let isoto    = $("#input_filter").val() || 2;
+
+  let laheadertable      = [];
+  let laheadertablevalue = [];
+  let laisnumeric        = [];
+  let laisshown          = [];
   let dataRefreshOutstanding2 = [];
-  if (!isoto) {
-    isoto = 2
-  }
 
-  console.log(isoto)
-  console.log({tglawal,
-  tglakhir,
-  isoto,})
-  let laheadertable = []
-
-  let laheadertablevalue = []
-  let laisnumeric = []
-  let laisparsed = 0
-  let laisshown = []
   $.ajax({
     url: "{!! url('pembelianpermintaannonagenloadall') !!}",
     type: "post",
@@ -1354,190 +1341,94 @@ function buttonFilter () {
       isoto,
       href
     },
-    success: function(res) {
-      console.log('loadall res')
-      console.log(res)
-      // laisshown = []
+    success: function (res) {
+      laisshown          = res.isshown;
+      laheadertable      = res.headertableheader;
+      laheadertablevalue = res.headertablevalue;
+      laisnumeric        = res.isnumeric;
 
-      console.log("asd")
-      // if (res.isparsed == 0) {
-      //   laisshown = JSON.parse(res.isshown)
-      //   laheadertable = JSON.parse(res.headertableheader)
-      //   laheadertablevalue = JSON.parse(res.headertablevalue)
-      //   laisnumeric = JSON.parse(res.isnumeric)
-      //
-      //
-      // } else {
-        laisshown = res.isshown
-        laheadertable = res.headertableheader
-        laheadertablevalue = res.headertablevalue
-        laisnumeric = res.isnumeric
-
-
-      // }
-
-      console.log(laisshown)
-      // console.log(laheadertableheader)
-      console.log(laheadertablevalue)
-      console.log(laisnumeric)
-      console.log("edw")
-      dataRefresh = res.listData2 || [];
       dataRefreshOutstanding2 = res.listData1 || [];
-      console.log("BOOO")
+    },
+    error: function (err) {
+      console.log(err);
+      alertify.warning('Terjadi kesalahan, silakan refresh browser');
     }
   });
-  console.log("BUUU")
 
-  let headerTable = '<tr><th style="padding: 4px 12px;" scope="col">Actions</th>'
-  console.log("Cek error")
-  console.log(laheadertable)
-  laheadertable.forEach((item, i) => {
+  // ===================== BUILD HEADER =====================
+  let headerTable = '<tr><th style="padding: 4px 12px;" scope="col">Actions</th>';
+
+  laheadertable.forEach((label, i) => {
     if (laisshown[i]) {
-
-      headerTable += `<th style="padding: 4px 12px;" scope="col">${laheadertable[i]}</th>`
+      headerTable += `<th style="padding: 4px 12px;" scope="col">${label}</th>`;
     }
   });
-  headerTable += `<th style="padding: 4px 12px;" scope="col">Authorized</th>
-  <th style="padding: 4px 12px;" scope="col">User Oto</th>
-  <th style="padding: 4px 12px;" scope="col">Tanggal Oto</th>
-</tr>`
 
-  // ===================== TABEL BELUM OTORISASI =====================
-  // let rowTable = "";
-  // dataRefresh.forEach((item) => {
-  //   let isOtorisasi = Number(item[0].isOtorisasi1) || 0;
-  //   let statusOtorisasi = isOtorisasi === 0
-  //     ? '<td class="text-danger text-center"><i class="bi bi-x" style="-webkit-text-stroke-width: 2px;"></i></td>'
-  //     : '<td class="text-success text-center"><i class="bi bi-check2" style="-webkit-text-stroke-width: 2px;"></i></td>';
-  //
-  //   let date = item[0].Tanggal ? new Date(item[0].Tanggal) : null;
-  //   let formattedDate = date ? `${date.getFullYear()}/${("0"+(date.getMonth()+1)).slice(-2)}/${("0"+date.getDate()).slice(-2)}` : "";
-  //
-  //   rowTable += `
-  //     <tr>
-  //       <td class="text-center">
-  //         <button class="btn btn-warning btn-sm" type="button" onclick="buttonDetail('${item[0].NoBukti}')"><i class="bi bi-info"></i></button>
-  //         <button class="btn btn-success btn-sm" type="button" onclick="buttonEdit('${item[0].NoBukti}')"><i class="bi bi-pen"></i></button>
-  //         <button class="btn btn-info btn-sm" type="button" onclick="buttonOtorisasi('${item[0].NoBukti}', '${item[0].isOtorisasi1}')"><i class="bi bi-key"></i></button>
-  //       </td>
-  //       <td>${item[0].NoBukti}</td>
-  //       <td>${formattedDate}</td>
-  //       ${statusOtorisasi}
-  //     </tr>
-  //   `;
-  // });
-  //
-  // document.getElementById("tabel_data").innerHTML = rowTable;
-  // $("#tabel").DataTable({ "lengthChange": false, "paging": false });
+  headerTable += `
+    <th style="padding: 4px 12px;" scope="col">Authorized</th>
+    <th style="padding: 4px 12px;" scope="col">User Oto</th>
+    <th style="padding: 4px 12px;" scope="col">Tanggal Oto</th>
+  </tr>`;
 
-  // ===================== TABEL SUDAH OTORISASI =====================
+  // ===================== BUILD ROWS =====================
   let rowTable2 = "";
 
-  console.log("BEEE")
-
   dataRefreshOutstanding2.forEach((item) => {
-  const isOtorisasi = Number(item[0].IsOtorisasi1) || 0;
+    let data = item[0];
+    let isOtorisasi = Number(data.IsOtorisasi1) || 0;
 
-  const statusOtorisasi = isOtorisasi == 0
-    ? '<td class="text-danger text-center"><i class="bi bi-x" style="-webkit-text-stroke-width: 2px;"></i></td>'
-    : '<td class="text-success text-center"><i class="bi bi-check2" style="-webkit-text-stroke-width: 2px;"></i></td>';
-  const buttonOtorisasi = isOtorisasi == 1
-  ? `<button class="btn btn-danger btn-sm"  type="button" onclick="buttonBatalOtorisasi('${item[0].NoBukti}', '${item[0].isOtorisasi1}')"><i class="bi bi-key"></i></button><button class="btn btn-primary btn-sm"  type="button" onclick="submitPrint('${item[0].NoBukti}')"><i class="bi bi-printer"></i></button>`
-  : `<button class="btn btn-info btn-sm" title="Otorisasi" onclick="buttonOtorisasi('${item[0].NoBukti }', '${item[0].IsOtorisasi1 }')"><i class="bi bi-key"></i></button>
+    let statusOtorisasi = isOtorisasi === 0
+      ? '<td class="text-center text-danger"><i class="bi bi-x" style="-webkit-text-stroke-width: 2px;"></i></td>'
+      : '<td class="text-center text-success"><i class="bi bi-check2" style="-webkit-text-stroke-width: 2px;"></i></td>';
 
-  <button class="btn btn-success btn-sm" title="Edit" onclick="buttonEdit('${item[0].NoBukti }')">
-                <i class="bi bi-pen"></i>
-              </button>`
+    let actionButtons = isOtorisasi === 1
+      ? `
+        <button class="btn-action-sm btn-action-danger" title="Batal Otorisasi" onclick="buttonBatalOtorisasi('${data.NoBukti}', '${data.IsOtorisasi1}')"><i class="bi bi-key"></i></button>
+        <button class="btn-action-sm btn-action-primary" title="Print" onclick="submitPrint('${data.NoBukti}')"><i class="bi bi-printer"></i></button>
+      `
+      : `
+        <button class="btn-action-sm btn-action-info" title="Otorisasi" onclick="buttonOtorisasi('${data.NoBukti}', '${data.IsOtorisasi1}')"><i class="bi bi-key"></i></button>
+        <button class="btn-action-sm btn-action-success" title="Edit" onclick="buttonEdit('${data.NoBukti}')"><i class="bi bi-pen"></i></button>
+      `;
 
-  const tglInput = item[0].Tanggal   ? new Date(item[0].Tanggal)  : null;
-  const tglOto   = item[0].TglOto1   ? new Date(item[0].TglOto1)  : null;
+    let formattedOto = data.TglOto1
+      ? new Date(data.TglOto1).toLocaleDateString('en-CA') // yyyy-mm-dd, swap format below if you need y/m/d with slashes
+      : "";
 
-  const formattedInput = tglInput ? `${tglInput.getFullYear()}/${("0"+(tglInput.getMonth()+1)).slice(-2)}/${("0"+tglInput.getDate()).slice(-2)}` : "";
-  const formattedOto   = tglOto   ? `${tglOto.getFullYear()}/${("0"+(tglOto.getMonth()+1)).slice(-2)}/${("0"+tglOto.getDate()).slice(-2)}`     : "";
+    let dynamicCells = "";
+    laheadertable.forEach((_, i) => {
+      if (Number(laisshown[i]) !== 1) return;
 
-  rowTable2 += `
-    <tr>
-      <td class="text-center">
-        <button class="btn btn-warning btn-sm" type="button" onclick="buttonDetail('${item[0].NoBukti}')"><i class="bi bi-info"></i></button>
-        ${buttonOtorisasi}
-        `
-        // if (Number(item[0].IsOtorisasi1) == 1) {
-        //   rowTable2 += `
-        //   <button class="btn btn-danger btn-sm" title="Batal Otorisasi" onclick="buttonBatalOtorisasi('${item[0].NoBukti }', '${item[0].IsOtorisasi1 }')"><i class="bi bi-key"></i></button>
-        //   <button class="btn btn-primary btn-sm" title="Print" onclick="submitPrint('${item[0].NoBukti }')">
-        //     <i class="bi bi-printer"></i>
-        //   </button>
-        //   `
-        // } else {
-        //   rowTable2 += `
-        //   <button class="btn btn-info btn-sm" title="Otorisasi" onclick="buttonOtorisasi('${item[0].NoBukti }', '${item[0].IsOtorisasi1 }')"><i class="bi bi-key"></i></button>
-        //
-        //   <button class="btn btn-success btn-sm" title="Edit" onclick="buttonEdit('${item[0].NoBukti }')">
-        //                 <i class="bi bi-pen"></i>
-        //               </button>
-        //   `
-        //
-        // }
-        console.log("BAAAAAAAAAAAAA")
-      rowTable2 += `</td>`
-      console.log(laheadertable)
-      laheadertable.forEach((itemx, i) => {
-        console.log('foreach')
-        console.log(laisshown , i)
-        console.log(laisshown[1])
-        console.log(Number(laisshown[i]) == 1)
-        if(Number(laisshown[i]) == 1) {
-          console.log("masuk isshown")
-          console.log(laisnumeric[i])
-          if (laisnumeric[i] == 0 )
-          {
+      let key = laheadertablevalue[i];
 
-              // ${laheadertablevalue[i]}
-              // let xvalx = laheadertablevalue[i]
-              let xvalx = itemx
+      if (laisnumeric[i] == 0) {
+        dynamicCells += `<td>${data[key] ?? ''}</td>`;
+      } else if (laisnumeric[i] == 1) {
+        dynamicCells += `<td style="text-align: right;">${formatAngka(data[key])}</td>`;
+      } else {
+        dynamicCells += `<td>${data[key] ? formatDate(data[key]) : ''}</td>`;
+      }
+    });
 
-            rowTable2 += `
-              <td>${item[0][xvalx] }</td>
-
-            `
-
-          } else if (laisnumeric[i] == 1 ) {
-            console.log("masuk isnum 1")
-
-            console.log(laheadertablevalue)
-            console.log(laheadertablevalue[i])
-
-            let xvalx = laheadertablevalue[i]
-            console.log('xvalx',xvalx)
-            rowTable2 += `<td style="text-align: right;">${ formatAngka(item[0][xvalx])}</td>
-  `
-
-          } else {
-            console.log("masuk isnum else")
-
-            console.log(laheadertablevalue)
-            console.log(laheadertablevalue[i])
-            let xvaluedate = item[0][laheadertablevalue[i]];
-  rowTable2 += `<td>${xvaluedate ? formatDate(xvaluedate) : ""}</td>`;
-
-          }
-        }
-
-
-      });
-
-
-      // <td>${item[0].NoBukti}</td>
-      // <td>${formattedInput}</td>
-      rowTable2 += `${statusOtorisasi}
-      <td>${item[0].OtoUser1 || '-'}</td>
-      <td>${formattedOto}</td>
-    </tr>
+    rowTable2 += `
+      <tr>
+        <td class="text-center">
+          <div class="action-buttons-wrap">
+            <button class="btn-action-sm btn-action-warning" title="Details" onclick="buttonDetail('${data.NoBukti}')"><i class="bi bi-info"></i></button>
+            ${actionButtons}
+          </div>
+        </td>
+        ${dynamicCells}
+        ${statusOtorisasi}
+        <td>${data.OtoUser1 || '-'}</td>
+        <td>${formattedOto}</td>
+      </tr>
     `;
-  })
-  document.getElementById("tabel_header").innerHTML = headerTable;
+  });
 
+  document.getElementById("tabel_header").innerHTML = headerTable;
   document.getElementById("tabel_data").innerHTML = rowTable2;
+
   $("#tabel").DataTable({ "lengthChange": false, "paging": false });
 }
 
