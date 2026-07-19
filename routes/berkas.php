@@ -5,6 +5,8 @@ use App\Http\Controllers\Berkas\NewSetupPeriodeKerjaController;
 use App\Http\Controllers\Berkas\KunciPeriodeKerjaController;
 use App\Http\Controllers\Berkas\SetNomorTransaksiController;
 use App\Http\Controllers\Berkas\GantiPasswordController;
+use App\Http\Controllers\Berkas\BerkasMenuController;
+use App\Http\Controllers\Berkas\BerkasStatusController;
 use Illuminate\Support\Facades\Route;
 
 // Berkas
@@ -32,14 +34,27 @@ Route::controller(NewSetPemakaiController::class)->group(function () {
     Route::post('/newsetpemakaideleteuser', 'deleteUser');
 });
 
-Route::get('/newsetupperiodekerja', [NewSetupPeriodeKerjaController::class, 'index']);
-Route::post('/newsetupperiodekerjaupdate', [NewSetupPeriodeKerjaController::class, 'updatePeriodeKerja']);
-
 Route::get('/kunciperiodekerja', [KunciPeriodeKerjaController::class, 'index']);
 Route::get('kunciperiodeload', [KunciPeriodeKerjaController::class, 'kunciPeriodeLoad']);
 Route::post('kunciperiodetoggle', [KunciPeriodeKerjaController::class, 'kunciPeriodeToggle']);
 
 Route::get('/setnomortransaksi', [SetNomorTransaksiController::class, 'index']);
+
+// BERKAS MENU ====================================================================================
+Route::get('/berkasmenu', [BerkasMenuController::class, 'index']);
+Route::get('/berkasmenuloadall', [BerkasMenuController::class, 'loadAll']);
+Route::post('/berkasmenuspadd', [BerkasMenuController::class, 'spAdd']);
+Route::post('/berkasmenuspedit', [BerkasMenuController::class, 'spEdit']);
+Route::post('/berkasmenuspdelete', [BerkasMenuController::class, 'spDelete']);
+Route::get('/berkasmenuspdetail', [BerkasMenuController::class, 'spDetail']);
+
+// ONLIN / OFFLINE ====================================================================================
+Route::get('/berkasstatus', [BerkasStatusController::class, 'index'])->middleware('auth');
+Route::get('/berkasstatusloadall', [BerkasStatusController::class, 'loadAll'])->middleware('auth');
+Route::post('/mastervalasspadd', [BerkasMenuController::class, 'spAdd'])->middleware('auth');
+Route::post('/mastervalasspedit', [BerkasMenuController::class, 'spEdit'])->middleware('auth');
+Route::post('/mastervalasspdelete', [BerkasMenuController::class, 'spDelete'])->middleware('auth');
+Route::get('/mastervalasspdetail', [BerkasMenuController::class, 'spDetail'])->middleware('auth');
 
 // GANTI PASSWORD
 Route::get('/gantipassword', [GantiPasswordController::class, 'index'])->middleware('auth');

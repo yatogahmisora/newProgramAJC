@@ -9,8 +9,6 @@ use App\Models\NewPeriode;
 // use App\Model\NewUsers;
 use Illuminate\Support\Facades\DB;
 
-
-
 // use App\Http\Controllers\NewMenuController;
 
 class NewSetupPeriodeKerjaController extends Controller

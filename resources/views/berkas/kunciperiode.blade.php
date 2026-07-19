@@ -7,13 +7,13 @@
 
 <link rel="stylesheet" href="{{ asset('css/tableMaster2.css') }}">
 
-  <div class="sp-breadcrumb">
+  {{-- <div class="sp-breadcrumb">
     <span>Beranda</span>
     <span class="sp-sep">›</span>
     <span>Utilitas</span>
     <span class="sp-sep">›</span>
     <span class="sp-crumb-active">Kunci Periode</span>
-  </div>
+  </div> --}}
 
   <div class="sp-page-head">
     <div>
@@ -45,55 +45,60 @@
           <input type="text" id="input_tahun" class="kp-tahun-input" value="{{ date('Y') }}" maxlength="4" onchange="loadKunciPeriode()">
         </div>
 
-        <div class="kp-month-list">
-          <label class="kp-month-item">
-            <input type="checkbox" id="bulan_1" value="1" onchange="toggleBulan(this)">
-            <span>Januari</span>
-          </label>
-          <label class="kp-month-item">
-            <input type="checkbox" id="bulan_2" value="2" onchange="toggleBulan(this)">
-            <span>Februari</span>
-          </label>
-          <label class="kp-month-item">
-            <input type="checkbox" id="bulan_3" value="3" onchange="toggleBulan(this)">
-            <span>Maret</span>
-          </label>
-          <label class="kp-month-item">
-            <input type="checkbox" id="bulan_4" value="4" onchange="toggleBulan(this)">
-            <span>April</span>
-          </label>
-          <label class="kp-month-item">
-            <input type="checkbox" id="bulan_5" value="5" onchange="toggleBulan(this)">
-            <span>Mei</span>
-          </label>
-          <label class="kp-month-item">
-            <input type="checkbox" id="bulan_6" value="6" onchange="toggleBulan(this)">
-            <span>Juni</span>
-          </label>
-          <label class="kp-month-item">
-            <input type="checkbox" id="bulan_7" value="7" onchange="toggleBulan(this)">
-            <span>Juli</span>
-          </label>
-          <label class="kp-month-item">
-            <input type="checkbox" id="bulan_8" value="8" onchange="toggleBulan(this)">
-            <span>Agustus</span>
-          </label>
-          <label class="kp-month-item">
-            <input type="checkbox" id="bulan_9" value="9" onchange="toggleBulan(this)">
-            <span>September</span>
-          </label>
-          <label class="kp-month-item">
-            <input type="checkbox" id="bulan_10" value="10" onchange="toggleBulan(this)">
-            <span>Oktober</span>
-          </label>
-          <label class="kp-month-item">
-            <input type="checkbox" id="bulan_11" value="11" onchange="toggleBulan(this)">
-            <span>November</span>
-          </label>
-          <label class="kp-month-item">
-            <input type="checkbox" id="bulan_12" value="12" onchange="toggleBulan(this)">
-            <span>Desember</span>
-          </label>
+        <div class="kp-month-list kp-month-list-cols">
+          <div class="kp-month-col">
+            <label class="kp-month-item">
+              <input type="checkbox" id="bulan_1" value="1" onchange="toggleBulan(this)">
+              <span>Januari</span>
+            </label>
+            <label class="kp-month-item">
+              <input type="checkbox" id="bulan_2" value="2" onchange="toggleBulan(this)">
+              <span>Februari</span>
+            </label>
+            <label class="kp-month-item">
+              <input type="checkbox" id="bulan_3" value="3" onchange="toggleBulan(this)">
+              <span>Maret</span>
+            </label>
+            <label class="kp-month-item">
+              <input type="checkbox" id="bulan_4" value="4" onchange="toggleBulan(this)">
+              <span>April</span>
+            </label>
+            <label class="kp-month-item">
+              <input type="checkbox" id="bulan_5" value="5" onchange="toggleBulan(this)">
+              <span>Mei</span>
+            </label>
+            <label class="kp-month-item">
+              <input type="checkbox" id="bulan_6" value="6" onchange="toggleBulan(this)">
+              <span>Juni</span>
+            </label>
+          </div>
+
+          <div class="kp-month-col">
+            <label class="kp-month-item">
+              <input type="checkbox" id="bulan_7" value="7" onchange="toggleBulan(this)">
+              <span>Juli</span>
+            </label>
+            <label class="kp-month-item">
+              <input type="checkbox" id="bulan_8" value="8" onchange="toggleBulan(this)">
+              <span>Agustus</span>
+            </label>
+            <label class="kp-month-item">
+              <input type="checkbox" id="bulan_9" value="9" onchange="toggleBulan(this)">
+              <span>September</span>
+            </label>
+            <label class="kp-month-item">
+              <input type="checkbox" id="bulan_10" value="10" onchange="toggleBulan(this)">
+              <span>Oktober</span>
+            </label>
+            <label class="kp-month-item">
+              <input type="checkbox" id="bulan_11" value="11" onchange="toggleBulan(this)">
+              <span>November</span>
+            </label>
+            <label class="kp-month-item">
+              <input type="checkbox" id="bulan_12" value="12" onchange="toggleBulan(this)">
+              <span>Desember</span>
+            </label>
+          </div>
         </div>
 
         <div class="kp-footer">
@@ -121,7 +126,7 @@
 
   .kp-card {
     width: 100%;
-    max-width: 420px;
+    max-width: 520px;
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 18px rgba(0,0,0,0.08);
@@ -201,6 +206,20 @@
     border-radius: 8px;
     padding: 6px 4px;
     margin-bottom: 20px;
+  }
+
+  .kp-month-list-cols {
+    display: flex;
+    gap: 4px;
+  }
+
+  .kp-month-col {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .kp-month-col:first-child {
+    border-right: 1px solid #e9e9e9;
   }
 
   .kp-month-item {

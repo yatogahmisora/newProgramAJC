@@ -35,6 +35,21 @@
 
 
 <style>
+
+  .report-card-has-sub {
+  position: relative;
+  padding-right: 34px;
+}
+
+.report-card-arrow {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  opacity: 0.5;
+}
   .hover-tooltip {
   position: relative;
 }
