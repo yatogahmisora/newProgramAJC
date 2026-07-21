@@ -825,8 +825,31 @@ function renderSidebarFooter() {
   `;
 }
 
+let reportViewStack = []; // breadcrumb trail of nodes drilled into, e.g. [Master Accounting, Daftar Perkiraan]
+
+// A node is worth showing only if it — or something underneath it —
+// actually has a real href. Pure "#" folders with no working leaf
+// anywhere below them get filtered out entirely.
+function hasLeafDescendant(node) {
+  if (node.href && node.href !== '#' && node.href !== '') return true;
+  return (node.children || []).some(hasLeafDescendant);
+}
+
+function loadReportMenu(callback) {
+  $.get('{{ url("getmenureport/1") }}', function (data) {
+    const tree = buildMenu(data); // reuse the same mapMenuNode/buildMenu as the sidebar
+    reportCategories = tree.filter(hasLeafDescendant);
+    if (callback) callback();
+  }).fail(function () {
+    console.error('Failed to load report menu from /getmenureport');
+    reportCategories = [];
+    if (callback) callback();
+  });
+}
+
 function showReportPage() {
   activeModuleKey = null;
+  reportViewStack = [];
 
   document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('active'));
   const reportItem = document.getElementById('nav-report-item');
@@ -845,79 +868,108 @@ function showReportPage() {
   report.style.display = 'block';
   report.innerHTML = `
     <div class="container-fluid clearfix">
-      <button class="report-back-btn" onclick="closeReportPage()">
+      <button class="report-back-btn" id="report-back-btn" onclick="reportGoBack()">
         ${icon('chevron')} Kembali
       </button>
       <div class="page-title">Report</div>
+      <div id="report-crumb" class="page-subtitle"></div>
       <div id="report-categories-container" class="text-muted">Memuat data laporan...</div>
     </div>
   `;
 
-  loadReportMenu(renderReportCategories);
+  loadReportMenu(renderReportView);
 }
 
-function renderReportCategories() {
+// Drill into a folder node — stays on the Report page, just changes
+// what's shown, same pattern as navToChild()/showModuleHome() elsewhere.
+function reportDrillInto(node) {
+  reportViewStack.push(node);
+  renderReportView();
+}
+
+// One level up. If already at the root, exit the Report page entirely
+// (same behavior the old "Kembali" button had).
+function reportGoBack() {
+  if (reportViewStack.length > 0) {
+    reportViewStack.pop();
+    renderReportView();
+  } else {
+    closeReportPage();
+  }
+}
+
+function renderReportView() {
   const container = document.getElementById('report-categories-container');
+  const crumbEl   = document.getElementById('report-crumb');
   if (!container) return;
 
+  // Breadcrumb trail: Master Accounting > Daftar Perkiraan ...
+  if (crumbEl) {
+    const trail = reportViewStack.map(n => n.label);
+    crumbEl.innerHTML = trail.length
+      ? trail.map((label, i) => i === trail.length - 1 ? `<b>${label}</b>` : `${label} <span class="bc-sep">›</span> `).join('')
+      : '';
+  }
+
+  const currentNode = reportViewStack[reportViewStack.length - 1] || null;
+
+  if (currentNode) {
+    // Inside a folder: show its children as one flat grid.
+    const children = (currentNode.children || []).filter(hasLeafDescendant);
+    container.className = '';
+    container.innerHTML = `<div class="report-grid">${renderReportCards(children)}</div>`;
+    return;
+  }
+
+  // Root: show each L0=1 category as its own titled section.
   if (!reportCategories.length) {
-    container.innerHTML = `<div class="text-muted">Tidak ada laporan tersedia.</div>`;
+    container.className = 'text-muted';
+    container.innerHTML = `Tidak ada laporan tersedia.`;
     return;
   }
 
   container.className = '';
-  container.innerHTML = reportCategories.map(cat => `
-    <div class="report-category">
-      <div class="report-category-title">${cat.title}</div>
-      <div class="report-grid">
-        ${cat.items.map(item => `
-          <div class="report-card" onclick="openReport('${encodeURIComponent(item.href)}')">
-            <div class="report-card-icon">${icon(item.icon)}</div>
-            <div class="report-card-label">${item.label}</div>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-  `).join('');
+  container.innerHTML = reportCategories.map(cat => {
+    const children = (cat.children || []).filter(hasLeafDescendant);
+    return `
+      <div class="report-category">
+        <div class="report-category-title">${cat.label}</div>
+        <div class="report-grid">${renderReportCards(children)}</div>
+      </div>`;
+  }).join('');
 }
 
-function loadReportMenu(callback) {
-  $.get('{{ url("getmenureport/1") }}', function (data) {
-    const tree = buildMenu(data); // reuse the same mapMenuNode/buildMenu as the sidebar
+function renderReportCards(nodes) {
+  return nodes.map((node, i) => {
+    const color    = cardColors[i % cardColors.length];
+    const iconName = getChildIcon(node.label, node.icon);
+    const subChildren = (node.children || []).filter(hasLeafDescendant);
+    const hasSub   = subChildren.length > 0;
 
-    reportCategories = tree
-      .map(cat => ({
-        title: cat.label,
-        items: flattenReportItems(cat)
-      }))
-      .filter(cat => cat.items.length > 0);
-
-    if (callback) callback();
-  }).fail(function () {
-    console.error('Failed to load report menu from /getmenureport');
-    reportCategories = [];
-    if (callback) callback();
-  });
-}
-
-function flattenReportItems(node) {
-  let items = [];
-  (node.children || []).forEach(child => {
-    if (child.href && child.href !== '#' && child.href !== '') {
-      items.push({
-        label: child.label,
-        icon: getChildIcon(child.label, child.icon),
-        href: child.href
-      });
+    if (hasSub) {
+      // Folder card: clicking drills into it, staying on this page.
+      return `
+        <div class="report-card report-card-has-sub" onclick='reportDrillInto(${JSON.stringify(node).replace(/'/g, "&#39;")})'>
+          <div class="report-card-icon ${color}">${icon(iconName)}</div>
+          <div class="report-card-label">${node.label}</div>
+          <span class="report-card-arrow">${icon('chevron')}</span>
+        </div>`;
     }
-    items = items.concat(flattenReportItems(child));
-  });
-  return items;
+
+    // Leaf card: clicking navigates straight to the report.
+    return `
+      <div class="report-card" onclick="openReport('${encodeURIComponent(node.href)}')">
+        <div class="report-card-icon ${color}">${icon(iconName)}</div>
+        <div class="report-card-label">${node.label}</div>
+      </div>`;
+  }).join('');
 }
 
 function closeReportPage() {
   const reportItem = document.getElementById('nav-report-item');
   if (reportItem) reportItem.classList.remove('active');
+
+  reportViewStack = [];
 
   document.getElementById('content-report').style.display = 'none';
   document.getElementById('content-blade').style.display = 'block';
@@ -927,8 +979,6 @@ function closeReportPage() {
 }
 
 function openReport(encodedHref) {
-  // Same navigation pattern as the sidebar's goTo() — actually route
-  // to the report page instead of the old placeholder alertify message.
   goTo(encodedHref);
 }
 

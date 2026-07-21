@@ -471,5 +471,14 @@ function batalSetingPerusahaan() {
   console.log('batalSetingPerusahaan - UI only for now');
 }
 
+function loadAll(){
+  
+}
+
+window.onload = function(){
+  loadAll();
+};
+
+
 </script>
 @endsection

@@ -51,10 +51,8 @@ Route::get('/berkasmenuspdetail', [BerkasMenuController::class, 'spDetail']);
 // ONLIN / OFFLINE ====================================================================================
 Route::get('/berkasstatus', [BerkasStatusController::class, 'index'])->middleware('auth');
 Route::get('/berkasstatusloadall', [BerkasStatusController::class, 'loadAll'])->middleware('auth');
-Route::post('/mastervalasspadd', [BerkasMenuController::class, 'spAdd'])->middleware('auth');
-Route::post('/mastervalasspedit', [BerkasMenuController::class, 'spEdit'])->middleware('auth');
-Route::post('/mastervalasspdelete', [BerkasMenuController::class, 'spDelete'])->middleware('auth');
-Route::get('/mastervalasspdetail', [BerkasMenuController::class, 'spDetail'])->middleware('auth');
+Route::post('/berkasstatusspedit', [BerkasStatusController::class, 'spEdit'])->middleware('auth');
+Route::get('/berkasstatusspdetail', [BerkasStatusController::class, 'spDetail'])->middleware('auth');
 
 // GANTI PASSWORD
 Route::get('/gantipassword', [GantiPasswordController::class, 'index'])->middleware('auth');

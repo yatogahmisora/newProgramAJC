@@ -38,34 +38,36 @@ class BerkasMenuController extends Controller
     return $users;
 
   }
-public function spAdd (Request $req) {
-    $check = DB::connection('SML')->select(
-        'SELECT * FROM DBMENUWEB where KODEMENU = :KODEMENU',
-        ['KODEMENU' => $req->KODEMENU]
-    );
 
-    if ($check) {
-        return 'Kode jenis sudah ada di database';
+    public function spAdd (Request $req) 
+    {
+        $check = DB::connection('SML')->select(
+            'SELECT * FROM DBMENUWEB where KODEMENU = :KODEMENU',
+            ['KODEMENU' => $req->KODEMENU]
+        );
+
+        if ($check) {
+            return 'Kode jenis sudah ada di database';
+        }
+
+        DB::connection('SML')->insert(
+            'insert into DBMENUWEB (KODEMENU, Keterangan, L0, ACCESS, OL, TipeTrans, HeaderMenu, href, icon)
+            values (:KODEMENU, :Keterangan, :L0, :ACCESS, :OL, :TipeTrans, :HeaderMenu, :href, :icon)',
+            [
+                'KODEMENU'   => $req->KODEMENU,
+                'Keterangan' => $req->Keterangan,
+                'L0'         => $req->L0,
+                'ACCESS'     => $req->ACCESS,
+                'OL'         => $req->OL,
+                'TipeTrans'  => '',
+                'HeaderMenu' => 1,
+                'href'       => '#',
+                'icon'       => null,
+            ]
+        );
+
+        return 1;
     }
-
-    DB::connection('SML')->insert(
-        'insert into DBMENUWEB (KODEMENU, Keterangan, L0, ACCESS, OL, TipeTrans, HeaderMenu, href, icon)
-         values (:KODEMENU, :Keterangan, :L0, :ACCESS, :OL, :TipeTrans, :HeaderMenu, :href, :icon)',
-        [
-            'KODEMENU'   => $req->KODEMENU,
-            'Keterangan' => $req->Keterangan,
-            'L0'         => $req->L0,
-            'ACCESS'     => $req->ACCESS,
-            'OL'         => $req->OL,
-            'TipeTrans'  => '',
-            'HeaderMenu' => 1,
-            'href'       => '#',
-            'icon'       => null,
-        ]
-    );
-
-    return 1;
-}
 
   public function spDelete (Request $req) {
     // $check = DB::connection('SML')->select('SELECT * FROM DBPPL where KDDep = :kode' , ['kode' => $req->kode]);

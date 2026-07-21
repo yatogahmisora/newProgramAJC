@@ -39,46 +39,15 @@ class BerkasStatusController extends Controller
 
   }
 
-public function kunciPeriodeLoad(Request $req)
-{
-    $tahun = $req->tahun;
+  public function spEdit (Request $req) {
+    $edit = DB::connection('SML')->update('update DBFLPASS set STATUS = :status where USERID = :kode' , ['kode' => $req->kode , 'status' => $req->status]);
 
-    $bulanLocked = DB::connection('SML')
-        ->table('DBLOCKPERIODE')
-        ->where('TAHUN', $tahun)
-        ->pluck('BULAN');
+    return $edit;
+  }
 
-    return response()->json($bulanLocked);
-}
-
-public function kunciPeriodeToggle(Request $req)
-{
-    $bulan   = $req->bulan;
-    $tahun   = $req->tahun;
-    $checked = $req->checked; // '1' = lock (insert), '0' = unlock (delete)
-
-    if ($checked == 1) {
-        $exists = DB::connection('SML')
-            ->table('DBLOCKPERIODE')
-            ->where('BULAN', $bulan)
-            ->where('TAHUN', $tahun)
-            ->exists();
-
-        if (!$exists) {
-            DB::connection('SML')->table('DBLOCKPERIODE')->insert([
-                'BULAN' => $bulan,
-                'TAHUN' => $tahun,
-            ]);
-        }
-    } else {
-        DB::connection('SML')
-            ->table('DBLOCKPERIODE')
-            ->where('BULAN', $bulan)
-            ->where('TAHUN', $tahun)
-            ->delete();
-    }
-
-    return response()->json(1);
-}
+  public function spDetail (Request $req) {
+    $detail = DB::connection('SML')->select('SELECT * FROM DBFLPASS where USERID = :kode' , ['kode' => $req->kode]);
+    return $detail;
+  }
 
 }
