@@ -39,46 +39,87 @@ class SetNomorTransaksiController extends Controller
 
   }
 
-public function kunciPeriodeLoad(Request $req)
-{
-    $tahun = $req->tahun;
+  public function spDetail (Request $req) {
+    $detail = DB::connection('SML')->select("SELECT
+    KODEUSAHA,
+    NAMA,
+    ALAMAT1,
+    ALAMAT2,
+    KOTA,
+    Telpon,
+    Fax,
+    NAMAPKP,
+    ALAMATPKP1,
+    ALAMATPKP2,
+    KOTAPKP,
+    NPWP,
+    TGLPENGUKUHAN,
+    NAMAPKP1,
+    ALAMATPKP21,
+    ALAMATPKP22,
+    KOTAPKP1,
+    NPWP1,
+    TGLPENGUKUHAN1,
+    Direksi,
+    Jabatan,
+    email,
+    L_Update
+        FROM DBPERUSAHAAN");
+    return $detail;
+  }
 
-    $bulanLocked = DB::connection('SML')
-        ->table('DBLOCKPERIODE')
-        ->where('TAHUN', $tahun)
-        ->pluck('BULAN');
+    public function submitEdit(Request $req) {
+    DB::connection('SML')->update(
+        "UPDATE DBPERUSAHAAN SET
+            NAMA = :nama,
+            ALAMAT1 = :alamat1,
+            ALAMAT2 = :alamat2,
+            KOTA = :kota,
+            Telpon = :telpon,
+            Fax = :fax,
+            email = :email,
+            NAMAPKP = :namapkp,
+            ALAMATPKP1 = :alamatpkp1,
+            ALAMATPKP2 = :alamatpkp2,
+            KOTAPKP = :kotapkp,
+            NPWP = :npwp,
+            TGLPENGUKUHAN = :tglpengukuhan,
+            NAMAPKP1 = :namapkp1,
+            ALAMATPKP21 = :alamatpkp21,
+            ALAMATPKP22 = :alamatpkp22,
+            KOTAPKP1 = :kotapkp1,
+            NPWP1 = :npwp1,
+            TGLPENGUKUHAN1 = :tglpengukuhan1,
+            Direksi = :direksi,
+            Jabatan = :jabatan,
+            L_Update = GETDATE()
+        ",
+        [
+            "nama"           => $req->nama,
+            "alamat1"        => $req->alamat1,
+            "alamat2"        => $req->alamat2,
+            "kota"           => $req->kota,
+            "telpon"         => $req->telpon,
+            "fax"            => $req->fax,
+            "email"          => $req->email,
+            "namapkp"        => $req->namapkp,
+            "alamatpkp1"     => $req->alamatpkp1,
+            "alamatpkp2"     => $req->alamatpkp2,
+            "kotapkp"        => $req->kotapkp,
+            "npwp"           => $req->npwp,
+            "tglpengukuhan"  => $req->tglpengukuhan,
+            "namapkp1"       => $req->namapkp1,
+            "alamatpkp21"    => $req->alamatpkp21,
+            "alamatpkp22"    => $req->alamatpkp22,
+            "kotapkp1"       => $req->kotapkp1,
+            "npwp1"          => $req->npwp1,
+            "tglpengukuhan1" => $req->tglpengukuhan1,
+            "direksi"        => $req->direksi,
+            "jabatan"        => $req->jabatan,
+        ]
+    );
 
-    return response()->json($bulanLocked);
-}
-
-public function kunciPeriodeToggle(Request $req)
-{
-    $bulan   = $req->bulan;
-    $tahun   = $req->tahun;
-    $checked = $req->checked; // '1' = lock (insert), '0' = unlock (delete)
-
-    if ($checked == 1) {
-        $exists = DB::connection('SML')
-            ->table('DBLOCKPERIODE')
-            ->where('BULAN', $bulan)
-            ->where('TAHUN', $tahun)
-            ->exists();
-
-        if (!$exists) {
-            DB::connection('SML')->table('DBLOCKPERIODE')->insert([
-                'BULAN' => $bulan,
-                'TAHUN' => $tahun,
-            ]);
-        }
-    } else {
-        DB::connection('SML')
-            ->table('DBLOCKPERIODE')
-            ->where('BULAN', $bulan)
-            ->where('TAHUN', $tahun)
-            ->delete();
+    return 1;
     }
-
-    return response()->json(1);
-}
 
 }
