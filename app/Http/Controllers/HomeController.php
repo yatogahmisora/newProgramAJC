@@ -207,7 +207,7 @@ class HomeController extends Controller
 
 public function getMenuReport($headermenu = 1)
 {
-    $rows = DB::connection('SML')->table('dbmenureport')
+    $rows = DB::connection('SML')->table('dbmenureportweb')
         ->orderBy('KODEMENU')
         ->get();
 

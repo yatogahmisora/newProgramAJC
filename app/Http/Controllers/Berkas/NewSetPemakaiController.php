@@ -71,7 +71,7 @@ class NewSetPemakaiController extends Controller
     DB::connection('SML')->update('exec sp_updateMenuReportWeb1 ?',$values);
 
 
-    $listAksesReport = DB::connection("SML")->select('select a.* , b.* from DBMENUREPORT a join DBFLMENUREPORT b on a.KODEMENU = b.L1 where b.UserID = :username order by a.KODEMENU', ['username' => $req->userid]);
+    $listAksesReport = DB::connection("SML")->select('select a.* , b.* from DBMENUREPORTWEB a join DBFLMENUREPORT b on a.KODEMENU = b.L1 where b.UserID = :username order by a.KODEMENU', ['username' => $req->userid]);
     return $listAksesReport;
 
 

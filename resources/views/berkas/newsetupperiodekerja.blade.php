@@ -231,12 +231,16 @@ function submitPeriodeKerja () {
       tahun
     },
     success: function (res) {
-      if (res.data && res.data[0]) {
-        let el = document.getElementById("div_periode");
-        if (el) {
-          el.innerHTML = `Username : ${res.data[0].user_id} - Periode : ${res.data[0].bulan} / ${res.data[0].tahun}`;
-        }
+      let el = document.getElementById("period-badge");
+      if (el) {
+        el.innerHTML = `Username: {{ Auth::user()->username }} &nbsp;–&nbsp; Periode: ${bulan} / ${tahun}`;
       }
+
+      // Also keep the hidden periode_bulan/periode_tahun inputs on THIS page
+      // in sync, so re-submitting on the same page uses the fresh values.
+      document.getElementById("periode_bulan").value = bulan;
+      document.getElementById("periode_tahun").value = tahun;
+
       alertify.success('Periode kerja telah disimpan');
     },
     error: function (err) {
