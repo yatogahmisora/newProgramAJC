@@ -7,13 +7,13 @@
 
 <link rel="stylesheet" href="{{ asset('css/tableMaster2.css') }}">
 
-  <div class="sp-breadcrumb">
+  {{-- <div class="sp-breadcrumb">
     <span>Beranda</span>
     <span class="sp-sep">›</span>
     <span>Master</span>
     <span class="sp-sep">›</span>
     <span class="sp-crumb-active">Customer</span>
-  </div>
+  </div> --}}
 
   <div class="sp-page-head">
     <div>
@@ -26,12 +26,7 @@
 
   <input type="hidden" name="_token" id="_token" value="{!! csrf_token() !!}" />
 
-<div class="sp-toolbar">
-    <div class="sp-search-wrap">
-      <i class="bi bi-search sp-search-icon"></i>
-      <input type="text" id="tabel_filter_visual" placeholder="Cari user...">
-    </div>
-  </div>
+  @include('master.partials.headerTableMaster')
 
   <div class="table-outer">
     <div class="table-wrap">
@@ -65,9 +60,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Add</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <!-- <h1>Tes Modal</h1> -->
@@ -542,9 +535,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <!-- <h1>Tes Modal</h1> -->
@@ -1011,9 +1002,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Detail Akun</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
       <button class="btn btn-primary btn-sm" type="button" onclick="buttonDetailAkunAdd()">Add Data</i></button>
@@ -1061,9 +1050,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Add Detail Akun</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <!-- <h1>Tes Modal</h1> -->
@@ -1122,9 +1109,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Add Detail Akun</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <!-- <h1>Tes Modal</h1> -->
@@ -1181,9 +1166,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Detail Akun</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
       {{-- <button class="btn btn-primary btn-sm" type="button" onclick="buttonDetailAkunAdd('${item.Perkiraan}')">Add Data</i></button> --}}
@@ -1228,62 +1211,85 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('js/masterTable.js') }}"></script>
 <script type="text/javascript">
 
 let dataRefresh = []
 let kodeDetailPerkiraan = []
 
-function loadAll () {
-  $('#tabel').DataTable().destroy();
+function loadAll() {
 
-  $('#tabel').DataTable({
-    processing: true,
-    serverSide: true,
-    ajax: {
-      url: "{!! url('mastercustomerloadall') !!}",
-      type: "get",
-      data: {
-        _token: $("#_token").val(),
-      }
-    },
-    columns: [
-      {
-        data: 'KODECUSTSUPP',
-        render: function(data, type, row) {
-          return `
-          <button class="btn btn-success btn-sm hover-tooltip" type="button" onclick="buttonEdit('${data}')" data-tooltip="Edit Customer">
-            <i class="bi bi-pen"></i>
-          </button>
-          <button class="btn btn-primary btn-sm hover-tooltip" type="button" onclick="buttonDetailAkun('${data}')" data-tooltip="Detail Akun">
-            <i class="bi bi-card-text"></i>
-          </button>
-        
-          <button class="btn btn-primary btn-sm hover-tooltip" type="button" onclick="buttonAlamat('${data}')" data-tooltip="Alamat">
-            <i class="bi bi-house-door"></i>
-          </button>
-          <button class="btn btn-danger btn-sm hover-tooltip" type="button" onclick="buttonDelete('${data}')" data-tooltip="Delete Customer">
-            <i class="bi bi-trash"></i>
-          </button>
-          `;
+    if ($.fn.DataTable.isDataTable('#tabel')) {
+        $('#tabel').DataTable().destroy();
+    }
+
+    $('#tabel').DataTable({
+        processing: true,
+        serverSide: true,
+
+        paging: true,
+        searching: true,
+        lengthChange: true,
+        pageLength: 10,
+
+        dom: 'tip',
+
+        autoWidth: false,
+        responsive: false,
+
+        ajax: {
+            url: "{!! url('mastercustomerloadall') !!}",
+            type: "GET",
+            data: function (d) {
+                d._token = $("#_token").val();
+            }
         },
-        orderable: false,
-        searchable: false,
-        className: "text-center action-buttons-wrap"
-      },
-      { data: 'KODECUSTSUPP' },
-      { data: 'USAHA', defaultContent: '' },
-      { data: 'NAMACUSTSUPP', defaultContent: '' },
-      { data: 'ALAMAT1', defaultContent: '' },
-      { data: 'namakota', defaultContent: '' },
-      // { data: 'KODEPOS', defaultContent: '' },
-      { data: 'NEGARA', defaultContent: '' },
-      { data: 'TELPON', defaultContent: '' },
-      // { data: 'FAX', defaultContent: '' },
-      { data: 'EMAIL', defaultContent: '' }
-    ],
-    lengthChange: true,
-    pageLength: 10
-  });
+
+        columns: [
+            {
+                data: 'KODECUSTSUPP',
+                orderable: false,
+                searchable: false,
+                className: "text-center action-buttons-wrap",
+                render: function (data) {
+                    return `
+                        <button class="btn-action-sm btn-action-success hover-tooltip"
+                            onclick="buttonEdit('${data}')"
+                            data-tooltip="Edit Customer">
+                            <i class="bi bi-pen"></i>
+                        </button>
+
+                        <button class="btn-action-sm btn-action-primary hover-tooltip"
+                            onclick="buttonDetailAkun('${data}')"
+                            data-tooltip="Detail Akun">
+                            <i class="bi bi-card-text"></i>
+                        </button>
+
+                        <button class="btn-action-sm btn-action-primary hover-tooltip"
+                            onclick="buttonAlamat('${data}')"
+                            data-tooltip="Alamat">
+                            <i class="bi bi-house-door"></i>
+                        </button>
+
+                        <button class="btn-action-sm btn-action-danger hover-tooltip"
+                            onclick="buttonDelete('${data}')"
+                            data-tooltip="Delete Customer">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    `;
+                }
+            },
+            { data: 'KODECUSTSUPP' },
+            { data: 'USAHA', defaultContent: '' },
+            { data: 'NAMACUSTSUPP', defaultContent: '' },
+            { data: 'ALAMAT1', defaultContent: '' },
+            { data: 'namakota', defaultContent: '' },
+            { data: 'NEGARA', defaultContent: '' },
+            { data: 'TELPON', defaultContent: '' },
+            { data: 'EMAIL', defaultContent: '' }
+        ]
+    });
+
 }
 
 function buttonAdd () {

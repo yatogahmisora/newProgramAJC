@@ -7,13 +7,13 @@
 
 <link rel="stylesheet" href="{{ asset('css/tableMaster2.css') }}">
 
-  <div class="sp-breadcrumb">
+  {{-- <div class="sp-breadcrumb">
     <span>Beranda</span>
     <span class="sp-sep">›</span>
     <span>Master</span>
     <span class="sp-sep">›</span>
     <span class="sp-crumb-active">Perkiraan</span>
-  </div>
+  </div> --}}
 
   <div class="sp-page-head">
     <div>
@@ -26,13 +26,7 @@
 
   <input type="hidden" name="_token" id="_token" value="{!! csrf_token() !!}" />
 
-<div class="sp-toolbar">
-  <div class="sp-search-wrap">
-    <i class="bi bi-search sp-search-icon"></i>
-    <input type="text" id="tabel_filter_visual" placeholder="Cari user...">
-  </div>
-
-</div>
+@include('master.partials.headerTableMaster');
 
   <div class="table-outer">
     <div class="table-wrap">
@@ -65,9 +59,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Add</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <!-- <h1>Tes Modal</h1> -->
@@ -123,7 +115,7 @@
             </div> -->
           </div>
 
-          <div class="row">
+          <div class="row mt-3">
             <div class="col-3">
               <div class="form-group">
                 <label>Kelompok</label>
@@ -258,9 +250,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Edit Perkiraan</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <!-- <h1>Tes Modal</h1> -->
@@ -297,7 +287,7 @@
 
             </div>
 
-          <div class="row">
+          <div class="row ">
             <div class="col-3">
               <div class="form-group">
                 <label>Keterangan</label>
@@ -316,7 +306,7 @@
             </div> -->
           </div>
 
-          <div class="row">
+          <div class="row mt-3">
             <div class="col-3">
               <div class="form-group">
                 <label>Kelompok</label>
@@ -660,6 +650,10 @@ function onChangePerkiraan () {
   
 $("#tabel_filter_visual").on("keyup", function () {
   $("#tabel").DataTable().search(this.value).draw();
+});
+
+$("#tabel_length_visual").on("change", function () {
+  $("#tabel").DataTable().page.len(Number(this.value)).draw();
 });
 
 

@@ -3,233 +3,132 @@
 
 @endsection
 @section('content')
+<link rel="stylesheet" href="{{ asset('css/tableMaster2.css') }}">
 
-<link rel="stylesheet" href="public/css/tabelCustom.css">
+{{-- <div class="sp-breadcrumb">
+  <span>Beranda</span>
+  <span class="sp-sep">›</span>
+  <span>Master</span>
+  <span class="sp-sep">›</span>
+  <span class="sp-crumb-active">Giro</span>
+</div> --}}
 
-<div class="container-fluid">
-
-  <!-- <div id="qrcode"></div> -->
-  <div class="row mt-4">
-      <div class="col-6 text-left">
-        <h2 style="margin-top:-85px;">Master Giro</h2>
-      </div>
-      <div class="col-6 text-right">
-        <button type="button" class="btn btn-primary btn-lg" style="
-            height: 30px; 
-            margin-top: -150px; 
-            padding: 4px 12px; 
-            border-radius: 20px; 
-            font-size: 0.75rem; 
-            font-weight: 600; 
-            text-transform: uppercase; 
-            transition: background-color 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
-            onclick="buttonAddBuka()">
-          Add Giro Buka
-        </button>
-        <button type="button" class="btn btn-primary btn-lg" style="
-            height: 30px; 
-            margin-top: -150px; 
-            padding: 4px 12px; 
-            border-radius: 20px; 
-            font-size: 0.75rem; 
-            font-weight: 600; 
-            text-transform: uppercase; 
-            transition: background-color 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
-            onclick="buttonAddTerima()">
-          Add Giro Terima
-        </button>
-      </div>
-    </div>
-<!-- <button onclick="loadAll()">tes</button> -->
+<div class="sp-page-head">
+  <div>
+    <h1>Master Giro</h1>
+  </div>
+  <div class="d-flex gap-2">
+    <button class="btn btn-primary" onclick="buttonAddBuka()">+ Add Giro Buka</button>
+    <button class="btn btn-primary" onclick="buttonAddTerima()">+ Add Giro Terima</button>
+  </div>
 </div>
 
-<div id="printContainer" style="display:none">
+<div id="contentContainer" class="container-fluid">
 
-</div>
-<div id="contentContainer" class="container-fluid" style="max-width: 1800px">
+  <input type="hidden" name="_token" id="_token" value="{!! csrf_token() !!}" />
   <input type="hidden" id="periode_tahun" value="{!! $periode->tahun !!}" />
   <input type="hidden" id="periode_bulan" value="{!! $periode->bulan !!}" />
-  <input type="hidden" name="_token" id="_token" value="{!! csrf_token() !!}" />
 
-  <div class="row mt-4">
-    <!-- <div class="col-12 text-right">
-        <button type="button" class="btn btn-primary btn-lg " style="height: 60px; " onclick="buttonAdd()"  >Add Koreksi Stock Gudang</button>
-    </div> -->
-  </div>
-  <div id="contentContainer" class="container-fluid" style="max-width: 1800px; margin-top:-110px">
-    <input type="hidden" id="periode_tahun" value="{!! $periode->tahun !!}" />
-    <input type="hidden" id="periode_bulan" value="{!! $periode->bulan !!}" />
-    <input type="hidden" name="_token" id="_token" value="{!! csrf_token() !!}" />
-
-    <div class="row mt-4">
-      <!-- <div class="col-12 text-right">
-          <button type="button" class="btn btn-primary btn-lg " style="height: 60px; " onclick="buttonAdd()"  >Add Koreksi Stock Gudang</button>
-      </div> -->
+  <div>
+      <div class="sp-toolbar">
+    <div class="sp-search-wrap">
+      <i class="bi bi-search sp-search-icon"></i>
+      <input type="text" id="tabel_filter_visual" placeholder="Cari user...">
     </div>
 
-    <div class="row mt-3">
-      <div class="col-12" style="overflow:auto;">
-        <div class="">
-          <input type="radio" id="tab_dibuka" name="tab" checked>
-          <label for="tab_dibuka" class="tab-label">Daftar Giro Dibuka</label>
+    <div class="sp-length-wrap">
+      <label for="tabel_length_visual">Tampilkan</label>
+      <select id="tabel_length_visual" class="form-select form-select-sm">
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+        <option value="-1">Semua</option>
+      </select>
+    </div>
+  </div>
 
-          <input type="radio" id="tab_diterima" name="tab">
-          <label for="tab_diterima" class="tab-label">Daftar Giro Diterima</label>
+  </div>
 
-          <div class="tab-content" id="content_dibuka">
-            <table id="tabel_dibuka" class="table table-bordered table-striped">
-              <thead id='theadCustom' style='white-space:nowrap;' class="text-center">
-                <tr>
-                  <th scope="col">Actions</th>
-                  <th scope="col">Bank</th>
-                  <th scope="col">No. Giro</th>
-                  <th scope="col">Tanggal Giro Jatuh Tempo</th>
-                  <th scope="col">Valas</th>
-                  <th scope="col">Kurs</th>
-                  <th scope="col">Debet Rupiah</th>
-                  <th scope="col">Kredit Rupiah</th>
-                  <th scope="col">Debet Valas</th>
-                  <th scope="col">Kredit Valas</th>
-                  <th scope="col">Tanggal Buka Giro</th>
-                  <th scope="col">Bukti Buka Giro</th>
-                  <th scope="col">Keterangan Buka Giro</th>
-                  <th scope="col">Tanggal Pencairan Giro</th>
-                  <th scope="col">Bukti Pencairan Giro</th>
-                  <th scope="col">Keterangan Pencairan Giro</th>
-                </tr>
-              </thead>
+  <ul class="nav nav-tabs mb-0" id="giroTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="tab-dibuka-btn" data-bs-toggle="tab" data-bs-target="#tab-dibuka" type="button" role="tab">Daftar Giro Dibuka</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="tab-diterima-btn" data-bs-toggle="tab" data-bs-target="#tab-diterima" type="button" role="tab">Daftar Giro Diterima</button>
+    </li>
+  </ul>
 
-              <tbody id="tabel_dataDibuka" class="text-left">
-                {{-- @for ($i = 0; $i < count($listData); $i++)
-                <tr style='white-space:nowrap;'>
-                  <td style="white-space:nowrap;" class='text-center'>
-                    <button class="btn btn-success btn-sm" type="button" 
-                            data-bs-toggle="tooltip" 
-                            data-bs-placement="top" 
-                            title="Edit Giro Buka" 
-                            onclick="buttonEditBuka('{{ $listData[$i]->NoGiro }}')">
-                      <i class="bi bi-pen"></i>
-                    </button>
-                    <button class="btn btn-danger btn-sm" type="button" 
-                            data-bs-toggle="tooltip" 
-                            data-bs-placement="top" 
-                            title="Delete Giro Buka" 
-                            onclick="buttonDeleteBuka('{{ $listData[$i]->NoGiro }}')">
-                      <i class="bi bi-trash"></i>
-                    </button>
-                  </td>
-                  <td>{{ $listData[$i]->Bank }}</td>
-                  <td>{{ $listData[$i]->NoGiro }}</td>
-                  <td>{{ date('d-m-Y', strtotime($listData[$i]->TglGiro)) }}</td>
-                  <td>{{ $listData[$i]->Kodevls }}</td>
-                  <td class='text-right'>{{ $listData[$i]->Kurs }}</td>
-                  <td class='text-right'>{{ $listData[$i]->DebetRp }}</td>
-                  <td class='text-right'>{{ $listData[$i]->KreditRp }}</td>
-                  <td class='text-right'>{{ $listData[$i]->Debet }}</td>
-                  <td class='text-right'>{{ $listData[$i]->Kredit }}</td>
-                  <td>{{ date('d-m-Y', strtotime($listData[$i]->TglBuka)) }}</td>
-                  <td>{{ $listData[$i]->BuktiBuka }}</td>
-                  <td>{{ $listData[$i]->Keterangan }}</td>
-                  <td>{{ $listData[$i]->TglCair ? date('d-m-Y', strtotime($listData[$i]->TglCair)) : '' }}</td>
-                  <td>{{ $listData[$i]->BuktiCair }}</td>
-                  <td>{{ $listData[$i]->KeteranganCair }}</td>
+  <div class="tab-content">
 
-                </tr>
-                @endfor --}}
-              </tbody>
-            </table>
-          </div>
-
-          <div class="tab-content" id="content_diterima">
-            <table id="tabel_diterima" class="table table-bordered table-striped">
-              <thead id='theadCustom' style='white-space:nowrap;' class="text-center">
-                <tr>
-                  <th scope="col">Actions</th>
-                  <th scope="col">Bank</th>
-                  <th scope="col">No. Giro</th>
-                  <th scope="col">Perkiraan Kas</th>
-                  <th scope="col">Tanggal Giro Jatuh Tempo</th>
-                  <th scope="col">Valas</th>
-                  <th scope="col">Kurs</th>
-                  <th scope="col">Debet Rupiah</th>
-                  <th scope="col">Kredit Rupiah</th>
-                  <th scope="col">Debet Valas</th>
-                  <th scope="col">Kredit Valas</th>
-                  <th scope="col">Tanggal Terima Giro</th>
-                  <th scope="col">Bukti Terima Giro</th>
-                  <th scope="col">Keterangan Terima Giro</th>
-                  <th scope="col">Tanggal Pencairan Giro</th>
-                  <th scope="col">Bukti Pencairan Giro</th>
-                  <th scope="col">Keterangan Pencairan Giro</th>
-                </tr>
-              </thead>
-
-              <tbody id="tabel_dataDiterima" class="text-left">
-                {{-- @for ($i = 0; $i < count($listDataTerima); $i++)
-                <tr>
-                  <td style="white-space:nowrap;" class='text-center'>
-                    <button class="btn btn-success btn-sm" type="button" 
-                            data-bs-toggle="tooltip" 
-                            data-bs-placement="top" 
-                            title="Edit Giro Terima" 
-                            onclick="buttonEditTerima('{{ $listData[$i]->NoGiro }}')">
-                      <i class="bi bi-pen"></i>
-                    </button>
-                    <button class="btn btn-danger btn-sm" type="button" 
-                            data-bs-toggle="tooltip" 
-                            data-bs-placement="top" 
-                            title="Delete Giro Terima" 
-                            onclick="buttonDeleteTerima('{{ $listData[$i]->NoGiro }}')">
-                      <i class="bi bi-trash"></i>
-                    </button>
-                  </td>
-                  <td>{{ $listDataTerima[$i]->Bank }}</td>
-                  <td>{{ $listDataTerima[$i]->NoGiro }}</td>
-                  <td>{{ $listDataTerima[$i]->Kas }}</td>
-                  <td>{{ date('d-m-Y', strtotime($listDataTerima[$i]->TglGiro)) }}</td>
-                  <td>{{ $listDataTerima[$i]->Kodevls }}</td>
-                  <td class='text-right'>{{ $listDataTerima[$i]->Kurs }}</td>
-                  <td class='text-right'>{{ $listDataTerima[$i]->Debet }}</td>
-                  <td class='text-right'>{{ $listDataTerima[$i]->Kredit }}</td>
-                  <td class='text-right'>{{ $listDataTerima[$i]->DebetRp }}</td>
-                  <td class='text-right'>{{ $listDataTerima[$i]->KreditRp }}</td>
-                  <td>{{ date('d-m-Y', strtotime($listDataTerima[$i]->TglBuka)) }}</td>
-                  <td>{{ $listDataTerima[$i]->BuktiBuka }}</td>
-                  <td>{{ $listDataTerima[$i]->Keterangan }}</td>
-                  <td>{{ $listDataTerima[$i]->TglCair ? date('d-m-Y', strtotime($listDataTerima[$i]->TglCair)) : '' }}</td>
-                  <td>{{ $listDataTerima[$i]->BuktiCair }}</td>
-                  <td>{{ $listDataTerima[$i]->KeteranganCair }}</td>
-                </tr>
-                @endfor --}}
-              </tbody>
-            </table>
-          </div>
+    <!-- ---------- DAFTAR GIRO DIBUKA ---------- -->
+    <div class="tab-pane fade show active" id="tab-dibuka" role="tabpanel">
+      <div class="table-outer">
+        <div class="table-wrap">
+          <table class="tb" id="tabel_dibuka">
+            <thead style="white-space:nowrap;">
+              <tr>
+                <th scope="col">Actions</th>
+                <th scope="col">Bank</th>
+                <th scope="col">No. Giro</th>
+                <th scope="col">Tanggal Giro Jatuh Tempo</th>
+                <th scope="col">Valas</th>
+                <th scope="col">Kurs</th>
+                <th scope="col">Debet Rupiah</th>
+                <th scope="col">Kredit Rupiah</th>
+                <th scope="col">Debet Valas</th>
+                <th scope="col">Kredit Valas</th>
+                <th scope="col">Tanggal Buka Giro</th>
+                <th scope="col">Bukti Buka Giro</th>
+                <th scope="col">Keterangan Buka Giro</th>
+                <th scope="col">Tanggal Pencairan Giro</th>
+                <th scope="col">Bukti Pencairan Giro</th>
+                <th scope="col">Keterangan Pencairan Giro</th>
+              </tr>
+            </thead>
+            <tbody id="tabel_dataDibuka" class="text-left"></tbody>
+          </table>
         </div>
       </div>
     </div>
 
-    <style>
-      .tab-label {
-        cursor: pointer;
-        padding: 10px;
-        display: inline-block;
-        background-color: #f2f2f2;
-        border: 1px solid #ccc;
-        border-radius: 4px 4px 0 0;
-      }
+    <!-- ---------- DAFTAR GIRO DITERIMA ---------- -->
+    <div class="tab-pane fade" id="tab-diterima" role="tabpanel">
+      <div class="table-outer">
+        <div class="table-wrap">
+          <table class="tb" id="tabel_diterima">
+            <thead style="white-space:nowrap;">
+              <tr>
+                <th scope="col">Actions</th>
+                <th scope="col">Bank</th>
+                <th scope="col">No. Giro</th>
+                <th scope="col">Perkiraan Kas</th>
+                <th scope="col">Tanggal Giro Jatuh Tempo</th>
+                <th scope="col">Valas</th>
+                <th scope="col">Kurs</th>
+                <th scope="col">Debet Rupiah</th>
+                <th scope="col">Kredit Rupiah</th>
+                <th scope="col">Debet Valas</th>
+                <th scope="col">Kredit Valas</th>
+                <th scope="col">Tanggal Terima Giro</th>
+                <th scope="col">Bukti Terima Giro</th>
+                <th scope="col">Keterangan Terima Giro</th>
+                <th scope="col">Tanggal Pencairan Giro</th>
+                <th scope="col">Bukti Pencairan Giro</th>
+                <th scope="col">Keterangan Pencairan Giro</th>
+              </tr>
+            </thead>
+            <tbody id="tabel_dataDiterima" class="text-left"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
 
-      .tab-content {
-        display: none;
-      }
-
-      #tab_dibuka:checked ~ #content_dibuka,
-      #tab_diterima:checked ~ #content_diterima {
-        display: block;
-      }
-    </style>
   </div>
+
+</div>
+
+<div id="printContainer" style="display:none"></div>
 
 
 <!-- start modal add terima giro-->
@@ -238,9 +137,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Add Giro Terima</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <!-- <h1>Tes Modal</h1> -->
@@ -262,7 +159,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">No. Giro</label>
@@ -276,7 +173,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Tanggal Giro</label>
@@ -290,7 +187,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4">
                 <label class="form-label">Valas</label>
               </div>
@@ -313,7 +210,7 @@
               </div>
             </div>
             
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Nilai Giro</label>
@@ -341,7 +238,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Tanggal Terima</label>
@@ -355,7 +252,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Bukti Terima</label>
@@ -369,7 +266,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Keterangan</label>
@@ -383,7 +280,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Tanggal Cair</label>
@@ -397,7 +294,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Bukti Cair</label>
@@ -411,7 +308,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Keterangan Cair</label>
@@ -425,7 +322,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Perkiraan Kas</label>
@@ -462,9 +359,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Add Giro Buka</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <!-- <h1>Tes Modal</h1> -->
@@ -492,7 +387,7 @@
 
           </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">No. Giro</label>
@@ -506,7 +401,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Tanggal Giro</label>
@@ -520,7 +415,7 @@
 
             </div>
             
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4">
                 <label class="form-label">Valas</label>
               </div>
@@ -543,7 +438,7 @@
               </div>
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
 
               <div class="col-4 text-left">
                 <div class="form-group text-left">
@@ -572,7 +467,7 @@
             </div>
 
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Tanggal Buka</label>
@@ -586,7 +481,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Bukti Buka</label>
@@ -600,7 +495,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Keterangan</label>
@@ -614,7 +509,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Tanggal Cair</label>
@@ -628,7 +523,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Bukti Cair</label>
@@ -642,7 +537,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Keterangan Cair</label>
@@ -673,9 +568,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Edit Giro Terima</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <!-- <h1>Tes Modal</h1> -->
@@ -697,7 +590,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">No. Giro</label>
@@ -711,7 +604,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Tanggal Giro</label>
@@ -725,7 +618,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4">
                 <label class="form-label">Valas</label>
               </div>
@@ -749,7 +642,7 @@
             </div>
 
             
-            <div class="row">
+            <div class="row mt-2">
 
               <div class="col-4 text-left">
                 <div class="form-group text-left">
@@ -771,7 +664,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Tanggal Terima</label>
@@ -785,7 +678,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Bukti Terima</label>
@@ -799,7 +692,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Keterangan</label>
@@ -813,7 +706,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Tanggal Cair</label>
@@ -827,7 +720,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Bukti Cair</label>
@@ -840,7 +733,7 @@
               </div>
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Keterangan Cair</label>
@@ -853,7 +746,7 @@
               </div>
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Perkiraan Kas</label>
@@ -889,9 +782,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Edit Giro Buka</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <!-- <h1>Tes Modal</h1> -->
@@ -913,7 +804,7 @@
 
           </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">No. Giro</label>
@@ -927,7 +818,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Tanggal Giro</label>
@@ -941,7 +832,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4">
                 <label class="form-label">Valas</label>
               </div>
@@ -965,7 +856,7 @@
             </div>
 
             
-            <div class="row">
+            <div class="row mt-2">
 
               <div class="col-4 text-left">
                 <div class="form-group text-left">
@@ -988,7 +879,7 @@
             </div>
 
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Tanggal Buka</label>
@@ -1002,7 +893,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Bukti Buka</label>
@@ -1016,7 +907,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Keterangan</label>
@@ -1030,7 +921,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Tanggal Cair</label>
@@ -1044,7 +935,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Bukti Cair</label>
@@ -1058,7 +949,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-4 text-left">
                 <div class="form-group text-left">
                   <label class="text-left">Keterangan Cair</label>
@@ -1089,9 +980,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Select Kas</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <table id="tabelAktivaSelectPerkiraan" class="table table-bordered table-striped"  >
@@ -1135,9 +1024,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Select Bank</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <table id="tabelBukaSelectBank" class="table table-bordered table-striped"  >
@@ -1205,9 +1092,11 @@ function loadAllBuka () {
     let temp = ""
 
     rowTable += `<tr>
-    <td class="text-center">
-      <button class="btn btn-success btn-sm hover-tooltip" data-tooltip='Edit Giro Buka' type="button" onclick="buttonEditBuka('${item.NoGiro}')"><i class="bi bi-pen"></i></button>
-      <button class="btn btn-danger btn-sm hover-tooltip" data-tooltip='Delete Giro Buka' type="button" onclick="buttonDeleteBuka('${item.NoGiro}')"><i class="bi bi-trash"></i></button>
+    <td style="white-space:nowrap;" class='text-center'>
+      <div class="action-buttons-wrap">
+          <button data-toggle="tooltip" data-placement="top" title="Menu" class="btn-action-sm btn-action-success" type="button" onclick="buttonEditBuka('${item.NoGiro}')"><i class="bi bi-pen"></i></button>
+          <button data-toggle="tooltip" data-placement="top" title="Menu" class="btn-action-sm btn-action-danger" type="button" onclick="buttonDeleteBuka('${item.NoGiro}')"><i class="bi bi-trash"></i></button>
+      </div>
     </td>
     <td>${ item.Bank }</td>
     <td>${ item.NoGiro }</td>
@@ -1230,9 +1119,12 @@ function loadAllBuka () {
 
   document.getElementById("tabel_dataDibuka").innerHTML = rowTable
   $("#tabel_dibuka").DataTable({
-    "lengthChange": false,
-      "paging": false ,
-    });
+    "lengthChange": true,
+    "paging": true,
+    "paging": true,
+    "searching": true,
+    "dom": 'tip'
+  });
 
 }
 
@@ -1259,9 +1151,11 @@ function loadAllTerima () {
     let temp = ""
 
     rowTable += `<tr>
-    <td class="text-center">
-      <button class="btn btn-success btn-sm hover-tooltip" data-tooltip='Edit Giro Terima' type="button" onclick="buttonEditTerima('${item.NoGiro}')"><i class="bi bi-pen"></i></button>
-      <button class="btn btn-danger btn-sm hover-tooltip" data-tooltip='Delete Giro Terima' type="button" onclick="buttonDeleteTerima('${item.NoGiro}')"><i class="bi bi-trash"></i></button>
+    <td style="white-space:nowrap;" class='text-center'>
+      <div class="action-buttons-wrap">
+          <button data-toggle="tooltip" data-placement="top" title="Menu" class="btn-action-sm btn-action-success" type="button" onclick="buttonEditTerima('${item.NoGiro}')"><i class="bi bi-pen"></i></button>
+          <button data-toggle="tooltip" data-placement="top" title="Menu" class="btn-action-sm btn-action-danger" type="button" onclick="buttonDeleteTerima('${item.NoGiro}')"><i class="bi bi-trash"></i></button>
+      </div>
     </td>
     <td>${ item.Bank }</td>
     <td>${ item.NoGiro }</td>
@@ -1284,9 +1178,11 @@ function loadAllTerima () {
 
   document.getElementById("tabel_dataDiterima").innerHTML = rowTable
   $("#tabel_diterima").DataTable({
-    "lengthChange": false,
-      "paging": false ,
-    });
+    "lengthChange": true,
+    "paging": true,
+    "searching": true,
+    "dom": 'tip'
+  });
 
 }
 

@@ -6,13 +6,13 @@
 
 <link rel="stylesheet" href="{{ asset('css/tableMaster2.css') }}">
 
-  <div class="sp-breadcrumb">
+  {{-- <div class="sp-breadcrumb">
     <span>Beranda</span>
     <span class="sp-sep">›</span>
     <span>Master</span>
     <span class="sp-sep">›</span>
     <span class="sp-crumb-active">Piutang</span>
-  </div>
+  </div> --}}
 
   <div class="sp-page-head">
     <div>
@@ -25,11 +25,7 @@
 
   <input type="hidden" name="_token" id="_token" value="{!! csrf_token() !!}" />
 
-<div class="sp-toolbar">
-  <div class="sp-search-wrap">
-    <i class="bi bi-search sp-search-icon"></i>
-    <input type="text" id="tabel_filter_visual" placeholder="Cari user...">
-  </div>
+  @include('master.partials.headerTableMaster')
 
   <div class="sp-filter-wrap">
     <select id="perkiraanCustomer" class="form-select" onchange="loadAll()">
@@ -344,9 +340,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Valas</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <table id="tabelSelectValas" class="table table-bordered table-striped"  >

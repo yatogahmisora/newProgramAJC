@@ -120,11 +120,17 @@
     .btn-action-primary{ color: var(--sp-blue); border-color: #cfdcff; background: var(--sp-blue-bg); }
     .btn-action-danger { color: var(--sp-red);  border-color: #f7cfcf; background: var(--sp-red-bg); }
     
-    .action-buttons-wrap{
-      display:flex;
-      flex-wrap: wrap;
-      justify-content:center;
-      gap: 4px;
+    .action-buttons-wrap {
+        display: flex;
+        flex-wrap: nowrap;
+        white-space: nowrap;
+        gap: 4px;              /* optional spacing */
+        justify-content: center;
+        align-items: center;
+    }
+
+    .action-buttons-wrap .btn-action-sm {
+        flex-shrink: 0;
     }
 
     /* ---------- Stat cards --------------------------------------------- */
@@ -217,7 +223,17 @@
       font-size: 14px;
       pointer-events:none;
     }
+.table-wrap{
+    overflow-x:auto;
+    overflow-y:hidden;
+    width:100%;
+}
 
+.tb{
+    min-width:100%;
+    width:max-content;
+    white-space:nowrap;
+}
     /* ---------- Table card shell ---------------------------------------- */
     .sp-table-card{
       background: var(--sp-surface);

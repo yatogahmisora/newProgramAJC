@@ -6,13 +6,13 @@
 
 <link rel="stylesheet" href="{{ asset('css/tableMaster2.css') }}">
 
-  <div class="sp-breadcrumb">
+  {{-- <div class="sp-breadcrumb">
     <span>Beranda</span>
     <span class="sp-sep">›</span>
     <span>Master</span>
     <span class="sp-sep">›</span>
     <span class="sp-crumb-active">Kota</span>
-  </div>
+  </div> --}}
 
   <div class="sp-page-head">
     <div>
@@ -25,12 +25,7 @@
 
   <input type="hidden" name="_token" id="_token" value="{!! csrf_token() !!}" />
 
-<div class="sp-toolbar">
-    <div class="sp-search-wrap">
-      <i class="bi bi-search sp-search-icon"></i>
-      <input type="text" id="tabel_filter_visual" placeholder="Cari user...">
-    </div>
-  </div>
+  @include('master.partials.headerTableMaster')
 
           <div class="table-outer">
             <div class="table-wrap">
@@ -204,6 +199,7 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('js/masterTable.js') }}"></script>
 <script type="text/javascript">
 
 let dataRefresh = []
@@ -252,10 +248,6 @@ function loadAll () {
   });
 
 }
-
-$("#tabel_filter_visual").on("keyup", function () {
-  $("#tabel").DataTable().search(this.value).draw();
-});
 
 function buttonAdd () {
 

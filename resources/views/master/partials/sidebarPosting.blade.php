@@ -1,20 +1,22 @@
 <style>
-.sidebar {
+.posting-sidebar {
   position: fixed;
-  top: 77px; /* Adjust this value based on your navbar height */
-  left: 0;
-  height: calc(100vh - 60px); /* Subtract navbar height from full height */
+  top: 77px;
+  right: 0;
+  left: auto;
+  height: calc(100vh - 60px);
   width: 280px;
   background-color: #f8f9fa;
-  border-right: 1px solid #dee2e6;
+  border-left: 1px solid #dee2e6;
+  border-right: none;
   z-index: 1000;
-  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  box-shadow: -2px 0 5px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
 }
 
-/* ? STICKY TITLE SECTION */
-.sidebar-header {
+/* STICKY TITLE SECTION */
+.posting-sidebar-header {
   position: sticky;
   top: 0;
   background-color: #f8f9fa;
@@ -24,21 +26,21 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.sidebar-header h3 {
+.posting-sidebar-header h3 {
   color: #495057;
   margin: 0;
   font-weight: 600;
   font-size: 1.25rem;
 }
 
-/* ? SCROLLABLE CONTENT SECTION */
-.sidebar-content {
+/* SCROLLABLE CONTENT SECTION */
+.posting-sidebar-content {
   flex: 1;
   overflow-y: auto;
   padding: 20px 15px;
 }
 
-.sidebar .btn {
+.posting-sidebar .btn {
   width: 100%;
   margin-bottom: 10px;
   text-align: left;
@@ -48,24 +50,25 @@
   transition: all 0.3s ease;
 }
 
-.sidebar .btn:hover {
+.posting-sidebar .btn:hover {
   transform: translateX(5px);
   box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
-.sidebar .btn i {
+.posting-sidebar .btn i {
   margin-right: 8px;
   width: 16px;
 }
 
-.main-content {
-  margin-left: 280px;
-  margin-top: 60px; /* Add top margin to account for navbar */
-  padding: 20px;
-  min-height: calc(100vh - 60px);
+.posting-main-content {
+    margin-left: 0;
+    margin-right: 280px;
+    margin-top: 60px;
+    padding: 20px;
+    min-height: calc(100vh - 60px);
 }
 
-.content-card {
+.posting-content-card {
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -73,34 +76,34 @@
   text-align: center;
 }
 
-.welcome-text {
+.posting-welcome-text {
   color: #6c757d;
   font-size: 18px;
   margin-bottom: 20px;
 }
 
 @media (max-width: 768px) {
-  .sidebar {
+  .posting-sidebar {
     width: 250px;
-    top: 60px; /* Keep the same top offset on mobile */
+    top: 60px;
     height: calc(100vh - 60px);
-    transform: translateX(-100%);
+    transform: translateX(100%); /* fixed: right-anchored sidebar hides to the RIGHT, not left */
     transition: transform 0.3s ease;
   }
-  
-  .sidebar.active {
+
+  .posting-sidebar.active {
     transform: translateX(0);
   }
-  
-  .main-content {
-    margin-left: 0;
-    margin-top: 60px; /* Keep top margin on mobile too */
+
+  .posting-main-content {
+    margin-right: 0;
+    margin-top: 60px;
   }
-  
-  .mobile-menu-btn {
+
+  .posting-mobile-menu-btn {
     position: fixed;
-    top: 70px; /* Position below navbar */
-    left: 20px;
+    top: 70px;
+    right: 20px; /* moved to right to match the sidebar side */
     z-index: 1001;
     background: #007bff;
     color: white;
@@ -112,15 +115,15 @@
 }
 </style>
 
-<!-- Sidebar Component -->
-<div class="sidebar" id="sidebar">
-  <!-- ? STICKY HEADER SECTION -->
-  <div class="sidebar-header">
+<!-- Posting Sidebar Component -->
+<div class="posting-sidebar" id="postingSidebar">
+  <!-- STICKY HEADER SECTION -->
+  <div class="posting-sidebar-header">
     <h3 id='judulPosting'>Master Set Posting</h3>
   </div>
-  
-  <!-- ? SCROLLABLE CONTENT SECTION -->
-  <div class="sidebar-content" id="sidebar-content">
+
+  <!-- SCROLLABLE CONTENT SECTION -->
+  <div class="posting-sidebar-content" id="postingSidebarContent">
     <!-- Posting Section -->
     <div class="mb-4">
       <h6 class="text-muted mb-3">Posting Utama</h6>
@@ -228,48 +231,44 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const sidebar = document.getElementById('sidebar-content');
-  const SCROLL_STORAGE_KEY = 'sidebar_scroll_position';
-  
+  const postingSidebarContent = document.getElementById('postingSidebarContent');
+  const SCROLL_STORAGE_KEY = 'posting_sidebar_scroll_position';
+
   // Restore scroll position when page loads
   function restoreScrollPosition() {
     const savedScrollPosition = sessionStorage.getItem(SCROLL_STORAGE_KEY);
-    if (savedScrollPosition && sidebar) {
-      sidebar.scrollTop = parseInt(savedScrollPosition, 10);
+    if (savedScrollPosition && postingSidebarContent) {
+      postingSidebarContent.scrollTop = parseInt(savedScrollPosition, 10);
     }
   }
-  
+
   // Save scroll position
   function saveScrollPosition() {
-    if (sidebar) {
-      sessionStorage.setItem(SCROLL_STORAGE_KEY, sidebar.scrollTop.toString());
+    if (postingSidebarContent) {
+      sessionStorage.setItem(SCROLL_STORAGE_KEY, postingSidebarContent.scrollTop.toString());
     }
   }
-  
+
   // Listen for scroll events and save position
-  if (sidebar) {
-    sidebar.addEventListener('scroll', function() {
-      // Use throttling to avoid too many saves
-      clearTimeout(sidebar.scrollTimer);
-      sidebar.scrollTimer = setTimeout(saveScrollPosition, 100);
+  if (postingSidebarContent) {
+    postingSidebarContent.addEventListener('scroll', function() {
+      clearTimeout(postingSidebarContent.scrollTimer);
+      postingSidebarContent.scrollTimer = setTimeout(saveScrollPosition, 100);
     });
   }
-  
+
   // Save scroll position before page unloads
   window.addEventListener('beforeunload', saveScrollPosition);
-  
-  // Restore position when page is fully loaded
+
   restoreScrollPosition();
-  
-  // Also restore after a short delay to ensure everything is rendered
   setTimeout(restoreScrollPosition, 100);
 });
 
 // Enhanced navigation functions that save scroll position before redirect
 function navigateWithScrollSave(url) {
-  const sidebar = document.getElementById('sidebar-content');
-  if (sidebar) {
-    sessionStorage.setItem('sidebar_scroll_position', sidebar.scrollTop.toString());
+  const postingSidebarContent = document.getElementById('postingSidebarContent');
+  if (postingSidebarContent) {
+    sessionStorage.setItem('posting_sidebar_scroll_position', postingSidebarContent.scrollTop.toString());
   }
   window.location.href = url;
 }
@@ -362,11 +361,10 @@ function pagePostingPPHKeluaran() {
   navigateWithScrollSave("{{'mastersetpostingpphkeluaran'}}");
 }
 
-
 // Optional: Clear scroll position when user manually scrolls to top
 document.addEventListener('keydown', function(e) {
   if ((e.ctrlKey || e.metaKey) && e.key === 'Home') {
-    sessionStorage.removeItem('sidebar_scroll_position');
+    sessionStorage.removeItem('posting_sidebar_scroll_position');
   }
 });
 </script>

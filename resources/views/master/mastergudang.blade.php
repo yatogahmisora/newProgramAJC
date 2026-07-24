@@ -7,48 +7,43 @@
 
 <link rel="stylesheet" href="{{ asset('css/tableMaster2.css') }}">
 
-  <div class="sp-breadcrumb">
+  {{-- <div class="sp-breadcrumb">
     <span>Beranda</span>
     <span class="sp-sep">›</span>
     <span>Master</span>
     <span class="sp-sep">›</span>
-    <span class="sp-crumb-active">Satuan</span>
-  </div>
+    <span class="sp-crumb-active">Gudang</span>
+  </div> --}}
 
   <div class="sp-page-head">
     <div>
-      <h1>Master Satuan</h1>
+      <h1>Master Gudang</h1>
     </div>
-    <button class="btn btn-primary" onclick="buttonAdd()">+ Add Satuan</button>
+    <button class="btn btn-primary" onclick="buttonAdd()">+ Add Gudang</button>
   </div>
 
 <div id="contentContainer" class="container-fluid">
 
   <input type="hidden" name="_token" id="_token" value="{!! csrf_token() !!}" />
 
-<div class="sp-toolbar">
-    <div class="sp-search-wrap">
-      <i class="bi bi-search sp-search-icon"></i>
-      <input type="text" id="tabel_filter_visual" placeholder="Cari user...">
-    </div>
-  </div>
+  @include('master.partials.headerTableMaster')
 
-          <div class="table-outer">
-            <div class="table-wrap">
-              <table class="tb" id="tabel">
-                <thead>
-                  <tr>
-                    <th scope="col">Actions</th>
-                    <th scope="col">Kode Gudang</th>
-                    <th scope="col">Nama Gudang</th>
-                    <th scope="col">Sample</th>
-                  </tr>
-                </thead>
-                <tbody id="tabel_data" class="text-right">
-              </tbody>
-              </table>
-            </div>
-        </div>
+    <div class="table-outer">
+      <div class="table-wrap">
+        <table class="tb" id="tabel">
+          <thead>
+            <tr>
+              <th scope="col">Actions</th>
+              <th scope="col">Kode Gudang</th>
+              <th scope="col">Nama Gudang</th>
+              <th scope="col">Sample</th>
+            </tr>
+          </thead>
+          <tbody id="tabel_data" class="text-right">
+        </tbody>
+        </table>
+      </div>
+  </div>
 
 </div>
 
@@ -58,9 +53,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Add</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <!-- <h1>Tes Modal</h1> -->
@@ -165,9 +158,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <!-- <h1>Tes Modal</h1> -->
@@ -278,6 +269,7 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('js/masterTable.js') }}"></script>
 <script type="text/javascript">
 
 let dataRefresh = []
@@ -330,10 +322,6 @@ function loadAll () {
   });
 
 }
-
-$("#tabel_filter_visual").on("keyup", function () {
-  $("#tabel").DataTable().search(this.value).draw();
-});
 
 function buttonAdd () {
 

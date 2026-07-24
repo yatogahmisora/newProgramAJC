@@ -1,65 +1,61 @@
-@extends('master.newmaster')
+@extends('newmaster')
 @section('buttons')
 
 @endsection
+
+
 @section('content')
-<div class="container-fluid">
-
 @include('master/partials/sidebarPosting')
-  <!-- <div id="qrcode"></div> -->
-  <div class="row mt-4">
-      <div class="col-6 text-left">
-      </div>
-      <div class="col-6 text-right">
-        <button type="button" class="btn btn-primary btn-lg" style="
-            height: 30px; 
-            margin-top: -150px; 
-            padding: 4px 12px; 
-            border-radius: 20px; 
-            font-size: 0.75rem; 
-            font-weight: 600; 
-            text-transform: uppercase; 
-            transition: background-color 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
-            onclick="buttonAdd()">
-          Add Posting Aktiva
-        </button>
-      </div>
-      {{-- <div class="col-6 text-right">
-        <button type="button" class="btn btn-primary btn-lg" style="
-            height: 30px; 
-            margin-top: -150px; 
-            padding: 4px 12px; 
-            border-radius: 20px; 
-            font-size: 0.75rem; 
-            font-weight: 600; 
-            text-transform: uppercase; 
-            transition: background-color 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
-            onclick="loadAll()">
-          tes load all
-        </button>
-      </div> --}}
+
+<link rel="stylesheet" href="{{ asset('css/tableMaster2.css') }}">
+
+<style>
+  .sp-page-wrap {
+    margin-right: 280px; /* clears the fixed posting-sidebar so content doesn't run under it */
+  }
+
+  .sp-page-wrap .sp-page-head,
+  .sp-page-wrap #contentContainer {
+    max-width: 900px;   /* stops the table from stretching edge-to-edge */
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (max-width: 768px) {
+    .sp-page-wrap {
+      margin-right: 0; /* posting-sidebar slides off-screen on mobile, no need to reserve space */
+    }
+  }
+</style>
+
+<div class="sp-page-wrap">
+
+  {{-- <div class="sp-breadcrumb">
+    <span>Beranda</span>
+    <span class="sp-sep">›</span>
+    <span>Master</span>
+    <span class="sp-sep">›</span>
+    <span class="sp-crumb-active">Satuan</span>
+  </div> --}}
+
+  <div class="sp-page-head">
+    <div>
+      <h1>Master Posting Aktiva</h1>
     </div>
-
-<div id="printContainer" style="display:none">
-
-</div>
-<div id="contentContainer" class="container-fluid" style="max-width: 900px; margin-top:-100px;">
-  <input type="hidden" id="periode_tahun" value="{!! $periode->tahun !!}" />
-  <input type="hidden" id="periode_bulan" value="{!! $periode->bulan !!}" />
-  <input type="hidden" name="_token" id="_token" value="{!! csrf_token() !!}" />
-  <div class="row mt-4">
-      <!-- <div class="col-12 text-right">
-          <button type="button" class="btn btn-primary btn-lg " style="height: 60px; " onclick="buttonAdd()"  >Add Koreksi Stock Gudang</button>
-      </div> -->
+    <button class="btn btn-primary" onclick="buttonAdd()">+ Add Posting Aktiva</button>
   </div>
-  <div class="row mt-3">
-    <div class="col-12" style="overflow:auto;">
 
-      <table id="tabel" class="table table-bordered table-striped"  >
-        <thead id='theadCustom' class="text-center" style='white-space:nowrap;'>
-          <tr>
+  <div id="contentContainer" class="container-fluid">
+
+    <input type="hidden" name="_token" id="_token" value="{!! csrf_token() !!}" />
+
+    @include('master.partials.headerTableMaster')
+
+    <div class="table-outer">
+      <div class="table-wrap">
+        <table class="tb" id="tabel">
+          <thead>
+            <tr>
             <th scope="col">Actions</th>
             <th scope="col">Perkiraan</th>
             <th scope="col">Keterangan</th>
@@ -70,15 +66,16 @@
             <th scope="col">Persen Biaya 1</th>
             <th scope="col">Perkiraan Biaya 2</th>
             <th scope="col">Persen Biaya 2</th>
-
-          </tr>
-        </thead>
-        <tbody id="tabel_data" class="text-left">
-        </tbody>
-      </table>
-
+            </tr>
+          </thead>
+          <tbody id="tabel_data" class="text-right">
+          </tbody>
+        </table>
+      </div>
     </div>
+
   </div>
+
 </div>
 
 <!-- start modal add posting aktiva-->
@@ -311,6 +308,7 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('js/masterTable.js') }}"></script>
 <script type="text/javascript">
 
 let dataRefresh = []
@@ -340,9 +338,11 @@ function loadAll () {
     let temp = ""
 
     rowTable += `<tr>
-    <td class="text-center">
-      <button class="btn btn-success btn-sm hover-tooltip" data-tooltip='Edit Posting Aktiva'type="button" onclick="buttonEdit('${item.Perkiraan}')"><i class="bi bi-pen"></i></button>
-      <button class="btn btn-danger btn-sm hover-tooltip" data-tooltip='Delete Posting Aktiva'type="button" onclick="buttonDelete('${item.Perkiraan}')"><i class="bi bi-trash"></i></button>
+    <td style="white-space:nowrap;" class='text-center'>
+      <div class="action-buttons-wrap">
+          <button data-toggle="tooltip" data-placement="top" title="Menu" class="btn-action-sm btn-action-success" type="button" onclick="buttonEdit('${item.Perkiraan}')"><i class="bi bi-pen"></i></button>
+          <button data-toggle="tooltip" data-placement="top" title="Menu" class="btn-action-sm btn-action-danger" type="button" onclick="buttonDelete('${item.Perkiraan}')"><i class="bi bi-trash"></i></button>
+      </div>
     </td>
     <td>${item.Perkiraan}</td>
     <td>${item.Keterangan}</td>
@@ -355,13 +355,14 @@ function loadAll () {
     <td>${item.PersenBiaya2}</td>
     </tr>`
   });
-
+ 
   document.getElementById("tabel_data").innerHTML = rowTable
   $("#tabel").DataTable({
-    "lengthChange": false,
-      "paging": false ,
-    });
-
+    "lengthChange": true,
+    "paging": true,
+    "searching": true,
+    "dom": 'tip'
+  });
 }
 
 function buttonAdd () {
