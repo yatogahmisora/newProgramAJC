@@ -43,15 +43,128 @@
     background-color: #f5f3ff;
   }
 
+  #tabelitem tbody td {
+    font-size: 12px;
+    padding: 6px 12px;
+    vertical-align: middle;
+  }
+
+  #tabelitem td:last-child {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #tabelitem td:last-child .btn {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
+    font-size: 13px;
+    border: 1px solid transparent;
+    box-shadow: none;
+    transition: all .12s ease;
+  }
+
+  #tabelitem td:last-child .btn:hover {
+    filter: brightness(0.97);
+    transform: translateY(-1px);
+  }
+
+  #tabelitem td:last-child .btn-success {
+    color: #16a34a; border-color: #cdebd7; background: #e7f7ed;
+  }
+
+  #tabelitem td:last-child .btn-danger {
+    color: #dc2626; border-color: #f7cfcf; background: #fdeaea;
+  }
+
+
+  #mainTable th.rt-fixed-th,
+  #mainTable td:first-child {
+    min-width: 112px;
+  }
+
+  #mainTable td:first-child {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #mainTable td:first-child .btn {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
+    font-size: 13px;
+    border: 1px solid transparent;
+    box-shadow: none;
+    transition: all .12s ease;
+  }
+
+  #mainTable td:first-child .btn:hover {
+    filter: brightness(0.97);
+    transform: translateY(-1px);
+  }
+
+  #mainTable tbody td:first-child .btn {
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  #mainTable tbody tr:hover td:first-child .btn {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  #mainTable td:first-child .btn-success {
+    color: #16a34a; border-color: #cdebd7; background: #e7f7ed;
+  }
+
+  #mainTable td:first-child .btn-warning {
+    color: #b45309; border-color: #fbe3bd; background: #fef3e0;
+  }
+
+  #mainTable td:first-child .btn-primary {
+    color: #2563eb; border-color: #cfdcff; background: #e8edff;
+  }
+
+  #mainTable td:first-child .btn-danger {
+    color: #dc2626; border-color: #f7cfcf; background: #fdeaea;
+  }
+
+  #mainTable td:first-child .btn-info {
+    color: #0891b2; border-color: #a5f3fc; background: #ecfeff;
+  }
+
   .btn-pill-action {
     height: 30px;
-    padding: 4px 16px;
+    padding: 4px 12px;
     border-radius: 20px;
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
     transition: background-color 0.3s, box-shadow 0.3s;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-width: 1px;
+    border-style: solid;
+  }
+
+  .btn-pill-flat {
+    height: 30px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: background-color 0.3s, box-shadow 0.3s;
     border-width: 1px;
     border-style: solid;
   }
@@ -69,6 +182,12 @@
     color: #1d4ed8;
   }
 
+  .btn-chip-biru:active {
+    background-color: #cfdcff !important;
+    border-color: #a8bdff !important;
+    color: #1d4ed8 !important;
+  }
+
   .btn-batal-add {
     background-color: #f1f3f5;
     border-color: #dee2e6;
@@ -82,6 +201,12 @@
     color: #343a40;
   }
 
+  .btn-batal-add:active {
+    background-color: #dee2e6 !important;
+    border-color: #ced4da !important;
+    color: #343a40 !important;
+  }
+
   .btn-close-pill {
     background-color: #fdeaea;
     border-color: #f7cfcf;
@@ -93,6 +218,12 @@
     background-color: #fbdcdc;
     border-color: #f2bcbc;
     color: #b91c1c;
+  }
+
+  .btn-close-pill:active {
+    background-color: #f8cfcf !important;
+    border-color: #eda9a9 !important;
+    color: #b91c1c !important;
   }
 </style>
 @endsection
@@ -131,12 +262,7 @@
             onchange="reloadData()">
         </div>
 
-        {{-- Susunan (Cari data -> Tampilkan -> Filter -> Tambah) disamakan dengan
-             gudang/purchaseOrder.blade.php (po-search-inp/po-len-wrap/po-btn-filter/
-             po-toolbar-act): ditulis sejajar langsung di dalam .toolbar (bukan
-             dibungkus lagi di .action-group), Tambah saja yang dikelompokkan supaya
-             tetap ngambang di ujung kanan (lihat .action-group{margin-left:auto}
-             di @section('css')). --}}
+        
         <input class="search-inp" type="text" id="searchBox2" placeholder="Cari data..."
           oninput="currentPage = 1; renderTabel()" style="width:200px">
 
@@ -344,7 +470,7 @@
 
         <div class="row ">
           <div class="col-md-12 mt-2 text-right">
-            <button type="button" class="btn btn-lg btn-pill-action btn-chip-biru hideableModeDetail" onclick="buttonItemAdd()"><b>+ Tambah Item</b></button>
+            <button type="button" class="btn btn-lg btn-pill-flat btn-chip-biru hideableModeDetail" onclick="buttonItemAdd()">Tambah Item</button>
           </div>
         </div>
 
@@ -508,7 +634,7 @@
           <div class="row mt-2">
             <div class="col-md-12 text-right">
               <button type="button" class="btn btn-lg btn-pill-action btn-batal-add" onclick="closeFormItem()">Batal</button>
-              <button type="button" id="buttonSubmitItem" class="btn btn-lg btn-pill-action btn-chip-biru" onclick="submitItem()">Submit</button>
+              <button type="button" id="buttonSubmitItem" class="btn btn-lg btn-pill-action btn-chip-biru" onclick="submitItem()">Simpan</button>
             </div>
 
           </div>
@@ -717,9 +843,9 @@ document.addEventListener('DOMContentLoaded', function () {
       let boleh = true;
       $.ajax({
         url: "{!! url('') !!}/" + urlName,
-        type: 'get',
+        type: 'post',
         async: false,
-        data: { nobukti: nobukti },
+        data: { _token: $('#_token').val(), nobukti: nobukti },
         success: function(res) {
           let row = Array.isArray(res) ? res[0] : res;
           let sudahOto = row ? Number(row.isOtorisasi1 ?? row.IsOtorisasi1 ?? 0) : 0;
@@ -1005,7 +1131,7 @@ document.addEventListener('DOMContentLoaded', function () {
     doSimpanHeader(g_href, g_modeReport, gcart_header, gsum_issubtotal, gsum_isgrandtotal);
   }
 
-  // ambil field dari row tanpa peduli besar/kecil huruf.
+
   function pickCI(r, key) {
     if (r[key] !== undefined) {
       return r[key];
@@ -1029,29 +1155,53 @@ document.addEventListener('DOMContentLoaded', function () {
     return rows;
   }
 
+  function getVisibleRows() {
+    const cols = gcart_header.filter(c => c[2] === 1);
+    const search = ($('#searchBox2').val() || '').trim().toLowerCase();
+    let rows = lastRows;
+    if (search) {
+      rows = rows.filter(function(r) {
+        return cols.some(function(c) {
+          const v = pickCI(r, c[0]);
+          return v != null && String(v).toLowerCase().indexOf(search) !== -1;
+        });
+      });
+    }
+    return filterByOtorisasi(rows, globalOtorisasi);
+  }
+
+  function gotoRowPage(nobukti) {
+    if (!nobukti) { currentPage = 1; return; }
+    let visible = getVisibleRows();
+    let idx = visible.findIndex(function(r) { return String(r.Nobukti) === String(nobukti); });
+    if (idx < 0) {
+
+      return;
+    }
+    currentPage = (pageSize === -1) ? 1 : Math.floor(idx / pageSize) + 1;
+  }
+
   function aksiButtonsHtml(r) {
     const nobukti = r.Nobukti;
     const detailBtn =
-      '<button type="button" class="btn-action-sm btn-action-warning" data-toggle="tooltip" title="Detail" onclick="buttonDetail(\'' +
-      nobukti + '\')"><i class="bi bi-info-circle"></i></button>';
+      '<button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" title="Detail" onclick="buttonDetail(\'' +
+      nobukti + '\')"><i class="bi bi-info"></i></button>';
 
     if (Number(pickCI(r, 'NeedOtorisasi')) === 0) {
-      // Sudah otorisasi (Print + Batal Otorisasi)
-      return '<div class="action-buttons">' + detailBtn +
-        '<button type="button" class="btn-action-sm" data-toggle="tooltip" title="Print" onclick="submitPrint(\'' +
-        nobukti + '\')"><i class="bi bi-printer"></i></button>' +
-        '<button type="button" class="btn-action-sm btn-action-danger" data-toggle="tooltip" title="Batal Otorisasi" onclick="buttonBatalOtorisasi(\'' +
-        nobukti + '\')"><i class="bi bi-key"></i></button>' +
-        '</div>';
+      // Sudah otorisasi (Batal Otorisasi + Print)
+      return detailBtn +
+        '<button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" title="Batal Otorisasi" onclick="buttonBatalOtorisasi(\'' +
+        nobukti + '\')"><i class="bi bi-key-fill"></i></button>' +
+        '<button type="button" class="btn btn-info btn-sm" data-toggle="tooltip" title="Print" onclick="submitPrint(\'' +
+        nobukti + '\')"><i class="bi bi-printer"></i></button>';
     }
 
-    // Belum otorisasi (Edit + Otorisasi)
-    return '<div class="action-buttons">' + detailBtn +
-      '<button type="button" class="btn-action-sm" data-toggle="tooltip" title="Edit" onclick="buttonEdit(\'' +
-      nobukti + '\')"><i class="bi bi-pencil"></i></button>' +
-      '<button type="button" class="btn-action-sm btn-action-primary" data-toggle="tooltip" title="Otorisasi" onclick="buttonOtorisasi(\'' +
+    // Belum otorisasi (Otorisasi + Edit)
+    return detailBtn +
+      '<button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" title="Otorisasi" onclick="buttonOtorisasi(\'' +
       nobukti + '\')"><i class="bi bi-key"></i></button>' +
-      '</div>';
+      '<button type="button" class="btn btn-success btn-sm" data-toggle="tooltip" title="Edit" onclick="buttonEdit(\'' +
+      nobukti + '\')"><i class="bi bi-pencil-fill"></i></button>';
   }
 
   function stripTanggalSuffix(v) {
@@ -1065,17 +1215,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const thead = document.querySelector('#mainTable thead');
     thead.innerHTML = ReportTable.headHtml(cols).replace('<tr>', '<tr><th class="rt-fixed-th">Aksi</th>');
 
-    const search = ($('#searchBox2').val() || '').trim().toLowerCase();
-    let rows = lastRows;
-    if (search) {
-      rows = rows.filter(function(r) {
-        return cols.some(function(c) {
-          const v = pickCI(r, c[0]);
-          return v != null && String(v).toLowerCase().indexOf(search) !== -1;
-        });
-      });
-    }
-    rows = filterByOtorisasi(rows, globalOtorisasi);
+    let rows = getVisibleRows();
 
     const tbody = document.getElementById('tabel2_data');
     $(tbody).find('[data-toggle="tooltip"]').tooltip('dispose');
@@ -1209,7 +1349,7 @@ document.addEventListener('DOMContentLoaded', function () {
     renderTabel();
   });
 
-  function reloadData() {
+  function reloadData(_focusNobukti) {
     let listKMBJ = [], listSdhOto = [];
 
     $.ajax({
@@ -1227,7 +1367,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     lastRows = listKMBJ.concat(listSdhOto);
-    currentPage = 1;
+    if (_focusNobukti) {
+      gotoRowPage(_focusNobukti);
+    } else {
+      currentPage = 1;
+    }
     renderTabel();
   }
 
@@ -2086,7 +2230,7 @@ function submitPrint (nobukti) {
       success: function(res) {
         if (res > 0) {
           alertify.success('Berhasil otorisasi');
-          reloadData();
+          reloadData(_nb);
         } else {
           alertify.warning('Gagal otorisasi');
         }
@@ -2118,7 +2262,7 @@ function submitPrint (nobukti) {
           success: function(res) {
             if (res > 0) {
               alertify.success('Berhasil batal otorisasi');
-              reloadData();
+              reloadData(_nb);
             } else {
               alertify.warning('Gagal batal otorisasi');
             }
