@@ -43,6 +43,12 @@
     background-color: #f5f3ff;
   }
 
+  #tabelitem tbody td {
+    font-size: 12px;
+    padding: 6px 12px;
+    vertical-align: middle;
+  }
+
   #tabelitem td:last-child {
     display: flex;
     gap: 4px;
@@ -77,7 +83,7 @@
     color: #dc2626; border-color: #f7cfcf; background: #fdeaea;
   }
 
-  /* Kolom Aksi tabel */
+
   #mainTable th.rt-fixed-th,
   #mainTable td:first-child {
     min-width: 112px;
@@ -148,6 +154,17 @@
     text-transform: uppercase;
     transition: background-color 0.3s, box-shadow 0.3s;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-width: 1px;
+    border-style: solid;
+  }
+
+  .btn-pill-flat {
+    height: 30px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: background-color 0.3s, box-shadow 0.3s;
     border-width: 1px;
     border-style: solid;
   }
@@ -245,12 +262,7 @@
             onchange="reloadData()">
         </div>
 
-        {{-- Susunan (Cari data -> Tampilkan -> Filter -> Tambah) disamakan dengan
-             gudang/purchaseOrder.blade.php (po-search-inp/po-len-wrap/po-btn-filter/
-             po-toolbar-act): ditulis sejajar langsung di dalam .toolbar (bukan
-             dibungkus lagi di .action-group), Tambah saja yang dikelompokkan supaya
-             tetap ngambang di ujung kanan (lihat .action-group{margin-left:auto}
-             di @section('css')). --}}
+        
         <input class="search-inp" type="text" id="searchBox2" placeholder="Cari data..."
           oninput="currentPage = 1; renderTabel()" style="width:200px">
 
@@ -458,7 +470,7 @@
 
         <div class="row ">
           <div class="col-md-12 mt-2 text-right">
-            <button type="button" class="btn btn-lg btn-pill-action btn-chip-biru hideableModeDetail" onclick="buttonItemAdd()"><b>+ Tambah Item</b></button>
+            <button type="button" class="btn btn-lg btn-pill-flat btn-chip-biru hideableModeDetail" onclick="buttonItemAdd()">Tambah Item</button>
           </div>
         </div>
 
@@ -622,7 +634,7 @@
           <div class="row mt-2">
             <div class="col-md-12 text-right">
               <button type="button" class="btn btn-lg btn-pill-action btn-batal-add" onclick="closeFormItem()">Batal</button>
-              <button type="button" id="buttonSubmitItem" class="btn btn-lg btn-pill-action btn-chip-biru" onclick="submitItem()">Submit</button>
+              <button type="button" id="buttonSubmitItem" class="btn btn-lg btn-pill-action btn-chip-biru" onclick="submitItem()">Simpan</button>
             </div>
 
           </div>
@@ -1119,7 +1131,7 @@ document.addEventListener('DOMContentLoaded', function () {
     doSimpanHeader(g_href, g_modeReport, gcart_header, gsum_issubtotal, gsum_isgrandtotal);
   }
 
-  // ambil field dari row tanpa peduli besar/kecil huruf.
+
   function pickCI(r, key) {
     if (r[key] !== undefined) {
       return r[key];
@@ -1163,7 +1175,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let visible = getVisibleRows();
     let idx = visible.findIndex(function(r) { return String(r.Nobukti) === String(nobukti); });
     if (idx < 0) {
-      currentPage = 1;
+
       return;
     }
     currentPage = (pageSize === -1) ? 1 : Math.floor(idx / pageSize) + 1;
