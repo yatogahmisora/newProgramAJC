@@ -13,6 +13,125 @@
     href="{!! URL::asset('css/tableMaster2.css') !!}?v={{ @filemtime(base_path('public/css/tableMaster2.css')) ?: '1' }}">
 
   <style>
+  .showhide {
+    display: none;
+  }
+  </style>
+
+  <style>
+  #tabel_add thead th {
+    background: #f8f9fb !important;
+    color: #6b7280 !important;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    font-weight: 600;
+    border-bottom: 1px solid #e7e9ee;
+    border-top: none;
+  }
+
+  #tabel_add.table-bordered th,
+  #tabel_add.table-bordered td {
+    border-color: #e7e9ee !important;
+  }
+
+  #tabel_add tbody tr:nth-of-type(odd) {
+    background-color: #fbfbfc;
+  }
+
+  #tabel_add tbody tr:hover {
+    background-color: #f5f3ff;
+  }
+
+  #tabel_add tbody td {
+    font-size: 12px;
+    padding: 6px 12px;
+    vertical-align: middle;
+  }
+
+  .btn-pill-action {
+    height: 30px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-width: 1px;
+    border-style: solid;
+  }
+
+  .btn-pill-flat {
+    height: 30px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    border-width: 1px;
+    border-style: solid;
+  }
+
+  .btn-chip-biru {
+    background-color: #e8edff;
+    border-color: #cfdcff;
+    color: #2563eb;
+  }
+
+  .btn-chip-biru:hover,
+  .btn-chip-biru:focus {
+    background-color: #dce6ff;
+    border-color: #b9c9ff;
+    color: #1d4ed8;
+  }
+
+  .btn-chip-biru:active {
+    background-color: #cfdcff !important;
+    border-color: #a8bdff !important;
+    color: #1d4ed8 !important;
+  }
+
+  .btn-batal-add {
+    background-color: #f1f3f5;
+    border-color: #dee2e6;
+    color: #495057;
+  }
+
+  .btn-batal-add:hover,
+  .btn-batal-add:focus {
+    background-color: #e9ecef;
+    border-color: #ced4da;
+    color: #343a40;
+  }
+
+  .btn-batal-add:active {
+    background-color: #dee2e6 !important;
+    border-color: #ced4da !important;
+    color: #343a40 !important;
+  }
+
+  .btn-close-pill {
+    background-color: #fdeaea;
+    border-color: #f7cfcf;
+    color: #dc2626;
+  }
+
+  .btn-close-pill:hover,
+  .btn-close-pill:focus {
+    background-color: #fbdcdc;
+    border-color: #f2bcbc;
+    color: #b91c1c;
+  }
+
+  .btn-close-pill:active {
+    background-color: #f8cfcf !important;
+    border-color: #eda9a9 !important;
+    color: #b91c1c !important;
+  }
+  </style>
+
+  <style>
   #contentContainer .toolbar {
     display: flex;
     align-items: center;
@@ -295,19 +414,16 @@
 <div id="page2" class="container-fluid" style="display: none" >
   <div class="row">
     <div class="col-6 text-left">
-      <h2 id="formTitle" style="margin-top: -80px;">Form Permintaan Transfer Barang</h2>
+      {{-- Judul H2 disembunyikan (disamakan dengan #pageForm di
+           gudang/ubahkemasanbarang.blade.php yang judulnya dikosongkan),
+           TAPI elemennya tetap ada karena setFormMode() masih menulis ke
+           #formTitle lewat document.getElementById (bukan jQuery) - kalau
+           elemennya dihapus total, baris itu bakal throw error dan logic
+           show/hide kolom Actions di fungsi yang sama ikut batal jalan. --}}
+      <h2 id="formTitle" style="display:none;"></h2>
     </div>
     <div class="col-6 text-right">
-      <button type="button" class="btn btn-danger btn-lg" style="
-          height: 30px; 
-          margin-top: -150px; 
-          padding: 4px 12px; 
-          border-radius: 20px; 
-          font-size: 0.75rem; 
-          font-weight: 600; 
-          text-transform: uppercase; 
-          transition: background-color 0.3s, box-shadow 0.3s;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
+      <button type="button" class="btn btn-lg btn-pill-action btn-close-pill"
           onclick="buttonCloseForm()">
         Close
       </button>
@@ -315,7 +431,7 @@
   </div>
 
   <div id="modalBodyAddMain" class="">
-    <div class="modal-body" style="margin-top:-60px;">
+    <div class="modal-body">
       <div class="row"> 
         <div class="col-md-3">
           <div class="row">
@@ -372,7 +488,7 @@
             <div class="col-md-6">
               <div class="input-group mb-3">
                 <input type="text" class="form-control text-left" value='-' id="input_add_kodeGudangAsal" disabled>
-                <button class="btn btn-primary btn-sm rounded-end shadow-sm" id="buttonAddListGudangAsal" onclick="buttonAddListGudangAsal()">
+                <button class="btn btn-chip-biru btn-sm" style="height:32px; border-radius:0;" id="buttonAddListGudangAsal" onclick="buttonAddListGudangAsal()">
                   <i class="bi bi-plus"></i>
                 </button>
               </div>
@@ -397,7 +513,7 @@
             <div class="col-md-6">
               <div class="input-group mb-3">
                 <input type="text" class="form-control text-left" value='-' id="input_add_kodeGudangTujuan" disabled>
-                <button class="btn btn-primary btn-sm rounded-end shadow-sm" id="buttonAddListGudangTujuan" onclick="buttonAddListGudangTujuan()">
+                <button class="btn btn-chip-biru btn-sm" style="height:32px; border-radius:0;" id="buttonAddListGudangTujuan" onclick="buttonAddListGudangTujuan()">
                   <i class="bi bi-plus"></i>
                 </button>
               </div>
@@ -427,17 +543,8 @@
 
           <div class="row ">
             <div class="col-md-12 mt-2 text-left" hidden>
-              <button type="button" class="btn btn-primary btn-lg" style="
-                height: 30px; 
-                margin-top: -35px;
-                padding: 4px 12px; 
-                border-radius: 20px; 
-                font-size: 0.75rem; 
-                font-weight: 600; 
-                text-transform: uppercase; 
-                transition: background-color 0.3s, box-shadow 0.3s;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
-                onclick="buttonShowHideHeader()" class="btn btn-secondary"><b>Show/Hide Header</b></button>
+              <button type="button" class="btn btn-lg btn-pill-flat btn-chip-biru" style="margin-top: -35px;"
+                onclick="buttonShowHideHeader()"><b>Show/Hide Header</b></button>
             </div>
           </div>
 
@@ -453,7 +560,7 @@
                     </div>
                     <div class="form-group row">
                       <input class="form-control col-8" id="input_add_kodealamatkirim" readonly >
-                      <button onclick="buttonAddListGudang()" id="buttonAddListGudang"  style="height:32px;" class="btn btn-primary btn-sm text-right"><i class="bi bi-plus"></i></button>
+                      <button onclick="buttonAddListGudang()" id="buttonAddListGudang"  class="btn btn-chip-biru btn-sm" style="height:32px; border-radius:0;"><i class="bi bi-plus"></i></button>
                     </div>
                     <div class="col-md-12">
                       <div class="input-group form-group">
@@ -472,7 +579,7 @@
                     </div>
                     <div class="form-group row">
                       <input class="form-control col-8" id="input_add_kodeekspedisi" readonly >
-                      <button onclick="buttonAddListLokasiPenerima()" id="buttonAddListLokasiPenerima" style="height:32px;" class="btn btn-primary btn-sm text-right"><i class="bi bi-plus"></i></button>
+                      <button onclick="buttonAddListLokasiPenerima()" id="buttonAddListLokasiPenerima" class="btn btn-chip-biru btn-sm" style="height:32px; border-radius:0;"><i class="bi bi-plus"></i></button>
                     </div>
                     <div class="col-md-12">
                       <div class="form-group">
@@ -544,7 +651,7 @@
                           <div class="input-group form-group">
                             <input type="hidden" class="form-control" id="input_add_kodebackoffice" >
                             <input type="text" class="form-control" id="input_add_namabackoffice"  disabled>
-                            <button onclick="buttonAddListBackOffice()" id="buttonAddListBackOffice"  class="btn btn-primary btn-sm text-right"><i class="bi bi-plus"></i></button>
+                            <button onclick="buttonAddListBackOffice()" id="buttonAddListBackOffice"  class="btn btn-chip-biru btn-sm" style="height:32px; border-radius:0;"><i class="bi bi-plus"></i></button>
                           </div>
                         </div>
                       </div>
@@ -578,7 +685,7 @@
                       <div class="input-group form-group">
                         <input type="hidden" class="form-control" id="input_add_kodepic"  >
                         <input type="text" class="form-control" id="input_add_namapic"  disabled>
-                        <button onclick="buttonAddListPIC()" id="buttonAddListPIC"  class="btn btn-primary btn-sm text-right"><i class="bi bi-plus"></i></button>
+                        <button onclick="buttonAddListPIC()" id="buttonAddListPIC"  class="btn btn-chip-biru btn-sm" style="height:32px; border-radius:0;"><i class="bi bi-plus"></i></button>
                       </div>
                     </div>
                   </div>
@@ -601,7 +708,7 @@
                   <div class="input-group form-group">
                     <input type="hidden" class="form-control" id="input_add_kodesales" >
                     <input type="text" class="form-control" id="input_add_namasales"  disabled>
-                    <button onclick="buttonAddListSales()" id="buttonAddListSales"  class="btn btn-primary btn-sm text-right"><i class="bi bi-plus"></i></button>
+                    <button onclick="buttonAddListSales()" id="buttonAddListSales"  class="btn btn-chip-biru btn-sm" style="height:32px; border-radius:0;"><i class="bi bi-plus"></i></button>
                   </div>
                 </div>
               </div>
@@ -636,8 +743,8 @@
         <div class="container-fluid" style="overflow:auto; margin-top:-35px;">
           <!-- <input type="hidden" name="noUrut" id="input_add_noUrut" value="" /> -->
           <div class="row">
-            <table id="tabel_add" class="table table-bordered table-hover table-striped table-responsive-lg">
-              <thead class="text-center bg-primary text-white">
+            <table id="tabel_add" class="table table-bordered table-hover table-responsive-lg">
+              <thead class="text-center">
                 <tr>
                   <th style="padding: 4px 12px; width:120px;" scope="col">Kode Barang</th>
                   <th style="padding: 4px 12px;" scope="col">Nama Barang</th>
@@ -673,16 +780,8 @@
 
         <div class="row">
           <div class="col-md-12 mt-2 text-right">
-            <button id='buttonPlusTambahItem'type="button" class="btn btn-primary btn-lg" style="
-              height: 30px; 
-              padding: 4px 12px; 
-              border-radius: 20px; 
-              font-size: 0.75rem; 
-              font-weight: 600; 
-              text-transform: uppercase; 
-              transition: background-color 0.3s, box-shadow 0.3s;
-              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
-              onclick="buttonAddAddItem()" class="btn btn-secondary"><b>+ Tambah Item</b></button>
+            <button id='buttonPlusTambahItem' type="button" class="btn btn-lg btn-pill-flat btn-chip-biru"
+              onclick="buttonAddAddItem()"><b>+ Tambah Item</b></button>
           </div>
         </div>
 
@@ -712,7 +811,7 @@
                       <div class="col-md-4" style="margin-top:-10px;"> 
                         <div class="input-group form-group">
                           <input type="text" class="form-control" id="input_add_add_kodebarang">
-                          <button onclick="buttonAddAddListBarang()" id="buttonAddAddListBarang" class="btn btn-primary btn-sm text-right" tabindex="1">
+                          <button onclick="buttonAddAddListBarang()" id="buttonAddAddListBarang" class="btn btn-chip-biru btn-sm" style="height:32px; border-radius:0;" tabindex="1">
                             <i class="bi bi-plus"></i>
                           </button>
                         </div>
@@ -772,38 +871,14 @@
 
           <div class="row mt-2">
             <div class="col-md-12 text-right" style="margin-top:-40px;">
-              <button type="button" class="btn btn-danger btn-lg" style="
-              height: 30px; 
-              padding: 4px 12px; 
-              border-radius: 20px; 
-              font-size: 0.75rem; 
-              font-weight: 600; 
-              text-transform: uppercase; 
-              transition: background-color 0.3s, box-shadow 0.3s;
-              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
-              onclick="closeShowHideAdd()" class="btn btn-secondary">Batal</button>
+              <button type="button" class="btn btn-lg btn-pill-action btn-batal-add"
+              onclick="closeShowHideAdd()">Batal</button>
 
-              <button type="button" id="submitAddAdd" class="btn btn-primary btn-lg" style="
-              height: 30px; 
-              padding: 4px 12px; 
-              border-radius: 20px; 
-              font-size: 0.75rem; 
-              font-weight: 600; 
-              text-transform: uppercase; 
-              transition: background-color 0.3s, box-shadow 0.3s;
-              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
-              onclick="submitAddAdd()" class="btn btn-secondary">Submit Add</button>
+              <button type="button" id="submitAddAdd" class="btn btn-lg btn-pill-action btn-chip-biru"
+              onclick="submitAddAdd()">Submit Add</button>
 
-              <button type="button" id="submitAddEdit" class="btn btn-primary btn-lg" style="
-              height: 30px; 
-              padding: 4px 12px; 
-              border-radius: 20px; 
-              font-size: 0.75rem; 
-              font-weight: 600; 
-              text-transform: uppercase; 
-              transition: background-color 0.3s, box-shadow 0.3s;
-              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
-              onclick="submitAddEdit()" class="btn btn-secondary">Submit Edit</button>
+              <button type="button" id="submitAddEdit" class="btn btn-lg btn-pill-action btn-chip-biru"
+              onclick="submitAddEdit()">Submit Edit</button>
             </div>
 
           </div>
@@ -832,7 +907,7 @@
               </div>
               <div class="col-3 text-right">
                 <div class="form-group">
-              <button onclick=""  class="btn btn-primary btn-sm text-right" disabled><i class="bi bi-plus" ></i></button>
+              <button onclick=""  class="btn btn-chip-biru btn-sm" style="height:32px; border-radius:0;" disabled><i class="bi bi-plus" ></i></button>
               </div>
 
             </div>
@@ -859,7 +934,7 @@
               </div>
               <div class="col-3 text-right">
                 <div class="form-group">
-              <button onclick=""  class="btn btn-primary btn-sm text-right" disabled><i class="bi bi-plus"></i></button>
+              <button onclick=""  class="btn btn-chip-biru btn-sm" style="height:32px; border-radius:0;" disabled><i class="bi bi-plus"></i></button>
               </div>
 
             </div>
@@ -887,7 +962,7 @@
               </div>
               <div class="col-3 text-right">
                 <div class="form-group">
-              <button onclick="buttonAddEditListBarang()" id="buttonAddEditListBarang"  class="btn btn-primary btn-sm text-right" disabled><i class="bi bi-plus"></i></button>
+              <button onclick="buttonAddEditListBarang()" id="buttonAddEditListBarang"  class="btn btn-chip-biru btn-sm" style="height:32px; border-radius:0;" disabled><i class="bi bi-plus"></i></button>
               </div>
 
             </div>
@@ -1931,8 +2006,7 @@
 @endsection
 
 @section('js')
-{{-- Dipakai untuk tampilan tabel list ala report (search/filter/pager/kolom
-     tersembunyi) disamakan dengan gudang/ubahkemasanbarang.blade.php. --}}
+
 <script src="{!! URL::asset('js/ajc-func-core.js') !!}"></script>
 <script src="{!! URL::asset('js/report-table.js') !!}?v={{ @filemtime(base_path('public/js/report-table.js')) ?: '1' }}"></script>
 <script type="text/javascript">
@@ -2282,7 +2356,7 @@ function applyModalFilter() {
   renderTabel();
   $('#modalFilter').modal('hide');
 }
-// === end tabel list PRT ===================================================
+
 
 let dataTableAdd = []
 let dataTableEdit = []
@@ -4947,7 +5021,7 @@ function refreshDataTableAdd (NOBUKTI) {
     
     // if(!dataTableAdd.length) {
       let rowTable = `<tr>
-      <td class="text-center" colspan="5">Belum ada barang</td>
+      <td colspan="5">Belum ada barang</td>
       </tr>`
     // }
     document.getElementById("tabel_data_add").innerHTML = rowTable
@@ -4998,7 +5072,7 @@ function refreshDataTableAdd (NOBUKTI) {
 
           if(!dataTableAdd.length) {
             rowTable = `<tr>
-            <td class="text-center" colspan="5">Belum ada barang</td>
+            <td colspan="5">Belum ada barang</td>
             </tr>`
           }
           document.getElementById("tabel_data_add").innerHTML = rowTable
