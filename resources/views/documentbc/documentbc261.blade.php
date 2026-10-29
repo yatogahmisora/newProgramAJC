@@ -567,6 +567,9 @@
                             <label>Kode Barang</label>
                             <input type="text" class="form-control" data-f="kodeBarang" maxlength="20">
 
+                            <label class="bs-wrap">Asal Barang</label>
+                            <select class="form-control" data-f="kodeAsalBarang"></select>
+
                             <label>Uraian</label>
                             <input type="text" class="form-control" data-f="uraian" maxlength="100">
 
@@ -957,6 +960,13 @@
         const SATUAN = @json($lookup['satuan']);
         // Master Jenis Dokumen (JENISDOKUMEN): [{kode, nama}]
         const JENIS_DOKUMEN = @json($lookup['jenisDokumen']);
+        // Asal Barang (kodeAsalBarang CEISA): daftar tetap, tanpa master.
+        const ASAL_BARANG = [
+            { kode: '1', nama: 'Sepenuhnya diperoleh dan/atau diproduksi di luar daerah pabean' },
+            { kode: '2', nama: 'Sepenuhnya diperoleh dan/atau diproduksi di tempat lain dalam daerah pabean' },
+            { kode: '3', nama: 'Kawasan Pabean' },
+            { kode: '4', nama: 'Lainnya' },
+        ];
         const KODE = @json($kode);
 
         const AKSES = {
@@ -1795,6 +1805,7 @@
             const row = idx === null ? nilaiAwal(nama) : state[nama][idx];
             opsiMaster(modal.find('[data-f="kodeJenisKemasan"]'), JENIS_KEMASAN, row.kodeJenisKemasan || '');
             if (nama === 'barang') {
+                opsiMaster(modal.find('[data-f="kodeAsalBarang"]'), ASAL_BARANG, row.kodeAsalBarang || '');
                 opsiMaster(modal.find('[data-f="kodeNegaraAsal"]'), NEGARA, row.kodeNegaraAsal || '');
             }
             if (nama === 'barang' || nama === 'bahanbaku') {

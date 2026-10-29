@@ -204,7 +204,7 @@ class Bc261PayloadBuilder
             'jumlahKemasan' => (float) ($row['jumlahKemasan'] ?? 0),
             'jumlahSatuan' => (float) ($row['jumlahSatuan'] ?? 0),
             'kodeAsalBahanBaku' => '0',
-            'kodeAsalBarang' => '0',
+            'kodeAsalBarang' => (string) self::orDefault($row['kodeAsalBarang'] ?? null, '0'),
             'kodeBarang' => (string) ($row['kodeBarang'] ?? ''),
             'kodeDokumen' => '261',
             'kodeJenisKemasan' => $this->strOrNull($row['kodeJenisKemasan'] ?? null),

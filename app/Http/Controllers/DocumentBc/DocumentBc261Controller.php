@@ -64,6 +64,7 @@ class DocumentBc261Controller extends Controller
             'seriBarang' => ['SERIBARANG', 'seri'],
             'posTarif' => ['POSTARIF', 'str'],
             'kodeBarang' => ['KODEBARANG', 'str'],
+            'kodeAsalBarang' => ['KODEASALBARANG', 'strn'],
             'uraian' => ['URAIAN', 'str'],
             'merk' => ['MERK', 'strn'],
             'tipe' => ['TIPE', 'strn'],
