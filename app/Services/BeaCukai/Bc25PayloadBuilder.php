@@ -64,7 +64,7 @@ class Bc25PayloadBuilder
             'kotaTtd' => (string) ($header['kotaTtd'] ?? ''),
             'namaTtd' => (string) ($header['namaTtd'] ?? ''),
             'ndpbm' => (float) self::orDefault($header['ndpbm'] ?? null, 0),
-            'netto' => $this->round2($header['netto'] ?? null, 0),
+            'netto' => $this->flt4($header['netto'] ?? null),
             'nomorAju' => (string) ($header['nomorAju'] ?? ''),
             'ppnPajak' => $this->flt2($header['ppnPajak'] ?? null),
             'ppnbmPajak' => $this->flt2($header['ppnbmPajak'] ?? null),
@@ -210,7 +210,7 @@ class Bc25PayloadBuilder
             'kodeSatuanBarang' => (string) ($row['kodeSatuanBarang'] ?? ''),
             'merk' => (string) self::orDefault($row['merk'] ?? null, '-'),
             'ndpbm' => $this->num($row['ndpbm'] ?? null, 0),
-            'netto' => $this->round2($row['netto'] ?? null, 0),
+            'netto' => $this->flt4($row['netto'] ?? null),
             'nilaiBarang' => $this->round2($row['nilaiBarang'] ?? null, 0),
             'posTarif' => (string) ($row['posTarif'] ?? ''),
             'seriBarang' => $seri,
@@ -236,7 +236,7 @@ class Bc25PayloadBuilder
         $bm = $cifRp * $persenBm / 100;
         $dasar = $cifRp + $bm;
         $satuan = (string) ($row['kodeSatuanBarang'] ?? '');
-        $jumlah = $this->round2($row['netto'] ?? null, 0);
+        $jumlah = $this->flt4($row['netto'] ?? null);
 
         $baris = fn (string $pungutan, float $tarif, float $nilai, int $urut) => [
             'kodeJenisTarif' => (string) $this->cfg('kode_jenis_tarif', '1'),
@@ -312,6 +312,12 @@ class Bc25PayloadBuilder
     private function flt2($value): float
     {
         return round((float) self::orDefault($value, 0), 2);
+    }
+
+    // Berat (netto) dibulatkan 4 desimal (skema: kelipatan 0.0001, jangan dibulatkan ke 2 desimal); 0.0 bila kosong.
+    private function flt4($value): float
+    {
+        return round((float) self::orDefault($value, 0), 4);
     }
 
     private function strOrNull($value): ?string

@@ -139,6 +139,17 @@ class Bc25PayloadBuilderTest extends TestCase
         $this->assertSame(11.01, $p['tarifPpnPajak']);
     }
 
+    public function test_netto_keeps_four_decimals(): void
+    {
+        // Skema: netto kelipatan 0.0001; dibulatkan 2 desimal akan mengubah 100.4567 menjadi 100.46.
+        $p = $this->build(['netto' => 100.45678], ['barang' => [$this->barang(1, ['netto' => 50.12345])]]);
+
+        $this->assertSame(100.4568, $p['netto']);
+        $this->assertSame(50.1235, $p['barang'][0]['netto']);
+        $this->assertSame(50.1235, $p['barang'][0]['barangTarif'][0]['jumlahSatuan']);
+        $this->assertSame(0.0, $this->build(['netto' => null])['netto']);
+    }
+
     public function test_entitas_fixed_slots_and_official_keys(): void
     {
         $e = $this->build()['entitas'];

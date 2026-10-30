@@ -48,7 +48,7 @@ Keys are emitted in exactly this order. Helpers: `orDefault(v, d)` = `d` when `v
 | 16 | kotaTtd | string |
 | 17 | namaTtd | string |
 | 18 | ndpbm | float(orDefault(header.ndpbm, 0)) |
-| 19 | netto | `round2(header.netto, 0)` |
+| 19 | netto | `flt4(header.netto)` = `round(float(orDefault(v, 0)), 4)` always a float — **was `round2` (2 decimals); changed because the schema is `multipleOf 0.0001` and 2 decimals turned 100.4567 into 100.46** |
 | 20 | nomorAju | string |
 | 21 | ppnPajak | `flt2(header.ppnPajak)` |
 | 22 | ppnbmPajak | `flt2(header.ppnbmPajak)` |
@@ -95,7 +95,7 @@ kodePerhitungan     orDefault(row.kodePerhitungan, "0")
 kodeSatuanBarang    string
 merk                orDefault(row.merk, "-")
 ndpbm               num(row.ndpbm, 0)                         (schema: INTEGER; the form never sets it, so 0)
-netto               round2(row.netto, 0)
+netto               flt4(row.netto)                           (4 decimals, was round2)
 nilaiBarang         round2(row.nilaiBarang, 0)
 posTarif            string
 seriBarang          int
@@ -112,7 +112,7 @@ barangDokumen       []
 `kodeNegaraAsal`, `nilaiDiskon`, `nilaiJasa`, `uangMuka` (none exists in the official barang schema).
 
 `barangTarif` (computed, same as plan §9.3.1): `cifRp = row.cifRupiah`; `BM = cifRp × persenBM / 100`;
-`base = cifRp + BM`; `PPN = base × persenPPN / 100`; `PPH = base × persenPPh / 100`; `jumlahSatuan = round2(row.netto, 0)`;
+`base = cifRp + BM`; `PPN = base × persenPPN / 100`; `PPH = base × persenPPh / 100`; `jumlahSatuan = flt4(row.netto)`;
 objects in order BM (seriBarang 1), PPN (2), PPH (3), each with keys in this order: kodeJenisTarif (config, default `"1"`),
 kodeFasilitasTarif (config, default `"1"`), kodeJenisPungutan, kodeSatuanBarang, jumlahSatuan, `tarif = round(persen, 2)`,
 tarifFasilitas (config, default `0`), nilaiBayar = `round(value, 2)`, nilaiFasilitas `0`, nilaiSudahDilunasi `0`, seriBarang.
@@ -263,6 +263,7 @@ more save-time checks).
   empty entity slot 2 keeps seri 7 blank and does not move slot 3; bahan baku `nomorAjuDokAsal` null → `""`, `seriBarangDokAsal` null → 1,
   `bahanBakuTarif = []`; barang `fob = 0`, `ndpbm = 0` (int); barangTarif: persen 5/11/2.5 on CIF Rupiah 10,000,000 → nilaiBayar
   500,000 / 1,155,000 / 262,500 (BM, PPN, PPH).
+- Netto keeps 4 decimals: header `netto 100.45678 → 100.4568`, barang `netto 50.12345 → 50.1235` (also the `jumlahSatuan` of the 3 barangTarif rows); `null → 0.0`.
 - Validator on a fully filled document (header has `idPengguna`) → no problem; `payload['idPengguna']` equals the header value.
 - Extra rule: an empty `idPengguna` → `ID Pengguna (idPengguna): belum ada. Klik Login BC sekali supaya username CEISA tersimpan.`
 - Independent cross-check used in Laravel: Python `jsonschema` (draft-07, tuple items, Decimal-based `multipleOf`, digit-based `maxlength`) on a fully filled payload →

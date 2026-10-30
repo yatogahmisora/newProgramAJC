@@ -71,6 +71,10 @@ class CeisaSchemaValidator
         'jumlahRealisasi' => 'Jumlah Realisasi', 'nilaiPungutan' => 'Nilai Pungutan',
         // BC 4.1
         'userPortal' => 'User Portal CEISA', 'kodePembayar' => 'Wajib Bayar', 'idPengangkut' => 'ID Pengangkut', 'idDokumen' => 'ID Dokumen',
+        // BC 2.6.1
+        'kodeAsalBarang' => 'Asal Barang', 'idPungutan' => 'ID Pungutan', 'idJaminan' => 'ID Jaminan', 'kodeJenisJaminan' => 'Jenis Jaminan',
+        'nomorJaminan' => 'Nomor Jaminan', 'tanggalJaminan' => 'Tanggal Jaminan', 'tanggalJatuhTempo' => 'Jatuh Tempo',
+        'nilaiJaminan' => 'Nilai Jaminan', 'penjamin' => 'Penjamin', 'nomorBpj' => 'Nomor BPJ', 'tanggalBpj' => 'Tanggal BPJ',
     ];
 
     private string $dir;

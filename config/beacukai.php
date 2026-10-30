@@ -85,6 +85,7 @@ return [
         'bc262_kontainer' => 'DOCUMENTBC262KONTAINER',
         'bc262_jaminan' => 'DOCUMENTBC262JAMINAN',
         'bc262_dokumen' => 'DOCUMENTBC262DOKUMEN',
+        'bc262_pungutan' => 'DOCUMENTBC262PUNGUTAN', // docs/update-db-DBSMLNEW/beacukai/19_tabel_documentbc262_pungutan.sql
 
         // BC 2.5: header + 5 koleksi anak, berdiri sendiri (docs/update-db-DBSMLNEW/beacukai/14_tabel_documentbc25.sql).
         'bc25' => 'DOCUMENTBC25',
